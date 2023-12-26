@@ -56,10 +56,11 @@ static void UpdateDrawFrame(void);  // Update and Draw (one frame)
 //------------------------------------------------------------------------------------
 // Tile Functions Declaration (local)
 //------------------------------------------------------------------------------------
-static int DrawBall(Ball ball);
-static int DrawPaddle(Paddle paddle);
+static void DrawBall(Ball ball);
+static void DrawPaddle(Paddle paddle);
 static Paddle PaddleInit(int x, int y);
 static Ball BallInit(int x, int y);
+static void DrawVictoryMessage(void);
 
 //------------------------------------------------------------------------------------
 // Program main entry point
@@ -68,7 +69,7 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    screenScale = 3.0;
+    screenScale = 2.0;
     screenWidth = TILE_SIZE*TILE_MAP_WIDTH*(int)screenScale;
     screenHeight = TILE_SIZE*TILE_MAP_HEIGHT*(int)screenScale;
     
@@ -126,11 +127,11 @@ void UpdateGame(void)
         ball.speed.y *= -1;
     }
     // if (ball.position.x < 0) {
-        // ball.position.x = 0;
-        // ball.speed.x *= -1;
+    //     ball.position.x = 0;
+    //     ball.speed.x *= -1;
     // }
     // if (ball.position.x > GetScreenWidth()) {
-        // ball.speed.x *= -1;
+    //     ball.speed.x *= -1;
     // }
     
     if (IsKeyDown(KEY_W)) paddleLeft.rec.y -= paddleLeft.speed * delta;
@@ -166,33 +167,17 @@ void DrawGame(void)
     // Draw
     //----------------------------------------------------------------------------------
     BeginDrawing();
+        DrawFPS(GetRenderWidth()*0.9, 0);
+
         ClearBackground(BLACK);
         if (showGreenScreen) ClearBackground(GREEN);
         if (showRedScreen) ClearBackground(RED);
         
-        // Coloca os elementos na tela
         DrawBall(ball);
         DrawPaddle(paddleLeft);
         DrawPaddle(paddleRight);
         
-        if (ball.position.x < 0) {
-            DrawText(
-                "Congrats! The right player win the game!",
-                GetScreenHeight()/4.0f, 
-                GetScreenHeight()/4.0f, 
-                12*screenScale, 
-                LIGHTGRAY
-            );
-        }
-        else if (ball.position.x > GetScreenWidth()) {
-            DrawText(
-                "Congrats! The left player win the game!",
-                GetScreenHeight()/4.0f, 
-                GetScreenHeight()/4.0f, 
-                12*screenScale, 
-                LIGHTGRAY
-            );
-        }
+        DrawVictoryMessage();        
         
         // DrawCircle((int) ball.x, (int) ball.y, ball.radius, WHITE);
         // DrawRectangle(50, GetScreenHeight() / 2 - 50, 10, 100, WHITE);
@@ -211,8 +196,6 @@ void DrawGame(void)
         // snprintf(buf, 1024, "screen_width: %d\nscreen_height: %d", screenWidth, screenHeight);
         // DrawText(buf, 0, 0, 16, LIGHTGRAY);
         
-        DrawFPS(GetRenderWidth()*0.9, 0);
-        
     EndDrawing();
     //----------------------------------------------------------------------------------
 }
@@ -230,16 +213,36 @@ void UnloadGame(void)
     // TODO: Unload required assets here
 }
 
-int DrawBall(Ball ball) 
+void DrawBall(Ball ball) 
 {
     DrawCircle((int) ball.position.x, (int) ball.position.y, ball.radius, WHITE);
-    return 0;
 }
 
-int DrawPaddle(Paddle paddle) 
+void DrawPaddle(Paddle paddle) 
 {
     DrawRectangleRec(paddle.rec, WHITE);
-    return 0;
+}
+
+void DrawVictoryMessage(void)
+{
+    if (ball.position.x < 0) {
+        DrawText(
+            "Congrats! The right player win the game!",
+            GetScreenHeight()/4.0f, 
+            GetScreenHeight()/4.0f, 
+            12*screenScale, 
+            LIGHTGRAY
+        );
+    }
+    else if (ball.position.x > GetScreenWidth()) {
+        DrawText(
+            "Congrats! The left player win the game!",
+            GetScreenHeight()/4.0f, 
+            GetScreenHeight()/4.0f, 
+            12*screenScale, 
+            LIGHTGRAY
+        );
+    }
 }
 
 Paddle PaddleInit(int x, int y) 
