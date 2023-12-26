@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <string.h>
 
 //----------------------------------------------------------------------------------
 // Some Defines
@@ -37,6 +38,7 @@ static Ball ball = { 0 };
 //temp
 int showRedScreen;
 int showGreenScreen;
+char winner[32];
 
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
@@ -151,6 +153,13 @@ void UpdateGame(void)
     
     // if (paddleLeft.rec.y < 0) paddleLeft.speed = 0;
     // if (paddleLeft.rec.y > GetScreenHeight()-paddleLeft.rec.y/2.6f) paddleLeft.speed = 0;
+
+    if (ball.position.x < 0) {
+        strcpy(winner, "RIGHT_PADDLE_WIN");
+    }
+    else if (ball.position.x > GetScreenWidth()) {
+        strcpy(winner, "LEFT_PADDLE_WIN");
+    }
     
     showRedScreen = 0;
     showGreenScreen = 0;
@@ -177,7 +186,7 @@ void DrawGame(void)
         DrawPaddle(paddleLeft);
         DrawPaddle(paddleRight);
         
-        DrawVictoryMessage();        
+        DrawVictoryMessage();
         
         // DrawCircle((int) ball.x, (int) ball.y, ball.radius, WHITE);
         // DrawRectangle(50, GetScreenHeight() / 2 - 50, 10, 100, WHITE);
@@ -225,19 +234,21 @@ void DrawPaddle(Paddle paddle)
 
 void DrawVictoryMessage(void)
 {
-    if (ball.position.x < 0) {
+    if (strcmp(winner, "RIGHT_PADDLE_WIN") == 0) {
+        char msg[] = "Congrats! The right player win the game!";
         DrawText(
-            "Congrats! The right player win the game!",
-            GetScreenHeight()/4.0f, 
+            msg,
+            GetScreenWidth()/2.0f - MeasureText(msg, 12*screenScale)/2, 
             GetScreenHeight()/4.0f, 
             12*screenScale, 
             LIGHTGRAY
         );
     }
-    else if (ball.position.x > GetScreenWidth()) {
+    else if (strcmp(winner, "LEFT_PADDLE_WIN") == 0) {
+        char msg[] = "Congrats! The left player win the game!";
         DrawText(
-            "Congrats! The left player win the game!",
-            GetScreenHeight()/4.0f, 
+            msg,
+            GetScreenWidth()/2.0f - MeasureText(msg, 12*screenScale)/2, 
             GetScreenHeight()/4.0f, 
             12*screenScale, 
             LIGHTGRAY
