@@ -1,28 +1,8 @@
 #include "raylib.h"
 #include <string.h>
-
-
-#define TILE_MAP_WIDTH  20
-#define TILE_MAP_HEIGHT 12
-
-
-typedef enum GameScreen { LOGO = 0, TITLE, CREDITS, GAMEPLAY, ENDING } GameScreen;
-
-typedef struct Ball {
-    float radius;
-    Vector2 position;
-    Vector2 speed;
-} Ball;
-
-typedef struct Paddle {
-    float speed;
-    Rectangle rec;
-} Paddle;
-
+#include "core/game.h"
 
 int currentScreen = LOGO;
-const int TILE_SIZE = 16;
-const int TILE_ROUND = 15;  // Used in bitwise operation | TILE_SIZE - 1
 float screenScale;
 int screenWidth;
 int screenHeight;
@@ -36,46 +16,6 @@ char winner[32];
 int elementPositionY = -128;
 int framesCounter = 0;
 Texture2D texLogo = { 0 };
-
-Paddle PaddleInit(int x, int y);
-Ball BallInit(int x, int y);
-
-void DrawBall(Ball ball);
-void DrawPaddle(Paddle paddle);
-void DrawVictoryMessage(void);
-
-void InitGame(void);         // Initialize game
-void UpdateGame(void);       // Update game (one frame)
-void DrawGame(void);         // Draw game (one frame)
-void UnloadGame(void);       // Unload game
-void UpdateDrawFrame(void);  // Update and Draw (one frame)
-
-int main(void)
-{
-    screenScale = 3.0;
-    screenWidth = TILE_SIZE*TILE_MAP_WIDTH*(int)screenScale;
-    screenHeight = TILE_SIZE*TILE_MAP_HEIGHT*(int)screenScale;
-    
-    SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(screenWidth, screenHeight, "raylib - CPong");
-    
-    // Textures loading
-    texLogo = LoadTexture("resources/raylib_logo.png");
-    InitGame();
-
-    SetTargetFPS(60);
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        UpdateDrawFrame();
-    }
-
-    UnloadGame();         // Unload loaded data (textures, sounds, models...)
-    CloseWindow();        // Close window and OpenGL context
-
-    return 0;
-}
 
 // Initialize game variables
 void InitGame(void) 

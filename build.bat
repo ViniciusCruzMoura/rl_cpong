@@ -27,6 +27,9 @@ mingw32-make %FILENAME% -B PLATFORM=PLATFORM_DESKTOP RAYLIB_PATH=C:\raylib\rayli
 cmd /c if exist %FILENAME_FULL_PATH%.exe %FILENAME_FULL_PATH%.exe
 
 
+:: Executing program
 cmd /c if exist game.exe game.exe
+:: Cleaning after close program
 cmd /c if exist *.exe del /F *.exe
 cmd /c if exist *.o del /F *.o
+cmd /c if exist core\*.o del /F core\*.o

@@ -400,7 +400,8 @@ endif
 # Define source code object files required
 #------------------------------------------------------------------------------------------------
 PROJECT_SOURCE_FILES ?= \
-    main.c
+    core\main.c \
+    core\game.c
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
