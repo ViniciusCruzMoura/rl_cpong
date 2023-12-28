@@ -1,4 +1,6 @@
 ::@echo off
+:: .
+:: .
 :: > Setup required Environment
 :: -------------------------------------
 set RAYLIB_INCLUDE_DIR=C:\raylib\raylib\src
@@ -6,25 +8,25 @@ set RAYLIB_LIB_DIR=C:\raylib\raylib\src
 set RAYLIB_RES_FILE=C:\raylib\raylib\src\raylib.rc.data
 set COMPILER_DIR=C:\raylib\w64devkit\bin
 set PATH=%PATH%;%COMPILER_DIR%
-:: Get full filename path for input file %1
-set FILENAME=%~f1
-set NAMEPART=%FILENAME:~0,-2%
+set FILENAME=%1
+set FILENAME_FULL_PATH=%~f1
 :: cd %~dp0
 cd %~dp0\src
 :: .
 :: > Cleaning latest build
 :: ---------------------------
-cmd /c if exist %NAMEPART%.exe del /F %NAMEPART%.exe
+cmd /c if exist %FILENAME_FULL_PATH%.exe del /F %FILENAME_FULL_PATH%.exe
 :: .
 :: > Compiling program
 :: --------------------------
-:: -s        : Remove all symbol table and relocation information from the executable
-:: -O2       : Optimization Level 2, this option increases both compilation time and the performance of the generated code
-:: -std=c99  : Use C99 language standard
-:: -Wall     : Enable all compilation Warnings
-:: -mwindows : Compile a Windows executable, no cmd window
-gcc -o %NAMEPART%.exe %FILENAME% %RAYLIB_RES_FILE% -s -O2 -I%RAYLIB_INCLUDE_DIR% -L%RAYLIB_LIB_DIR% -lraylib -lopengl32 -lgdi32 -lwinmm -std=c99 -Wall -mwindows
+:: -B  : Force make recompilation despite file not changed
+mingw32-make %FILENAME% -B PLATFORM=PLATFORM_DESKTOP RAYLIB_PATH=C:\raylib\raylib
 :: .
 :: > Executing program
 :: -------------------------
-cmd /c if exist %NAMEPART%.exe %NAMEPART%.exe
+cmd /c if exist %FILENAME_FULL_PATH%.exe %FILENAME_FULL_PATH%.exe
+
+
+cmd /c if exist game.exe game.exe
+cmd /c if exist *.exe del /F *.exe
+cmd /c if exist *.o del /F *.o
