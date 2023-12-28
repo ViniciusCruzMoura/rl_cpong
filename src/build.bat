@@ -26,6 +26,6 @@ mingw32-make %FILENAME% -B PLATFORM=PLATFORM_DESKTOP RAYLIB_PATH=C:\raylib\rayli
 cmd /c if exist %FILENAME_FULL_PATH%.exe %FILENAME_FULL_PATH%.exe
 
 
-cmd /c if exist cpong.exe cpong.exe
-cmd /c if exist cpong.exe del /F cpong.exe
-cmd /c if exist main.o del /F main.o
+cmd /c if exist game.exe game.exe
+cmd /c if exist *.exe del /F *.exe
+cmd /c if exist *.o del /F *.o
