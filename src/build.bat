@@ -19,7 +19,7 @@ cmd /c if exist %FILENAME_FULL_PATH%.exe del /F %FILENAME_FULL_PATH%.exe
 :: > Compiling program
 :: --------------------------
 :: -B  : Force make recompilation despite file not changed
-mingw32-make %FILENAME% -B PLATFORM=PLATFORM_DESKTOP
+mingw32-make %FILENAME% -B PLATFORM=PLATFORM_DESKTOP RAYLIB_PATH=C:\raylib\raylib
 :: .
 :: > Executing program
 :: -------------------------

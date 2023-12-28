@@ -33,7 +33,7 @@ PROJECT_NAME          ?= cpong
 PROJECT_VERSION       ?= 1.0
 PROJECT_BUILD_PATH    ?= .
 
-RAYLIB_PATH           ?= C:\raylib\raylib#$(RAYLIB_PATH)
+RAYLIB_PATH           ?= RAYLIB_PATH#C:\raylib\raylib#$(RAYLIB_PATH)
 
 # Locations of raylib.h and libraylib.a/libraylib.so
 # NOTE: Those variables are only used for PLATFORM_OS: LINUX, BSD
