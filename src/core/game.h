@@ -15,8 +15,6 @@ typedef struct Paddle {
 } Paddle;
 
 extern int currentScreen;
-// extern const int TILE_SIZE;
-// extern const int TILE_ROUND;  // Used in bitwise operation | TILE_SIZE - 1
 extern float screenScale;
 extern int screenWidth;
 extern int screenHeight;
