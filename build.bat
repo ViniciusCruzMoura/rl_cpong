@@ -9,7 +9,8 @@ set PATH=%PATH%;%COMPILER_DIR%
 :: Get full filename path for input file %1
 set FILENAME=%~f1
 set NAMEPART=%FILENAME:~0,-2%
-cd %~dp0
+:: cd %~dp0
+cd %~dp0\src
 :: .
 :: > Cleaning latest build
 :: ---------------------------
