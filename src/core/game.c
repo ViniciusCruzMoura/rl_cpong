@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 #include "core/Game.h"
 
 void InitCGame() 
@@ -62,6 +63,8 @@ void UpdateCGame()
         case GAMEPLAY:
         { 
             // Update GAMEPLAY screen data here!
+
+            if (IsKeyPressed(KEY_SPACE)) game.gamePaused = !game.gamePaused;
 
             if (!game.gamePaused)
             {
@@ -205,6 +208,27 @@ void DrawCGame()
             } break;
             default: break;
         }
+
+        char buf[1024];
+        snprintf(
+            buf, 1024, 
+            "Debug:\n" \
+            "- GetMonitorWidth: (%d)\n" \
+            "- GetMonitorHeight: (%d)\n" \
+            "- game.currentScreen (%d)\n" \
+            "- game.framesCounter (%d)\n" \
+            "- game.elementPositionY (%d)\n" \
+            "- game.winner (%s)\n"
+            , GetMonitorWidth(GetCurrentMonitor())
+            , GetMonitorHeight(GetCurrentMonitor())
+            , game.currentScreen
+            , game.framesCounter
+            , game.elementPositionY
+            , game.winner
+            );
+        DrawRectangle(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, Fade(SKYBLUE, 0.5f));        
+        DrawRectangleLines(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, BLUE);
+        DrawText(TextFormat(buf), 0, 0, 10, WHITE);
 
     EndDrawing();
 }
