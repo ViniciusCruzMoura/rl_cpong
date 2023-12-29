@@ -10,6 +10,13 @@ int main(void)
     
     SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, "raylib - CPong");
+
+    if (!IsWindowFullscreen()) {
+        screenWidth = GetMonitorWidth(GetCurrentMonitor());
+        screenHeight = GetMonitorHeight(GetCurrentMonitor());
+        SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+        ToggleFullscreen();
+    }    
     
     // Textures loading
     texLogo = LoadTexture("resources/raylib_logo.png");
