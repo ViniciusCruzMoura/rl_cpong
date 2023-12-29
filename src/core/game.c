@@ -1,233 +1,216 @@
-#include "raylib.h"
 #include <string.h>
-#include "core/game.h"
+#include "core/Game.h"
 
-int currentScreen = LOGO;
-float screenScale;
-int screenWidth;
-int screenHeight;
-float delta;
-Paddle paddleLeft = { 0 };
-Paddle paddleRight = { 0 };
-Ball ball = { 0 };
-int showRedScreen;
-int showGreenScreen;
-char winner[32];
-int elementPositionY = -128;
-int framesCounter = 0;
-Texture2D texLogo = { 0 };
-
-// Initialize game variables
-void InitGame(void) 
+void InitCGame() 
 {
-    paddleLeft = PaddleInit(50, screenHeight / 2);
-    paddleRight = PaddleInit(screenWidth - 50, screenHeight / 2);
-    ball = BallInit(GetRenderWidth() / 2.0f, GetScreenHeight() / 2.0f);
-}
-
-// Update game (one frame)
-void UpdateGame(void) 
-{    
-    switch (currentScreen)
-        {
-            case LOGO:
-            {
-
-            } break;
-            case TITLE:
-            {
-
-            } break;
-            case GAMEPLAY: 
-            {
-                // Get time since last frame
-                delta = GetFrameTime();
-                
-                ball.position.x += ball.speed.x * delta;
-                ball.position.y += ball.speed.y * delta;
-                if (ball.position.y < 0) {
-                    ball.position.y = 0;
-                    ball.speed.y *= -1;
-                }
-                if (ball.position.y > GetScreenHeight()) {
-                    ball.speed.y *= -1;
-                }
-                
-                if (IsKeyDown(KEY_W)) paddleLeft.rec.y -= paddleLeft.speed * delta;
-                if (IsKeyDown(KEY_S)) paddleLeft.rec.y += paddleLeft.speed * delta;
-                if (IsKeyDown(KEY_UP)) paddleRight.rec.y -= paddleRight.speed * delta;
-                if (IsKeyDown(KEY_DOWN)) paddleRight.rec.y += paddleRight.speed * delta;
-                
-                // IsBallColliding
-                if (CheckCollisionCircleRec(ball.position, ball.radius, paddleLeft.rec) && ball.speed.x < 0) {
-                    ball.speed.x *= -1.1f;
-                    ball.speed.y = (ball.position.y - paddleLeft.rec.y) / (paddleLeft.rec.height / 2) * ball.speed.x;
-                }
-                if (CheckCollisionCircleRec(ball.position, ball.radius, paddleRight.rec) && ball.speed.x > 0) {
-                    ball.speed.x *= -1.1f;
-                    ball.speed.y = (ball.position.y - paddleRight.rec.y) / (paddleRight.rec.height / 2) * -ball.speed.x;
-                }
-
-                if (ball.position.x < 0) {
-                    strcpy(winner, "RIGHT_PADDLE_WIN");
-                }
-                else if (ball.position.x > GetScreenWidth()) {
-                    strcpy(winner, "LEFT_PADDLE_WIN");
-                }                
-                
-                showRedScreen = 0;
-                showGreenScreen = 0;
-                if (CheckCollisionPointRec(GetMousePosition(), paddleLeft.rec)) {
-                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) showGreenScreen = 1;
-                    else showRedScreen = 1;
-                }
-            } break;
-            case CREDITS: 
-            {
-
-            } break;
-            default: break;
-        }
+    game.currentScreen = LOGO;
+    game.screenScale = 3.0;
+    game.screenWidth = GetMonitorWidth(GetCurrentMonitor());
+    game.screenHeight = GetMonitorHeight(GetCurrentMonitor());
     
+    game.screenWidth = WIN_RES_W*game.screenScale;
+    game.screenHeight = WIN_RES_H*game.screenScale;
+    InitWindow(game.screenWidth, game.screenHeight, "raylib - CPong");
+
+    game.gamePaused = false;  // Game paused state toggle
+    game.elementPositionY = -128;
+    game.framesCounter = 0;  // General pourpose frames counter
+
+    game.paddleLeft = InitCPaddle(50, game.screenHeight / 2, game.screenScale);
+    game.paddleRight = InitCPaddle(game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
+    game.ball = InitCBall(GetRenderWidth() / 2.0f, GetScreenHeight() / 2.0f, game.screenScale);
+
+    // SetConfigFlags(FLAG_VSYNC_HINT);
+    // InitWindow(game.screenWidth, game.screenHeight, "raylib - CPong");
+    // if (!IsWindowFullscreen()) {
+    //     SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+    //     ToggleFullscreen();
+    // }
+
+    // Textures loading
+    game.texLogo = LoadTexture("resources/raylib_logo.png");
+    
+    SetTargetFPS(60);
 }
 
-// Draw game (every frame)
-void DrawGame(void) 
+void UpdateCGame()
+{
+    switch(game.currentScreen)
+    {
+        case LOGO: 
+        {
+            // Update LOGO screen data here!
+            
+            game.framesCounter++;
+            
+            if (game.framesCounter > 180) 
+            {
+                game.currentScreen = TITLE;    // Change to TITLE screen after 3 seconds
+                game.framesCounter = 0;
+            }
+            
+        } break;
+        case TITLE: 
+        {
+            // Update TITLE screen data here!
+            
+            game.framesCounter++;
+            
+            if (IsKeyPressed(KEY_ENTER)) game.currentScreen = GAMEPLAY;
+
+        } break;
+        case GAMEPLAY:
+        { 
+            // Update GAMEPLAY screen data here!
+
+            if (!game.gamePaused)
+            {
+                // TODO: Gameplay logic
+                game.ball.position.x += game.ball.speed.x * GetFrameTime();
+                game.ball.position.y += game.ball.speed.y * GetFrameTime();
+                if (game.ball.position.y < 0) {
+                    game.ball.position.y = 0;
+                    game.ball.speed.y *= -1;
+                }
+                if (game.ball.position.y > GetScreenHeight()) {
+                    game.ball.speed.y *= -1;
+                }
+
+                if (IsKeyDown(KEY_W)) game.paddleLeft.rec.y -= game.paddleLeft.speed * GetFrameTime();
+                if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
+                if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
+                if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
+
+                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
+                    game.ball.speed.x *= -1.1f;
+                    game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
+                }
+                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
+                    game.ball.speed.x *= -1.1f;
+                    game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
+                }
+
+                if (game.ball.position.x < 0) {
+                    strcpy(game.winner, "RIGHT_PADDLE_WIN");
+                }
+                else if (game.ball.position.x > GetScreenWidth()) {
+                    strcpy(game.winner, "LEFT_PADDLE_WIN");
+                }
+
+                game.showRedScreen = 0;
+                game.showGreenScreen = 0;
+                if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
+                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.showGreenScreen = 1;
+                    else game.showRedScreen = 1;
+                }
+            }
+
+        } break;
+        case ENDING: 
+        {
+            // Update END screen data here!
+            
+            game.framesCounter++;
+            
+            if (IsKeyPressed(KEY_ENTER))
+            {
+                // Replay / Exit game logic
+                game.currentScreen = TITLE;
+            }
+            
+        } break;
+        default: break;
+    }
+}
+
+void DrawCGame()
 {
     BeginDrawing();
-        DrawFPS(GetRenderWidth()*0.9, 0);
 
+        // ClearBackground(RAYWHITE);
         ClearBackground(BLACK);
-
-        switch (currentScreen)
+        
+        switch(game.currentScreen) 
         {
-            case LOGO:
+            case LOGO: 
             {
-                // Update LOGO screen
-                framesCounter++;
-                // Logo moving down logic (animation)
-                elementPositionY += 3;
-                if (elementPositionY > (screenHeight/3 - 64)) elementPositionY = screenHeight/3 - 64;
+                // Draw LOGO screen here!
+                
+                DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
 
-                if (framesCounter > 300)
-                {
-                    framesCounter = 0;
-                    currentScreen = TITLE;
-                }
-                // Draw LOGO screen
-                // DrawTexture(texLogo, (screenWidth/2)-((screenWidth/12)*2), elementPositionY, WHITE);
-
+                game.elementPositionY += 3;
+                if (game.elementPositionY > (game.screenHeight/3 - 64)) game.elementPositionY = game.screenHeight/3 - 64;
                 DrawTexturePro(
-                    texLogo,
-                    (Rectangle){ 0, 0, texLogo.width, texLogo.height },
-                    (Rectangle){ screenWidth/2, screenHeight/2, texLogo.width, texLogo.height },
-                    (Vector2){ texLogo.width / 2, texLogo.height / 2 - elementPositionY /4 },
+                    game.texLogo,
+                    (Rectangle){ 0, 0, game.texLogo.width, game.texLogo.height },
+                    (Rectangle){ game.screenWidth/2, game.screenHeight/2, game.texLogo.width, game.texLogo.height },
+                    (Vector2){ game.texLogo.width / 2, game.texLogo.height / 2 - game.elementPositionY /4 },
                     0,
                     WHITE
                 );
-            } break;
-            case TITLE:
-            {
-                currentScreen = GAMEPLAY;
-            } break;
-            case GAMEPLAY: 
-            {
-                if (showGreenScreen) ClearBackground(GREEN);
-                if (showRedScreen) ClearBackground(RED);
                 
-                DrawPaddle(paddleLeft);
-                DrawPaddle(paddleRight);
-                DrawBall(ball);
+            } break;
+            case TITLE: 
+            {
+                // Draw TITLE screen here!
                 
-                if (strcmp(winner, "RIGHT_PADDLE_WIN") == 0 || strcmp(winner, "LEFT_PADDLE_WIN") == 0) {
-                    currentScreen = CREDITS;
+                DrawText("TITLE SCREEN", 20, 20, 40, DARKGREEN);
+                
+                if ((game.framesCounter/30)%2 == 0) DrawText("PRESS [ENTER] to START", GetScreenWidth()/2 - MeasureText("PRESS [ENTER] to START", 20)/2, GetScreenHeight()/2 + 60, 20, DARKGRAY);
+                
+            } break;
+            case GAMEPLAY:
+            { 
+                // Draw GAMEPLAY screen here!
+
+                // Draw pause message when required
+                if (game.gamePaused) DrawText("GAME PAUSED", game.screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, game.screenHeight/2 + 60, 40, GRAY);
+
+                if (game.showGreenScreen) ClearBackground(GREEN);
+                if (game.showRedScreen) ClearBackground(RED);
+                DrawCBall(game.ball);
+                DrawCPaddle(game.paddleLeft);
+                DrawCPaddle(game.paddleRight);
+
+                if (strcmp(game.winner, "RIGHT_PADDLE_WIN") == 0) {
+                    char msg[] = "Congrats! The right player win the game!";
+                    DrawText(
+                        msg,
+                        GetScreenWidth()/2.0f - MeasureText(msg, 12*game.screenScale)/2,
+                        GetScreenHeight()/4.0f, 
+                        12*game.screenScale, 
+                        LIGHTGRAY
+                    );
                 }
+                else if (strcmp(game.winner, "LEFT_PADDLE_WIN") == 0) {
+                    char msg[] = "Congrats! The left player win the game!";
+                    DrawText(
+                        msg,
+                        GetScreenWidth()/2.0f - MeasureText(msg, 12*game.screenScale)/2, 
+                        GetScreenHeight()/4.0f, 
+                        12*game.screenScale, 
+                        LIGHTGRAY
+                    );
+                }
+                
             } break;
-            case CREDITS: 
+            case ENDING: 
             {
-                DrawVictoryMessage();
+                // Draw END screen here!
+                
+                DrawText("ENDING SCREEN", 20, 20, 40, DARKBLUE);
+                
+                if ((game.framesCounter/30)%2 == 0) DrawText("PRESS [ENTER] TO PLAY AGAIN", GetScreenWidth()/2 - MeasureText("PRESS [ENTER] TO PLAY AGAIN", 20)/2, GetScreenHeight()/2 + 80, 20, GRAY);
+                
             } break;
             default: break;
-        }        
+        }
 
-        // char str1[20] = "Hello ";
-        // char str2[] = "World!";
-        // strcat(str1, str2);
-        // DrawText(str1, 190, 200, 20, LIGHTGRAY);
-        
-        // char buf[1024];
-        // snprintf(buf, 1024, "screen_width: %d\nscreen_height: %d", screenWidth, screenHeight);
-        // DrawText(buf, 0, 0, 16, LIGHTGRAY);
-        
     EndDrawing();
 }
 
-// Update and Draw (one frame)
-void UpdateDrawFrame(void)
-{
-    UpdateGame();
-    DrawGame();
-}
-
-// Unload game variables
-void UnloadGame(void)
+void UnloadCGame()
 {
     // Unload textures
-    UnloadTexture(texLogo);
-}
-
-void DrawBall(Ball ball) 
-{
-    DrawCircle((int) ball.position.x, (int) ball.position.y, ball.radius, WHITE);
-}
-
-void DrawPaddle(Paddle paddle) 
-{
-    DrawRectangleRec(paddle.rec, WHITE);
-}
-
-void DrawVictoryMessage(void)
-{
-    if (strcmp(winner, "RIGHT_PADDLE_WIN") == 0) {
-        char msg[] = "Congrats! The right player win the game!";
-        DrawText(
-            msg,
-            GetScreenWidth()/2.0f - MeasureText(msg, 12*screenScale)/2,
-            GetScreenHeight()/4.0f, 
-            12*screenScale, 
-            LIGHTGRAY
-        );
-    }
-    else if (strcmp(winner, "LEFT_PADDLE_WIN") == 0) {
-        char msg[] = "Congrats! The left player win the game!";
-        DrawText(
-            msg,
-            GetScreenWidth()/2.0f - MeasureText(msg, 12*screenScale)/2, 
-            GetScreenHeight()/4.0f, 
-            12*screenScale, 
-            LIGHTGRAY
-        );
-    }
-}
-
-Paddle PaddleInit(int x, int y) 
-{
-    Paddle paddle;
-    paddle.rec.x = x;
-    paddle.rec.y = y;
-    paddle.rec.width = 5 * screenScale;
-    paddle.rec.height = 50 * screenScale;
-    paddle.speed = 300 * screenScale;
-    return paddle;
-}
-
-Ball BallInit(int x, int y) 
-{
-    Ball ball;
-    ball.position.x = x;
-    ball.position.y = y;
-    ball.speed.x = 100 * screenScale;
-    ball.speed.y = 100 * screenScale;
-    ball.radius = 3 * screenScale;
-    return ball;
+    UnloadTexture(game.texLogo);
 }
