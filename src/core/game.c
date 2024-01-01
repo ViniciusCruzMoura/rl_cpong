@@ -83,6 +83,31 @@ void UpdateCGame()
                 if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
                 if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
                 if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
+                
+                // left paddle AI
+                if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
+                    int debuff = 1.2f;
+                    if (game.paddleRight.rec.y == game.ball.position.y) {
+                    game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
+                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
+                        game.paddleRight.rec.y -= game.paddleRight.speed/debuff * GetFrameTime();
+                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 < game.ball.position.y) {
+                        game.paddleRight.rec.y += game.paddleRight.speed/debuff * GetFrameTime();
+                    }
+                }
+                // right paddle AI
+                if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
+                    int debuff = 1.2f;
+                    if (game.paddleLeft.rec.y == game.ball.position.y) {
+                    game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
+                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
+                        game.paddleLeft.rec.y -= game.paddleLeft.speed/debuff * GetFrameTime();
+                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 < game.ball.position.y) {
+                        game.paddleLeft.rec.y += game.paddleLeft.speed/debuff * GetFrameTime();
+                    }
+                }
+                
+                
 
                 if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
                     game.ball.speed.x *= -1.1f;
@@ -95,9 +120,11 @@ void UpdateCGame()
 
                 if (game.ball.position.x < 0) {
                     strcpy(game.winner, "RIGHT_PADDLE_WIN");
+                    game.gamePaused = !game.gamePaused;
                 }
                 else if (game.ball.position.x > GetScreenWidth()) {
                     strcpy(game.winner, "LEFT_PADDLE_WIN");
+                    game.gamePaused = !game.gamePaused;
                 }
 
                 game.showRedScreen = 0;
@@ -208,7 +235,7 @@ void DrawCGame()
             } break;
             default: break;
         }
-
+        /** 
         char buf[1024];
         snprintf(
             buf, 1024, 
@@ -229,7 +256,7 @@ void DrawCGame()
         DrawRectangle(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, Fade(SKYBLUE, 0.5f));        
         DrawRectangleLines(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, BLUE);
         DrawText(TextFormat(buf), 0, 0, 10, WHITE);
-
+        */
     EndDrawing();
 }
 
