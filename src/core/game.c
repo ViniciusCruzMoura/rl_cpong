@@ -127,11 +127,13 @@ void UpdateCGame()
                     game.gamePaused = !game.gamePaused;
                 }
 
-                game.showRedScreen = 0;
-                game.showGreenScreen = 0;
+                
+                
+                game.isMouseOverPaddle = 0;
+                game.isMouseClickingPaddle = 0;
                 if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
-                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.showGreenScreen = 1;
-                    else game.showRedScreen = 1;
+                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.isMouseClickingPaddle = 1;
+                    else game.isMouseOverPaddle = 1;
                 }
             }
 
@@ -196,8 +198,8 @@ void DrawCGame()
                 // Draw pause message when required
                 if (game.gamePaused) DrawText("GAME PAUSED", game.screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, game.screenHeight/2 + 60, 40, GRAY);
 
-                if (game.showGreenScreen) ClearBackground(GREEN);
-                if (game.showRedScreen) ClearBackground(RED);
+                if (game.isMouseOverPaddle) ClearBackground(GREEN);
+                if (game.isMouseClickingPaddle) ClearBackground(RED);
                 DrawCBall(game.ball);
                 DrawCPaddle(game.paddleLeft);
                 DrawCPaddle(game.paddleRight);

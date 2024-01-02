@@ -16,8 +16,8 @@ typedef struct CGame {
     CPaddle paddleLeft;
     CPaddle paddleRight;
     CBall ball;
-    int showRedScreen;
-    int showGreenScreen;
+    int isMouseClickingPaddle;
+    int isMouseOverPaddle;
     char winner[32];
     int elementPositionY;
     int framesCounter;
