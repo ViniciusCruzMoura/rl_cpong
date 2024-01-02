@@ -1,5 +1,5 @@
 #include <string.h>
-#include "core/Game.h"
+#include "game.h"
 
 // Game required variables
 CGame game;

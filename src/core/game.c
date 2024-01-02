@@ -1,6 +1,6 @@
 #include <string.h>
 #include <stdio.h>
-#include "core/Game.h"
+#include "game.h"
 
 void InitCGame() 
 {

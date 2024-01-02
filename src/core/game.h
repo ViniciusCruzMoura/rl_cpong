@@ -1,6 +1,6 @@
 #include "raylib.h"
-#include "core/Paddle.h"
-#include "core/Ball.h"
+#include "Paddle.h"
+#include "Ball.h"
 
 #define WIN_RES_W 256
 #define WIN_RES_H 192
