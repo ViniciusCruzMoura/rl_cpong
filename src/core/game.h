@@ -1,3 +1,6 @@
+#ifndef GAME_H
+#define GAME_H
+
 #include "raylib.h"
 #include "Paddle.h"
 #include "Ball.h"
@@ -31,3 +34,5 @@ void InitCGame();         // Initialize game
 void UpdateCGame();       // Update game (one frame)
 void DrawCGame();         // Draw game (one frame)
 void UnloadCGame();       // Unload game assets
+
+#endif // GAME_H
