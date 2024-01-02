@@ -69,54 +69,66 @@ void UpdateCGame()
             if (!game.gamePaused)
             {
                 // TODO: Gameplay logic
-                game.ball.position.x += game.ball.speed.x * GetFrameTime();
-                game.ball.position.y += game.ball.speed.y * GetFrameTime();
-                if (game.ball.position.y < 0) {
-                    game.ball.position.y = 0;
-                    game.ball.speed.y *= -1;
-                }
-                if (game.ball.position.y > GetScreenHeight()) {
-                    game.ball.speed.y *= -1;
-                }
+                // game.ball.position.x += game.ball.speed.x * GetFrameTime();
+                // game.ball.position.y += game.ball.speed.y * GetFrameTime();
+                // if (game.ball.position.y < 0) {
+                //     game.ball.position.y = 0;
+                //     game.ball.speed.y *= -1;
+                // }
+                // if (game.ball.position.y > GetScreenHeight()) {
+                //     game.ball.speed.y *= -1;
+                // }
+                MoveCBall();
 
-                if (IsKeyDown(KEY_W)) game.paddleLeft.rec.y -= game.paddleLeft.speed * GetFrameTime();
-                if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
-                if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
-                if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
+                // if (IsKeyDown(KEY_W)) game.paddleLeft.rec.y -= game.paddleLeft.speed * GetFrameTime();
+                // if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
+                // if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
+                // if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
+                MoveCPaddle();
                 
-                // left paddle AI
-                if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
-                    int debuff = 1.2f;
-                    if (game.paddleRight.rec.y == game.ball.position.y) {
-                        game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
-                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
-                        game.paddleRight.rec.y -= game.paddleRight.speed/debuff * GetFrameTime();
-                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 < game.ball.position.y) {
-                        game.paddleRight.rec.y += game.paddleRight.speed/debuff * GetFrameTime();
-                    }
-                }
-                // right paddle AI
-                if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
-                    int debuff = 1.2f;
-                    if (game.paddleLeft.rec.y == game.ball.position.y) {
-                        game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
-                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
-                        game.paddleLeft.rec.y -= game.paddleLeft.speed/debuff * GetFrameTime();
-                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 < game.ball.position.y) {
-                        game.paddleLeft.rec.y += game.paddleLeft.speed/debuff * GetFrameTime();
-                    }
-                }
+                // // left paddle AI
+                // if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
+                //     int debuff = 1.2f;
+                //     if (game.paddleRight.rec.y == game.ball.position.y) {
+                //         game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
+                //     } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
+                //         game.paddleRight.rec.y -= game.paddleRight.speed/debuff * GetFrameTime();
+                //     } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 < game.ball.position.y) {
+                //         game.paddleRight.rec.y += game.paddleRight.speed/debuff * GetFrameTime();
+                //     }
+                // }
+                // // right paddle AI
+                // if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
+                //     int debuff = 1.2f;
+                //     if (game.paddleLeft.rec.y == game.ball.position.y) {
+                //         game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
+                //     } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
+                //         game.paddleLeft.rec.y -= game.paddleLeft.speed/debuff * GetFrameTime();
+                //     } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 < game.ball.position.y) {
+                //         game.paddleLeft.rec.y += game.paddleLeft.speed/debuff * GetFrameTime();
+                //     }
+                // }
+                AI_CPaddle();
                 
                 
 
-                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
-                    game.ball.speed.x *= -1.1f;
-                    game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
-                }
-                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
-                    game.ball.speed.x *= -1.1f;
-                    game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
-                }
+                // if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
+                //     game.ball.speed.x *= -1.1f;
+                //     game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
+                // }
+                // if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
+                //     game.ball.speed.x *= -1.1f;
+                //     game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
+                // }
+                IsBallCollidingPaddle();
+
+                // game.isMouseOverPaddle = 0;
+                // game.isMouseClickingPaddle = 0;
+                // if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
+                //     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.isMouseClickingPaddle = 1;
+                //     else game.isMouseOverPaddle = 1;
+                // }
+                IsMouseCollidingPaddle();
 
                 if (game.ball.position.x < 0) {
                     strcpy(game.winner, "RIGHT_PADDLE_WIN");
@@ -126,15 +138,7 @@ void UpdateCGame()
                     strcpy(game.winner, "LEFT_PADDLE_WIN");
                     game.gamePaused = !game.gamePaused;
                 }
-
                 
-                
-                game.isMouseOverPaddle = 0;
-                game.isMouseClickingPaddle = 0;
-                if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
-                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.isMouseClickingPaddle = 1;
-                    else game.isMouseOverPaddle = 1;
-                }
             }
 
         } break;
