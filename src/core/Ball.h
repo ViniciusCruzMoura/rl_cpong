@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "game.h"
 
 typedef struct CBall {
     float radius;
@@ -8,3 +8,4 @@ typedef struct CBall {
 
 CBall InitCBall(int x, int y, int screenScale);
 void DrawCBall(CBall ball);
+void MoveCBall();
