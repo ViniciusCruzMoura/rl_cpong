@@ -26,10 +26,20 @@ mingw32-make %FILENAME% -B PLATFORM=PLATFORM_DESKTOP RAYLIB_PATH=C:\raylib\rayli
 :: -------------------------
 cmd /c if exist %FILENAME_FULL_PATH%.exe %FILENAME_FULL_PATH%.exe
 
+:: Creating build folder
+cmd /c if not exist %~dp0\build mkdir %~dp0\build\
+:: Moving files to build folder
+cmd /c move %~dp0\src\core\*.o %~dp0\build
+cmd /c move %~dp0\src\*.exe %~dp0\build
+:: Executing program
+:: cmd /c if exist %~dp0\build\game.exe %~dp0\build\game.exe
+:: Cleaning after close program
+:: cmd /c if exist %~dp0\build\*.o del /F %~dp0\build\*.o
+:: cmd /c if exist %~dp0\build\*.exe del /F %~dp0\build\*.exe
 
 :: Executing program
-cmd /c if exist game.exe game.exe
+:: cmd /c if exist game.exe game.exe
 :: Cleaning after close program
-cmd /c if exist *.exe del /F *.exe
-cmd /c if exist *.o del /F *.o
-cmd /c if exist core\*.o del /F core\*.o
+:: cmd /c if exist *.exe del /F *.exe
+:: cmd /c if exist *.o del /F *.o
+:: cmd /c if exist core\*.o del /F core\*.o
