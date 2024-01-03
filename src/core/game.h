@@ -16,7 +16,6 @@ typedef struct CGame {
     float screenScale;
     int screenWidth;
     int screenHeight;
-    float delta;
     CPaddle paddleLeft;
     CPaddle paddleRight;
     CBall ball;

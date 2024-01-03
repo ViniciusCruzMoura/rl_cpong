@@ -401,7 +401,7 @@ endif
 #------------------------------------------------------------------------------------------------
 PROJECT_SOURCE_FILES ?= \
     core\main.c \
-    core\Game.c \
+    core\game.c \
     core\Ball.c \
     core\Paddle.c \
     core\Collision.c 
