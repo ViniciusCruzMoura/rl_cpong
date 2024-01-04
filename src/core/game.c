@@ -39,11 +39,11 @@ void InitGame()
     game.paddleRight.speed = 300 * game.screenScale;
 
     // Init Ball
-    ball.position.x = GetRenderWidth() / 2.0f;
-    ball.position.y = GetScreenHeight() / 2.0f;
-    ball.speed.x = 100 * game.screenScale;
-    ball.speed.y = 100 * game.screenScale;
-    ball.radius = 3 * game.screenScale;
+    game.ball.position.x = GetRenderWidth() / 2.0f;
+    game.ball.position.y = GetScreenHeight() / 2.0f;
+    game.ball.speed.x = 100 * game.screenScale;
+    game.ball.speed.y = 100 * game.screenScale;
+    game.ball.radius = 3 * game.screenScale;
 
     
     // Textures loading
@@ -223,9 +223,9 @@ void DrawGame()
 
                 if (game.isMouseOverPaddle) ClearBackground(GREEN);
                 if (game.isMouseClickingPaddle) ClearBackground(RED);
-                DrawCircleV(game.ball.position, ball.radius, WHITE);
-                DrawRectangleRec(game.paddleLeft, WHITE);
-                DrawRectangleRec(game.paddleRight, WHITE);
+                DrawCircleV(game.ball.position, game.ball.radius, WHITE);
+                DrawRectangleRec(game.paddleLeft.rec, WHITE);
+                DrawRectangleRec(game.paddleRight.rec, WHITE);
 
                 if (strcmp(game.winner, "RIGHT_PADDLE_WIN") == 0) {
                     char msg[] = "Congrats! The right player win the game!";

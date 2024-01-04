@@ -2,9 +2,7 @@
 #define GAME_H
 
 #include "raylib.h"
-#include "paddle.h"
-#include "ball.h"
-#include "collision.h"
+#include "entity.h"
 
 #define WIN_RES_W 256
 #define WIN_RES_H 192
