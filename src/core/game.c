@@ -23,10 +23,27 @@ void InitCGame()
     game.gamePaused = false;  // Game paused state toggle
     game.elementPositionY = -128;
     game.framesCounter = 0;  // General pourpose frames counter
+    
+    // Init Left Paddle
+    game.paddleLeft.rec.x = 50;
+    game.paddleLeft.rec.y = game.screenHeight / 2;
+    game.paddleLeft.rec.width = 5 * game.screenScale;
+    game.paddleLeft.rec.height = 50 * game.screenScale;
+    game.paddleLeft.speed = 300 * game.screenScale;
 
-    game.paddleLeft = InitCPaddle(50, game.screenHeight / 2, game.screenScale);
-    game.paddleRight = InitCPaddle(game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
-    game.ball = InitCBall(GetRenderWidth() / 2.0f, GetScreenHeight() / 2.0f, game.screenScale);
+    // Init Right Paddle
+    game.paddleRight.rec.x = game.screenWidth - 50;
+    game.paddleRight.rec.y = game.screenHeight / 2;
+    game.paddleRight.rec.width = 5 * game.screenScale;
+    game.paddleRight.rec.height = 50 * game.screenScale;
+    game.paddleRight.speed = 300 * game.screenScale;
+
+    // Init Ball
+    ball.position.x = GetRenderWidth() / 2.0f;
+    ball.position.y = GetScreenHeight() / 2.0f;
+    ball.speed.x = 100 * game.screenScale;
+    ball.speed.y = 100 * game.screenScale;
+    ball.radius = 3 * game.screenScale;
 
     
     // Textures loading
@@ -70,67 +87,68 @@ void UpdateCGame()
             if (!game.gamePaused)
             {
                 // TODO: Gameplay logic
-                // game.ball.position.x += game.ball.speed.x * GetFrameTime();
-                // game.ball.position.y += game.ball.speed.y * GetFrameTime();
-                // if (game.ball.position.y < 0) {
-                //     game.ball.position.y = 0;
-                //     game.ball.speed.y *= -1;
-                // }
-                // if (game.ball.position.y > GetScreenHeight()) {
-                //     game.ball.speed.y *= -1;
-                // }
-                MoveCBall();
 
-                // if (IsKeyDown(KEY_W)) game.paddleLeft.rec.y -= game.paddleLeft.speed * GetFrameTime();
-                // if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
-                // if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
-                // if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
-                MoveCPaddle();
-                
-                // // left paddle AI
-                // if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
-                //     int debuff = 1.2f;
-                //     if (game.paddleRight.rec.y == game.ball.position.y) {
-                //         game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
-                //     } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
-                //         game.paddleRight.rec.y -= game.paddleRight.speed/debuff * GetFrameTime();
-                //     } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 < game.ball.position.y) {
-                //         game.paddleRight.rec.y += game.paddleRight.speed/debuff * GetFrameTime();
-                //     }
-                // }
-                // // right paddle AI
-                // if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
-                //     int debuff = 1.2f;
-                //     if (game.paddleLeft.rec.y == game.ball.position.y) {
-                //         game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
-                //     } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
-                //         game.paddleLeft.rec.y -= game.paddleLeft.speed/debuff * GetFrameTime();
-                //     } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 < game.ball.position.y) {
-                //         game.paddleLeft.rec.y += game.paddleLeft.speed/debuff * GetFrameTime();
-                //     }
-                // }
-                AI_CPaddle();
+                // BALL MOVEMENT
+                game.ball.position.x += game.ball.speed.x * GetFrameTime();
+                game.ball.position.y += game.ball.speed.y * GetFrameTime();
+                if (game.ball.position.y < 0) {
+                    game.ball.position.y = 0;
+                    game.ball.speed.y *= -1;
+                }
+                if (game.ball.position.y > GetScreenHeight()) {
+                    game.ball.speed.y *= -1;
+                }                
+
+                // PADDLE MOVEMENT
+                if (IsKeyDown(KEY_W)) game.paddleLeft.rec.y -= game.paddleLeft.speed * GetFrameTime();
+                if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
+                if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
+                if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
                 
                 
+                // LEFT PADDLE ARTIFICIAL INTELLIGENCE
+                if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
+                    int debuff = 1.2f;
+                    if (game.paddleRight.rec.y == game.ball.position.y) {
+                        game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
+                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
+                        game.paddleRight.rec.y -= game.paddleRight.speed/debuff * GetFrameTime();
+                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 < game.ball.position.y) {
+                        game.paddleRight.rec.y += game.paddleRight.speed/debuff * GetFrameTime();
+                    }
+                }
+                // RIGHT PADDLE ARTIFICIAL INTELLIGENCE
+                if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
+                    int debuff = 1.2f;
+                    if (game.paddleLeft.rec.y == game.ball.position.y) {
+                        game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
+                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
+                        game.paddleLeft.rec.y -= game.paddleLeft.speed/debuff * GetFrameTime();
+                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 < game.ball.position.y) {
+                        game.paddleLeft.rec.y += game.paddleLeft.speed/debuff * GetFrameTime();
+                    }
+                }
+                
+                
+                // THE BALL IS COLLIDING WITH THE PADDLE
+                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
+                    game.ball.speed.x *= -1.1f;
+                    game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
+                }
+                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
+                    game.ball.speed.x *= -1.1f;
+                    game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
+                }
 
-                // if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
-                //     game.ball.speed.x *= -1.1f;
-                //     game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
-                // }
-                // if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
-                //     game.ball.speed.x *= -1.1f;
-                //     game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
-                // }
-                IsBallCollidingPaddle();
+                // THE MOUSE IS COLLIDING WITH THE PADDLE
+                game.isMouseOverPaddle = 0;
+                game.isMouseClickingPaddle = 0;
+                if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
+                    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.isMouseClickingPaddle = 1;
+                    else game.isMouseOverPaddle = 1;
+                }
 
-                // game.isMouseOverPaddle = 0;
-                // game.isMouseClickingPaddle = 0;
-                // if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
-                //     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.isMouseClickingPaddle = 1;
-                //     else game.isMouseOverPaddle = 1;
-                // }
-                IsMouseCollidingPaddle();
-
+                // THE PLAYER WON THE GAME
                 if (game.ball.position.x < 0) {
                     strcpy(game.winner, "RIGHT_PADDLE_WIN");
                     game.gamePaused = !game.gamePaused;
@@ -205,9 +223,9 @@ void DrawCGame()
 
                 if (game.isMouseOverPaddle) ClearBackground(GREEN);
                 if (game.isMouseClickingPaddle) ClearBackground(RED);
-                DrawCBall(game.ball);
-                DrawCPaddle(game.paddleLeft);
-                DrawCPaddle(game.paddleRight);
+                DrawCircleV(game.ball.position, ball.radius, WHITE);
+                DrawRectangleRec(game.paddleLeft, WHITE);
+                DrawRectangleRec(game.paddleRight, WHITE);
 
                 if (strcmp(game.winner, "RIGHT_PADDLE_WIN") == 0) {
                     char msg[] = "Congrats! The right player win the game!";

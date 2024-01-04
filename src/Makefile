@@ -181,10 +181,7 @@ endif
 #------------------------------------------------------------------------------------------------
 PROJECT_SOURCE_FILES ?= \
     core\main.c \
-    core\game.c \
-    core\Ball.c \
-    core\Paddle.c \
-    core\Collision.c 
+    core\game.c
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
