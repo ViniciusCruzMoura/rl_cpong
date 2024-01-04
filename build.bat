@@ -36,7 +36,7 @@ cmd /c robocopy %~dp0\src\resources\ %~dp0\build\resources\ /E
 :: Cleaning
 cmd /c if exist %~dp0\build\*.o del /F %~dp0\build\*.o
 :: Executing program
-:: cmd /c if exist %~dp0\build\game.exe %~dp0\build\game.exe
+cmd /c if exist %~dp0\build\game.exe %~dp0\build\game.exe
 
 :: Executing program
 :: cmd /c if exist game.exe game.exe
