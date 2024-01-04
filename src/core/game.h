@@ -30,9 +30,9 @@ typedef struct CGame {
 
 extern CGame game;
 
-void InitCGame();         // Initialize game
-void UpdateCGame();       // Update game (one frame)
-void DrawCGame();         // Draw game (one frame)
-void UnloadCGame();       // Unload game assets
+void InitGame();         // Initialize game
+void UpdateGame();       // Update game (one frame)
+void DrawGame();         // Draw game (one frame)
+void UnloadGame();       // Unload game assets
 
 #endif // GAME_H

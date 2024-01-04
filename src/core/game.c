@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "game.h"
 
-void InitCGame() 
+void InitGame() 
 {
     game.currentScreen = LOGO;
     game.screenScale = 3.0;
@@ -52,7 +52,7 @@ void InitCGame()
     SetTargetFPS(60);
 }
 
-void UpdateCGame()
+void UpdateGame()
 {
     switch(game.currentScreen)
     {
@@ -178,7 +178,7 @@ void UpdateCGame()
     }
 }
 
-void DrawCGame()
+void DrawGame()
 {
     BeginDrawing();
 
@@ -285,7 +285,7 @@ void DrawCGame()
     EndDrawing();
 }
 
-void UnloadCGame()
+void UnloadGame()
 {
     // Unload textures
     UnloadTexture(game.texLogo);
