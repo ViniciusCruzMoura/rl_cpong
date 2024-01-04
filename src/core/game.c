@@ -6,12 +6,19 @@ void InitCGame()
 {
     game.currentScreen = LOGO;
     game.screenScale = 3.0;
-    game.screenWidth = GetMonitorWidth(GetCurrentMonitor());
-    game.screenHeight = GetMonitorHeight(GetCurrentMonitor());
-    
     game.screenWidth = WIN_RES_W*game.screenScale;
     game.screenHeight = WIN_RES_H*game.screenScale;
+    
+    SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(game.screenWidth, game.screenHeight, "raylib - CPong");
+    if (!IsWindowFullscreen()) {
+        game.screenWidth = GetMonitorWidth(GetCurrentMonitor());
+        game.screenHeight = GetMonitorHeight(GetCurrentMonitor());
+        // game.screenScale = game.screenHeight/WIN_RES_H;
+        game.screenScale = game.screenWidth/WIN_RES_W;
+        SetWindowSize(game.screenWidth, game.screenHeight);
+        ToggleFullscreen();
+    }
 
     game.gamePaused = false;  // Game paused state toggle
     game.elementPositionY = -128;
@@ -21,13 +28,7 @@ void InitCGame()
     game.paddleRight = InitCPaddle(game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
     game.ball = InitCBall(GetRenderWidth() / 2.0f, GetScreenHeight() / 2.0f, game.screenScale);
 
-    // SetConfigFlags(FLAG_VSYNC_HINT);
-    // InitWindow(game.screenWidth, game.screenHeight, "raylib - CPong");
-    // if (!IsWindowFullscreen()) {
-    //     SetWindowSize(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-    //     ToggleFullscreen();
-    // }
-
+    
     // Textures loading
     game.texLogo = LoadTexture("resources/raylib_logo.png");
     
