@@ -11,20 +11,31 @@
 typedef enum GameScreen { LOGO, TITLE, GAMEPLAY, ENDING } GameScreen;
 
 typedef struct CGame {
+    // game state
     GameScreen currentScreen;
+    bool gamePaused;
+    
+    // window config
     float screenScale;
     int screenWidth;
     int screenHeight;
+    
+    // players and objects
     CPaddle paddleLeft;
     CPaddle paddleRight;
     CBall ball;
+    
+    // actions
     int isMouseClickingPaddle;
     int isMouseOverPaddle;
+    
+    // infos
     char winner[32];
     int elementPositionY;
     int framesCounter;
+    
+    // resources
     Texture2D texLogo;
-    bool gamePaused;
     Sound soundArray[MAX_SOUNDS];
 } CGame;
 
