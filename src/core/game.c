@@ -164,6 +164,36 @@ void UpdateGame()
                 
             }
 
+            // RESET GAME
+            if (IsKeyDown(KEY_Q)) {
+                strcpy(game.winner, "");
+                game.currentScreen = LOGO;
+                game.gamePaused = false;  // Game paused state toggle
+                game.elementPositionY = -128;
+                game.framesCounter = 0;  // General pourpose frames counter
+                
+                // Init Left Paddle
+                game.paddleLeft.rec.x = 50;
+                game.paddleLeft.rec.y = game.screenHeight / 2;
+                game.paddleLeft.rec.width = 5 * game.screenScale;
+                game.paddleLeft.rec.height = 50 * game.screenScale;
+                game.paddleLeft.speed = 300 * game.screenScale;
+
+                // Init Right Paddle
+                game.paddleRight.rec.x = game.screenWidth - 50;
+                game.paddleRight.rec.y = game.screenHeight / 2;
+                game.paddleRight.rec.width = 5 * game.screenScale;
+                game.paddleRight.rec.height = 50 * game.screenScale;
+                game.paddleRight.speed = 300 * game.screenScale;
+
+                // Init Ball
+                game.ball.position.x = GetRenderWidth() / 2.0f;
+                game.ball.position.y = GetScreenHeight() / 2.0f;
+                game.ball.speed.x = 100 * game.screenScale;
+                game.ball.speed.y = 100 * game.screenScale;
+                game.ball.radius = 3 * game.screenScale;
+            }
+
         } break;
         case ENDING: 
         {
