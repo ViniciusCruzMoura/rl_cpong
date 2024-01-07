@@ -6,6 +6,7 @@
 
 #define WIN_RES_W 256
 #define WIN_RES_H 192
+#define MAX_SOUNDS 1
 
 typedef enum GameScreen { LOGO, TITLE, GAMEPLAY, ENDING } GameScreen;
 
@@ -24,6 +25,7 @@ typedef struct CGame {
     int framesCounter;
     Texture2D texLogo;
     bool gamePaused;
+    Sound soundArray[MAX_SOUNDS];
 } CGame;
 
 extern CGame game;

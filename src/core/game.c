@@ -49,6 +49,10 @@ void InitGame()
     // Textures loading
     game.texLogo = LoadTexture("resources/raylib_logo.png");
     
+    // Sounds loading
+    InitAudioDevice();      // Initialize audio device
+    game.soundArray[0] = LoadSound("resources/pong.wav");
+    
     SetTargetFPS(60);
 }
 
@@ -105,7 +109,6 @@ void UpdateGame()
                 if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
                 if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
                 
-                
                 // LEFT PADDLE ARTIFICIAL INTELLIGENCE
                 if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
                     int debuff = 1.2f;
@@ -129,13 +132,14 @@ void UpdateGame()
                     }
                 }
                 
-                
                 // THE BALL IS COLLIDING WITH THE PADDLE
                 if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
+                    PlaySound(game.soundArray[0]);      // play the next open sound slot
                     game.ball.speed.x *= -1.1f;
                     game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
                 }
                 if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
+                    PlaySound(game.soundArray[0]);      // play the next open sound slot
                     game.ball.speed.x *= -1.1f;
                     game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
                 }
@@ -289,4 +293,6 @@ void UnloadGame()
 {
     // Unload textures
     UnloadTexture(game.texLogo);
+    UnloadSound(game.soundArray[0]);        // Unload source sound data
+    CloseAudioDevice();     // Close audio device
 }
