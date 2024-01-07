@@ -292,7 +292,7 @@ void DrawGame()
 void UnloadGame()
 {
     // Unload textures
-    UnloadTexture(game.texLogo);
+    UnloadTexture(game.texLogo);        // Unload texture from GPU memory (VRAM)
     UnloadSound(game.soundArray[0]);        // Unload source sound data
     CloseAudioDevice();     // Close audio device
 }
