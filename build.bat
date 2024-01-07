@@ -28,6 +28,8 @@ cmd /c if exist %FILENAME_FULL_PATH%.exe %FILENAME_FULL_PATH%.exe
 
 :: Creating build folder
 cmd /c if not exist %~dp0\build mkdir %~dp0\build\
+:: Cleaning
+cmd /c if exist %~dp0\build\*.exe del /F %~dp0\build\*.exe
 :: Moving files to build folder
 cmd /c move %~dp0\src\core\*.o %~dp0\build
 cmd /c move %~dp0\src\*.exe %~dp0\build
