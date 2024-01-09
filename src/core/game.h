@@ -33,6 +33,7 @@ typedef struct CGame {
     char winner[32];
     int elementPositionY;
     int framesCounter;
+    bool gameOver;
     
     // resources
     Texture2D texLogo;
