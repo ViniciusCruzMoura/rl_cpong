@@ -270,6 +270,14 @@ void DrawGame()
                         12*game.screenScale, 
                         LIGHTGRAY
                     );
+                    char msg2[] = "PRESS [Q] TO PLAY AGAIN";
+                    DrawText(
+                        msg2, 
+                        GetScreenWidth()/2 - MeasureText(msg2, 20)/2, 
+                        GetScreenHeight()/2 + 280, 
+                        20, 
+                        GRAY
+                    );
                 }
                 else if (strcmp(game.winner, "LEFT_PADDLE_WIN") == 0) {
                     char msg[] = "Congrats! The left player win the game!";
@@ -279,6 +287,14 @@ void DrawGame()
                         GetScreenHeight()/4.0f, 
                         12*game.screenScale, 
                         LIGHTGRAY
+                    );
+                    char msg2[] = "PRESS [Q] TO PLAY AGAIN";
+                    DrawText(
+                        msg2, 
+                        GetScreenWidth()/2 - MeasureText(msg2, 20)/2, 
+                        GetScreenHeight()/2 + 280, 
+                        20, 
+                        GRAY
                     );
                 }
                 
