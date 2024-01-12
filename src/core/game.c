@@ -8,10 +8,11 @@ void InitGame()
     game.screenScale = 3.0;
     game.screenWidth = WIN_RES_W*game.screenScale;
     game.screenHeight = WIN_RES_H*game.screenScale;
+    game.fullscreen = false; //IsWindowFullscreen()
     
     SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(game.screenWidth, game.screenHeight, "raylib - CPong");
-    if (!IsWindowFullscreen()) {
+    if (game.fullscreen) {
         game.screenWidth = GetMonitorWidth(GetCurrentMonitor());
         game.screenHeight = GetMonitorHeight(GetCurrentMonitor());
         // game.screenScale = game.screenHeight/WIN_RES_H;
@@ -316,7 +317,7 @@ void DrawGame()
             } break;
             default: break;
         }
-        /** 
+        /** */
         char buf[1024];
         snprintf(
             buf, 1024, 
@@ -337,7 +338,7 @@ void DrawGame()
         DrawRectangle(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, Fade(SKYBLUE, 0.5f));        
         DrawRectangleLines(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, BLUE);
         DrawText(TextFormat(buf), 0, 0, 10, WHITE);
-        */
+        
     EndDrawing();
 }
 

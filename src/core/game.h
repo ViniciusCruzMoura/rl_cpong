@@ -19,6 +19,7 @@ typedef struct CGame {
     float screenScale;
     int screenWidth;
     int screenHeight;
+    bool fullscreen;
     
     // players and objects
     CPaddle paddleLeft;
