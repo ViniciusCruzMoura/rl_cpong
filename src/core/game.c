@@ -4,6 +4,18 @@
 
 void InitGame() 
 {
+    // Init menu
+    char *menu_opts[] = {
+        // "FULLSCREEN",
+        // "WINDOWED",
+    };
+    for (int i = 0; i < (sizeof(menu_opts) / sizeof(menu_opts[0])); i++) {
+        game.menu.option[i].label = menu_opts[i];
+        game.menu.option[i].recs = (Rectangle){ 40.0f, (float)(50 + 32*i), 150.0f, 30.0f };
+    }
+    game.menu.optionSelected = 0;
+    game.menu.mouseHoverRec = -1;
+
     game.currentScreen = LOGO;
     game.screenScale = 3.0;
     game.screenWidth = WIN_RES_W*game.screenScale;
@@ -82,6 +94,21 @@ void UpdateGame()
             game.framesCounter++;
             
             if (IsKeyPressed(KEY_ENTER)) game.currentScreen = GAMEPLAY;
+
+            // Mouse toggle group logic of menu options
+            for (int i = 0; i < (sizeof(game.menu.option) / sizeof(game.menu.option[0])); i++) {
+                if (CheckCollisionPointRec(GetMousePosition(), game.menu.option[i].recs))
+                {
+                    game.menu.mouseHoverRec = i;
+
+                    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+                    {
+                        game.menu.optionSelected = i;
+                    }
+                    break;
+                }
+                else game.menu.mouseHoverRec = -1;
+            }
 
         } break;
         case GAMEPLAY:
@@ -252,6 +279,13 @@ void DrawGame()
                 
                 if ((game.framesCounter/30)%2 == 0) DrawText("PRESS [ENTER] to START", GetScreenWidth()/2 - MeasureText("PRESS [ENTER] to START", 20)/2, GetScreenHeight()/2 + 60, 20, DARKGRAY);
                 
+                // Draw menu options
+                for (int i = 0; i < (sizeof(game.menu.option) / sizeof(game.menu.option[0])); i++) {
+                    DrawRectangleRec(game.menu.option[i].recs, ((i == game.menu.optionSelected) || (i == game.menu.mouseHoverRec)) ? SKYBLUE : LIGHTGRAY);
+                    DrawRectangleLines((int)game.menu.option[i].recs.x, (int) game.menu.option[i].recs.y, (int) game.menu.option[i].recs.width, (int) game.menu.option[i].recs.height, ((i == game.menu.optionSelected) || (i == game.menu.mouseHoverRec)) ? BLUE : GRAY);
+                    DrawText( game.menu.option[i].label, (int)( game.menu.option[i].recs.x + game.menu.option[i].recs.width/2 - MeasureText(game.menu.option[i].label, 10)/2), (int) game.menu.option[i].recs.y + 11, 10, ((i == game.menu.optionSelected) || (i == game.menu.mouseHoverRec)) ? DARKBLUE : DARKGRAY);
+                }
+                
             } break;
             case GAMEPLAY:
             { 
@@ -317,7 +351,7 @@ void DrawGame()
             } break;
             default: break;
         }
-        /** */
+        /** 
         char buf[1024];
         snprintf(
             buf, 1024, 
@@ -338,6 +372,7 @@ void DrawGame()
         DrawRectangle(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, Fade(SKYBLUE, 0.5f));        
         DrawRectangleLines(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, BLUE);
         DrawText(TextFormat(buf), 0, 0, 10, WHITE);
+        */
         
     EndDrawing();
 }
