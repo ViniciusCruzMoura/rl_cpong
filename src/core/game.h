@@ -39,6 +39,9 @@ typedef struct CGame {
     // resources
     Texture2D texLogo;
     Sound soundArray[MAX_SOUNDS];
+
+    // menus
+    CMenu menu;
 } CGame;
 
 extern CGame game;
