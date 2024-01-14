@@ -12,4 +12,15 @@ typedef struct CPaddle {
     Rectangle rec;
 } CPaddle;
 
+typedef struct CMenuOption {
+    char *label;
+    Rectangle recs;
+} CMenuOption;
+
+typedef struct CMenu {
+    CMenuOption option[5];
+    int optionSelected;
+    int mouseHoverRec;
+} CMenu;
+
 #endif // ENTITY_H
