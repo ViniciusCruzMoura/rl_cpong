@@ -4,15 +4,6 @@
 
 void InitGame() 
 {
-    // Init menu
-    char *menu_opts[] = {
-        // "FULLSCREEN",
-        // "WINDOWED",
-    };
-    for (int i = 0; i < (sizeof(menu_opts) / sizeof(menu_opts[0])); i++) {
-        game.menu.option[i].label = menu_opts[i];
-        game.menu.option[i].recs = (Rectangle){ 40.0f, (float)(50 + 32*i), 150.0f, 30.0f };
-    }
     game.menu.optionSelected = 0;
     game.menu.mouseHoverRec = -1;
 
@@ -59,14 +50,28 @@ void InitGame()
     game.ball.speed.y = 100 * game.screenScale;
     game.ball.radius = 3 * game.screenScale;
 
-    
+    // Init menu
+    char *menu_opts[] = {
+        "FULLSCREEN",
+        "WINDOWED",
+    };
+    for (int i = 0; i < (sizeof(menu_opts) / sizeof(menu_opts[0])); i++) {
+        game.menu.option[i].label = menu_opts[i];
+        game.menu.option[i].recs = (Rectangle){ 
+            game.screenWidth/2 - 150.0f/2, 
+            game.screenHeight/2.5f + 32*i, 
+            150.0f, 
+            30.0f
+        };
+    }
+
     // Textures loading
     game.texLogo = LoadTexture("resources/raylib_logo.png");
     
     // Sounds loading
     InitAudioDevice();      // Initialize audio device
     game.soundArray[0] = LoadSound("resources/pong.wav");
-    
+
     SetTargetFPS(60);
 }
 
