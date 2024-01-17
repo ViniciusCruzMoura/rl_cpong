@@ -1,5 +1,3 @@
-#include <string.h>
-#include <stdio.h>
 #include "game.h"
 
 void InitGame() 
@@ -356,7 +354,7 @@ void DrawGame()
             } break;
             default: break;
         }
-        /** 
+         
         char buf[1024];
         snprintf(
             buf, 1024, 
@@ -373,11 +371,17 @@ void DrawGame()
             , game.framesCounter
             , game.elementPositionY
             , game.winner
-            );
-        DrawRectangle(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, Fade(SKYBLUE, 0.5f));        
-        DrawRectangleLines(0, 0, MeasureText(buf, 10), GetScreenHeight()/2, BLUE);
-        DrawText(TextFormat(buf), 0, 0, 10, WHITE);
+        );
+        /**
+        int text_size = 20;        
+        DrawRectangle(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, Fade(SKYBLUE, 0.4f));
+        DrawRectangleLines(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, BLUE);
+        DrawText(TextFormat(buf), 0, 0, text_size, WHITE);
         */
+        // const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J"; //clearScreen
+        // write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);    //clearScreen
+        // fprintf(stderr, "testing debug print.\n");
+        printf("\r%s\n", buf);
         
     EndDrawing();
 }
