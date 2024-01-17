@@ -3,6 +3,9 @@
 
 #include "raylib.h"
 #include "entity.h"
+#include <string.h>
+#include <stdio.h>
+// #include <unistd.h>
 
 #define WIN_RES_W 256
 #define WIN_RES_H 192
