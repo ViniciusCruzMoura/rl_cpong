@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "entity.h"
+#include "menu.h"
 #include <string.h>
 #include <stdio.h>
 // #include <unistd.h>
