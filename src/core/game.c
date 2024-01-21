@@ -2,9 +2,6 @@
 
 void InitGame() 
 {
-    game.menu.optionSelected = 0;
-    game.menu.mouseHoverRec = -1;
-
     game.currentScreen = LOGO;
     game.screenScale = 3.0;
     game.screenWidth = WIN_RES_W*game.screenScale;
@@ -16,8 +13,8 @@ void InitGame()
     if (game.fullscreen) {
         game.screenWidth = GetMonitorWidth(GetCurrentMonitor());
         game.screenHeight = GetMonitorHeight(GetCurrentMonitor());
-        // game.screenScale = game.screenHeight/WIN_RES_H;
-        game.screenScale = game.screenWidth/WIN_RES_W;
+        game.screenScale = game.screenHeight/WIN_RES_H;
+        // game.screenScale = game.screenWidth/WIN_RES_W;
         SetWindowSize(game.screenWidth, game.screenHeight);
         ToggleFullscreen();
     }
@@ -30,15 +27,15 @@ void InitGame()
     // Init Left Paddle
     game.paddleLeft.rec.x = 50;
     game.paddleLeft.rec.y = game.screenHeight / 2;
-    game.paddleLeft.rec.width = 5 * game.screenScale;
-    game.paddleLeft.rec.height = 50 * game.screenScale;
+    game.paddleLeft.rec.width = 4 * game.screenScale;
+    game.paddleLeft.rec.height = 30 * game.screenScale;
     game.paddleLeft.speed = 300 * game.screenScale;
 
     // Init Right Paddle
     game.paddleRight.rec.x = game.screenWidth - 50;
     game.paddleRight.rec.y = game.screenHeight / 2;
-    game.paddleRight.rec.width = 5 * game.screenScale;
-    game.paddleRight.rec.height = 50 * game.screenScale;
+    game.paddleRight.rec.width = 4 * game.screenScale;
+    game.paddleRight.rec.height = 30 * game.screenScale;
     game.paddleRight.speed = 300 * game.screenScale;
 
     // Init Ball
@@ -48,20 +45,7 @@ void InitGame()
     game.ball.speed.y = 100 * game.screenScale;
     game.ball.radius = 3 * game.screenScale;
 
-    // Init menu
-    char *menu_opts[] = {
-        "FULLSCREEN",
-        "WINDOWED",
-    };
-    for (int i = 0; i < (sizeof(menu_opts) / sizeof(menu_opts[0])); i++) {
-        game.menu.option[i].label = menu_opts[i];
-        game.menu.option[i].recs = (Rectangle){ 
-            game.screenWidth/2 - 150.0f/2, 
-            game.screenHeight/2.5f + 32*i, 
-            150.0f, 
-            30.0f
-        };
-    }
+    init_menu(&game.menu);
 
     // Textures loading
     game.texLogo = LoadTexture("resources/raylib_logo.png");
@@ -98,20 +82,7 @@ void UpdateGame()
             
             if (IsKeyPressed(KEY_ENTER)) game.currentScreen = GAMEPLAY;
 
-            // Mouse toggle group logic of menu options
-            for (int i = 0; i < (sizeof(game.menu.option) / sizeof(game.menu.option[0])); i++) {
-                if (CheckCollisionPointRec(GetMousePosition(), game.menu.option[i].recs))
-                {
-                    game.menu.mouseHoverRec = i;
-
-                    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
-                    {
-                        game.menu.optionSelected = i;
-                    }
-                    break;
-                }
-                else game.menu.mouseHoverRec = -1;
-            }
+            update_menu(&game.menu);
 
         } break;
         case GAMEPLAY:
@@ -143,7 +114,7 @@ void UpdateGame()
                 
                 // LEFT PADDLE ARTIFICIAL INTELLIGENCE
                 if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
-                    int debuff = 1.2f;
+                    int debuff = 1.0f;
                     if (game.paddleRight.rec.y == game.ball.position.y) {
                         game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
                     } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
@@ -154,7 +125,7 @@ void UpdateGame()
                 }
                 // RIGHT PADDLE ARTIFICIAL INTELLIGENCE
                 if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
-                    int debuff = 1.2f;
+                    int debuff = 1.0f;
                     if (game.paddleLeft.rec.y == game.ball.position.y) {
                         game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
                     } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
@@ -282,12 +253,7 @@ void DrawGame()
                 
                 if ((game.framesCounter/30)%2 == 0) DrawText("PRESS [ENTER] to START", GetScreenWidth()/2 - MeasureText("PRESS [ENTER] to START", 20)/2, GetScreenHeight()/2 + 60, 20, DARKGRAY);
                 
-                // Draw menu options
-                for (int i = 0; i < (sizeof(game.menu.option) / sizeof(game.menu.option[0])); i++) {
-                    DrawRectangleRec(game.menu.option[i].recs, ((i == game.menu.optionSelected) || (i == game.menu.mouseHoverRec)) ? SKYBLUE : LIGHTGRAY);
-                    DrawRectangleLines((int)game.menu.option[i].recs.x, (int) game.menu.option[i].recs.y, (int) game.menu.option[i].recs.width, (int) game.menu.option[i].recs.height, ((i == game.menu.optionSelected) || (i == game.menu.mouseHoverRec)) ? BLUE : GRAY);
-                    DrawText( game.menu.option[i].label, (int)( game.menu.option[i].recs.x + game.menu.option[i].recs.width/2 - MeasureText(game.menu.option[i].label, 10)/2), (int) game.menu.option[i].recs.y + 11, 10, ((i == game.menu.optionSelected) || (i == game.menu.mouseHoverRec)) ? DARKBLUE : DARKGRAY);
-                }
+                draw_menu(&game.menu);
                 
             } break;
             case GAMEPLAY:
@@ -372,16 +338,16 @@ void DrawGame()
             , game.elementPositionY
             , game.winner
         );
-        /**
-        int text_size = 20;        
-        DrawRectangle(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, Fade(SKYBLUE, 0.4f));
-        DrawRectangleLines(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, BLUE);
+        /** */
+        int text_size = 10;
+        // DrawRectangle(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, Fade(SKYBLUE, 0.4f));
+        // DrawRectangleLines(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, BLUE);
         DrawText(TextFormat(buf), 0, 0, text_size, WHITE);
-        */
+        
         // const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J"; //clearScreen
         // write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);    //clearScreen
         // fprintf(stderr, "testing debug print.\n");
-        printf("\r%s\n", buf);
+        // printf("\r%s\n", buf);
         
     EndDrawing();
 }
