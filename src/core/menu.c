@@ -1,10 +1,8 @@
 #include "menu.h"
 #include "game.h"
 
-void init_menu(CMenu *menu) {
+void init_menu(CMenu *menu, int pos_x, int pos_y) {
     // Init menu
-    int pos_x = game.screenWidth/2;
-    int pos_y = game.screenHeight/2.5f;
     char *menu_opts[] = {
         "FULLSCREEN",
         "WINDOWED",

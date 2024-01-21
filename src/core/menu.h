@@ -14,7 +14,7 @@ typedef struct CMenu {
     int mouseHoverRec;
 } CMenu;
 
-void init_menu(CMenu *menu);
+void init_menu(CMenu *menu, int pos_x, int pos_y);
 void update_menu(CMenu *menu);
 void draw_menu(CMenu *menu);
 

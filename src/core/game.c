@@ -45,7 +45,7 @@ void InitGame()
     game.ball.speed.y = 100 * game.screenScale;
     game.ball.radius = 3 * game.screenScale;
 
-    init_menu(&game.menu);
+    init_menu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
 
     // Textures loading
     game.texLogo = LoadTexture("resources/raylib_logo.png");
