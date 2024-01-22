@@ -24,26 +24,9 @@ void InitGame()
     game.elementPositionY = -128;
     game.framesCounter = 0;  // General pourpose frames counter
     
-    // Init Left Paddle
-    game.paddleLeft.rec.x = 50;
-    game.paddleLeft.rec.y = game.screenHeight / 2;
-    game.paddleLeft.rec.width = 4 * game.screenScale;
-    game.paddleLeft.rec.height = 30 * game.screenScale;
-    game.paddleLeft.speed = 300 * game.screenScale;
+    init_player(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
 
-    // Init Right Paddle
-    game.paddleRight.rec.x = game.screenWidth - 50;
-    game.paddleRight.rec.y = game.screenHeight / 2;
-    game.paddleRight.rec.width = 4 * game.screenScale;
-    game.paddleRight.rec.height = 30 * game.screenScale;
-    game.paddleRight.speed = 300 * game.screenScale;
-
-    // Init Ball
-    game.ball.position.x = GetRenderWidth() / 2.0f;
-    game.ball.position.y = GetScreenHeight() / 2.0f;
-    game.ball.speed.x = 100 * game.screenScale;
-    game.ball.speed.y = 100 * game.screenScale;
-    game.ball.radius = 3 * game.screenScale;
+    init_ball(&game.ball, game.screenScale);
 
     init_menu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
 
@@ -95,62 +78,14 @@ void UpdateGame()
             {
                 // TODO: Gameplay logic
 
-                // BALL MOVEMENT
-                game.ball.position.x += game.ball.speed.x * GetFrameTime();
-                game.ball.position.y += game.ball.speed.y * GetFrameTime();
-                if (game.ball.position.y < 0) {
-                    game.ball.position.y = 0;
-                    game.ball.speed.y *= -1;
-                }
-                if (game.ball.position.y > GetScreenHeight()) {
-                    game.ball.speed.y *= -1;
-                }                
+                update_ball(&game.ball, &game.player);
 
-                // PADDLE MOVEMENT
-                if (IsKeyDown(KEY_W)) game.paddleLeft.rec.y -= game.paddleLeft.speed * GetFrameTime();
-                if (IsKeyDown(KEY_S)) game.paddleLeft.rec.y += game.paddleLeft.speed * GetFrameTime();
-                if (IsKeyDown(KEY_UP)) game.paddleRight.rec.y -= game.paddleRight.speed * GetFrameTime();
-                if (IsKeyDown(KEY_DOWN)) game.paddleRight.rec.y += game.paddleRight.speed * GetFrameTime();
-                
-                // LEFT PADDLE ARTIFICIAL INTELLIGENCE
-                if (game.ball.position.x > GetScreenWidth()/2 && game.ball.speed.x > 0) {
-                    int debuff = 1.0f;
-                    if (game.paddleRight.rec.y == game.ball.position.y) {
-                        game.paddleRight.rec.y = game.ball.position.y + -game.paddleRight.rec.height/2;
-                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 > game.ball.position.y) {
-                        game.paddleRight.rec.y -= game.paddleRight.speed/debuff * GetFrameTime();
-                    } else if (game.paddleRight.rec.y - -game.paddleRight.rec.height/2 < game.ball.position.y) {
-                        game.paddleRight.rec.y += game.paddleRight.speed/debuff * GetFrameTime();
-                    }
-                }
-                // RIGHT PADDLE ARTIFICIAL INTELLIGENCE
-                if (game.ball.position.x < GetScreenWidth()/2 && game.ball.speed.x < 0) {
-                    int debuff = 1.0f;
-                    if (game.paddleLeft.rec.y == game.ball.position.y) {
-                        game.paddleLeft.rec.y = game.ball.position.y + -game.paddleLeft.rec.height/2;
-                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 > game.ball.position.y) {
-                        game.paddleLeft.rec.y -= game.paddleLeft.speed/debuff * GetFrameTime();
-                    } else if (game.paddleLeft.rec.y - -game.paddleLeft.rec.height/2 < game.ball.position.y) {
-                        game.paddleLeft.rec.y += game.paddleLeft.speed/debuff * GetFrameTime();
-                    }
-                }
-                
-                // THE BALL IS COLLIDING WITH THE PADDLE
-                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleLeft.rec) && game.ball.speed.x < 0) {
-                    PlaySound(game.soundArray[0]);      // play the next open sound slot
-                    game.ball.speed.x *= -1.1f;
-                    game.ball.speed.y = (game.ball.position.y - game.paddleLeft.rec.y) / (game.paddleLeft.rec.height / 2) * game.ball.speed.x;
-                }
-                if (CheckCollisionCircleRec(game.ball.position, game.ball.radius, game.paddleRight.rec) && game.ball.speed.x > 0) {
-                    PlaySound(game.soundArray[0]);      // play the next open sound slot
-                    game.ball.speed.x *= -1.1f;
-                    game.ball.speed.y = (game.ball.position.y - game.paddleRight.rec.y) / (game.paddleRight.rec.height / 2) * -game.ball.speed.x;
-                }
+                update_player(&game.player, &game.ball);
 
                 // THE MOUSE IS COLLIDING WITH THE PADDLE
                 game.isMouseOverPaddle = 0;
                 game.isMouseClickingPaddle = 0;
-                if (CheckCollisionPointRec(GetMousePosition(), game.paddleLeft.rec)) {
+                if (CheckCollisionPointRec(GetMousePosition(), game.player.paddleLeft.rec)) {
                     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) game.isMouseClickingPaddle = 1;
                     else game.isMouseOverPaddle = 1;
                 }
@@ -179,18 +114,18 @@ void UpdateGame()
                 game.framesCounter = 0;  // General pourpose frames counter
                 
                 // Init Left Paddle
-                game.paddleLeft.rec.x = 50;
-                game.paddleLeft.rec.y = game.screenHeight / 2;
-                game.paddleLeft.rec.width = 5 * game.screenScale;
-                game.paddleLeft.rec.height = 50 * game.screenScale;
-                game.paddleLeft.speed = 300 * game.screenScale;
+                game.player.paddleLeft.rec.x = 50;
+                game.player.paddleLeft.rec.y = game.screenHeight / 2;
+                game.player.paddleLeft.rec.width = 5 * game.screenScale;
+                game.player.paddleLeft.rec.height = 50 * game.screenScale;
+                game.player.paddleLeft.speed = 300 * game.screenScale;
 
                 // Init Right Paddle
-                game.paddleRight.rec.x = game.screenWidth - 50;
-                game.paddleRight.rec.y = game.screenHeight / 2;
-                game.paddleRight.rec.width = 5 * game.screenScale;
-                game.paddleRight.rec.height = 50 * game.screenScale;
-                game.paddleRight.speed = 300 * game.screenScale;
+                game.player.paddleRight.rec.x = game.screenWidth - 50;
+                game.player.paddleRight.rec.y = game.screenHeight / 2;
+                game.player.paddleRight.rec.width = 5 * game.screenScale;
+                game.player.paddleRight.rec.height = 50 * game.screenScale;
+                game.player.paddleRight.speed = 300 * game.screenScale;
 
                 // Init Ball
                 game.ball.position.x = GetRenderWidth() / 2.0f;
@@ -265,9 +200,8 @@ void DrawGame()
 
                 if (game.isMouseOverPaddle) ClearBackground(GREEN);
                 if (game.isMouseClickingPaddle) ClearBackground(RED);
-                DrawCircleV(game.ball.position, game.ball.radius, WHITE);
-                DrawRectangleRec(game.paddleLeft.rec, WHITE);
-                DrawRectangleRec(game.paddleRight.rec, WHITE);
+                draw_ball(&game.ball);
+                draw_player(&game.player);
 
                 if (game.gameOver) {
                     if (strcmp(game.winner, "RIGHT_PADDLE_WIN") == 0) {
@@ -283,7 +217,7 @@ void DrawGame()
                         DrawText(
                             msg2, 
                             GetScreenWidth()/2 - MeasureText(msg2, 20)/2, 
-                            GetScreenHeight()/2 + 280, 
+                            GetScreenHeight()/2 + 180, 
                             20, 
                             GRAY
                         );
