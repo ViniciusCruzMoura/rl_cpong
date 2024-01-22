@@ -1,6 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+typedef struct CPaddle {
+    float speed;
+    Rectangle rec;
+} CPaddle;
+
 typedef struct CPlayer {
     CPaddle paddleLeft;
     CPaddle paddleRight;

@@ -2,7 +2,6 @@
 #define GAME_H
 
 #include "raylib.h"
-#include "entity.h"
 #include "menu.h"
 #include "ball.h"
 #include "player.h"
