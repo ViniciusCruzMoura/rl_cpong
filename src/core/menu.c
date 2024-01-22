@@ -1,4 +1,4 @@
-#include "menu.h"
+#include "game.h"
 
 void init_menu(CMenu *menu, int pos_x, int pos_y) {
     // Init menu
