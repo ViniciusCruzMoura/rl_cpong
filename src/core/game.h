@@ -4,6 +4,8 @@
 #include "raylib.h"
 #include "entity.h"
 #include "menu.h"
+#include "ball.h"
+#include "player.h"
 #include <string.h>
 #include <stdio.h>
 // #include <unistd.h>
@@ -26,9 +28,8 @@ typedef struct CGame {
     bool fullscreen;
     
     // players and objects
-    CPaddle paddleLeft;
-    CPaddle paddleRight;
-    CBall ball;
+    struct CBall ball;
+    struct CPlayer player;
     
     // actions
     int isMouseClickingPaddle;
