@@ -183,6 +183,8 @@ PROJECT_SOURCE_FILES ?= \
     core\main.c \
     core\game.c \
     core\menu.c \
+    core\ball.c \
+    core\player.c \
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
