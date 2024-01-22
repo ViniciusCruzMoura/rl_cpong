@@ -78,7 +78,7 @@ void UpdateGame()
             {
                 // TODO: Gameplay logic
 
-                update_ball(&game.ball, &game.player);
+                update_ball(&game.ball, &game.player, &game.soundArray);
 
                 update_player(&game.player, &game.ball);
 

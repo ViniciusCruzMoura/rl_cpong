@@ -9,7 +9,7 @@ void init_ball(CBall *ball, int scale) {
     ball->radius = 3 * scale;
 }
 
-void update_ball(CBall *ball, CPlayer *player) {
+void update_ball(CBall *ball, CPlayer *player, Sound *sfx) {
     // BALL MOVEMENT
     ball->position.x += ball->speed.x * GetFrameTime();
     ball->position.y += ball->speed.y * GetFrameTime();
@@ -23,12 +23,12 @@ void update_ball(CBall *ball, CPlayer *player) {
 
     // THE BALL IS COLLIDING WITH THE PADDLE
     if (CheckCollisionCircleRec(ball->position, ball->radius, player->paddleLeft.rec) && ball->speed.x < 0) {
-        // PlaySound(player->soundArray[0]);      // play the next open sound slot
+        PlaySound(sfx[0]);      // play the next open sound slot
         ball->speed.x *= -1.1f;
         ball->speed.y = (ball->position.y - player->paddleLeft.rec.y) / (player->paddleLeft.rec.height / 2) * ball->speed.x;
     }
     if (CheckCollisionCircleRec(ball->position, ball->radius, player->paddleRight.rec) && ball->speed.x > 0) {
-        // PlaySound(player->soundArray[0]);      // play the next open sound slot
+        PlaySound(sfx[0]);      // play the next open sound slot
         ball->speed.x *= -1.1f;
         ball->speed.y = (ball->position.y - player->paddleRight.rec.y) / (player->paddleRight.rec.height / 2) * -ball->speed.x;
     }

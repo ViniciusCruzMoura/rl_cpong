@@ -12,7 +12,7 @@ typedef struct CBall {
 } CBall;
 
 void init_ball(CBall *ball, int scale);
-void update_ball(CBall *ball, CPlayer *player);
+void update_ball(CBall *ball, CPlayer *player, Sound *sfx);
 void draw_ball(CBall *ball);
 
 #endif // BALL_H
