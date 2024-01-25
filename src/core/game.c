@@ -259,6 +259,7 @@ void DrawGame()
         // DrawRectangle(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, Fade(SKYBLUE, 0.4f));
         // DrawRectangleLines(0, 0, MeasureText(buf, text_size), GetScreenHeight()/2, BLUE);
         DrawText(TextFormat(buf), 0, 0, text_size, WHITE);
+        // TraceLog(LOG_INFO, buf);
         
         // const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J"; //clearScreen
         // write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 12);    //clearScreen
