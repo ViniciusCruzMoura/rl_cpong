@@ -113,26 +113,8 @@ void UpdateGame()
                 game.elementPositionY = -128;
                 game.framesCounter = 0;  // General pourpose frames counter
                 
-                // Init Left Paddle
-                game.player.paddleLeft.rec.x = 50;
-                game.player.paddleLeft.rec.y = game.screenHeight / 2;
-                game.player.paddleLeft.rec.width = 5 * game.screenScale;
-                game.player.paddleLeft.rec.height = 50 * game.screenScale;
-                game.player.paddleLeft.speed = 300 * game.screenScale;
-
-                // Init Right Paddle
-                game.player.paddleRight.rec.x = game.screenWidth - 50;
-                game.player.paddleRight.rec.y = game.screenHeight / 2;
-                game.player.paddleRight.rec.width = 5 * game.screenScale;
-                game.player.paddleRight.rec.height = 50 * game.screenScale;
-                game.player.paddleRight.speed = 300 * game.screenScale;
-
-                // Init Ball
-                game.ball.position.x = GetRenderWidth() / 2.0f;
-                game.ball.position.y = GetScreenHeight() / 2.0f;
-                game.ball.speed.x = 100 * game.screenScale;
-                game.ball.speed.y = 100 * game.screenScale;
-                game.ball.radius = 3 * game.screenScale;
+                init_player(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
+                init_ball(&game.ball, game.screenScale);
             }
 
         } break;
