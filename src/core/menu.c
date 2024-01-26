@@ -1,4 +1,4 @@
-#include "game.h"
+#include "core\game.h"
 
 void init_menu(CMenu *menu, int pos_x, int pos_y) {
     // Init menu
@@ -36,11 +36,11 @@ void update_menu(CMenu *menu) {
     }
 }
 
-void draw_menu(CMenu *menu) {
+void draw_menu(CMenu menu) {
     // Draw menu options
-    for (int i = 0; i < (sizeof(menu->option) / sizeof(menu->option[0])); i++) {
-        DrawRectangleRec(menu->option[i].recs, ((i == menu->optionSelected) || (i == menu->mouseHoverRec)) ? SKYBLUE : LIGHTGRAY);
-        DrawRectangleLines((int)menu->option[i].recs.x, (int) menu->option[i].recs.y, (int) menu->option[i].recs.width, (int) menu->option[i].recs.height, ((i == menu->optionSelected) || (i == menu->mouseHoverRec)) ? BLUE : GRAY);
-        DrawText( menu->option[i].label, (int)( menu->option[i].recs.x + menu->option[i].recs.width/2 - MeasureText(menu->option[i].label, 10)/2), (int) menu->option[i].recs.y + 11, 10, ((i == menu->optionSelected) || (i == menu->mouseHoverRec)) ? DARKBLUE : DARKGRAY);
+    for (int i = 0; i < (sizeof(menu.option) / sizeof(menu.option[0])); i++) {
+        DrawRectangleRec(menu.option[i].recs, ((i == menu.optionSelected) || (i == menu.mouseHoverRec)) ? SKYBLUE : LIGHTGRAY);
+        DrawRectangleLines((int)menu.option[i].recs.x, (int) menu.option[i].recs.y, (int) menu.option[i].recs.width, (int) menu.option[i].recs.height, ((i == menu.optionSelected) || (i == menu.mouseHoverRec)) ? BLUE : GRAY);
+        DrawText( menu.option[i].label, (int)( menu.option[i].recs.x + menu.option[i].recs.width/2 - MeasureText(menu.option[i].label, 10)/2), (int) menu.option[i].recs.y + 11, 10, ((i == menu.optionSelected) || (i == menu.mouseHoverRec)) ? DARKBLUE : DARKGRAY);
     }
 }
