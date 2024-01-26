@@ -3,8 +3,9 @@
 
 #include "raylib.h"
 #include "menu.h"
-#include "ball.h"
-#include "player.h"
+#include "characters\ball\ball.h"
+#include "characters\player\player.h"
+#include "screens\screens.h"
 #include <string.h>
 #include <stdio.h>
 // #include <unistd.h>
@@ -13,7 +14,7 @@
 #define WIN_RES_H 192
 #define MAX_SOUNDS 1
 
-typedef enum GameScreen { LOGO, TITLE, GAMEPLAY, ENDING } GameScreen;
+// typedef enum GameScreen { LOGO, TITLE, GAMEPLAY, ENDING } GameScreen;
 
 typedef struct CGame {
     // game state
