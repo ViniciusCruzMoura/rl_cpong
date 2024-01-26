@@ -32,9 +32,12 @@ cmd /c if exist %~dp0\build\ rmdir /s /q %~dp0\build\
 cmd /c if not exist %~dp0\build mkdir %~dp0\build\
 :: Moving files to build folder
 cmd /c move %~dp0\src\core\*.o %~dp0\build
+cmd /c move %~dp0\src\screens\*.o %~dp0\build
+cmd /c move %~dp0\src\characters\ball\*.o %~dp0\build
+cmd /c move %~dp0\src\characters\player\*.o %~dp0\build
 cmd /c move %~dp0\src\*.exe %~dp0\build
 :: Coping assets to build folder
-cmd /c robocopy %~dp0\src\resources\ %~dp0\build\resources\ /E
+cmd /c robocopy %~dp0\resources\ %~dp0\build\resources\ /E
 :: Cleaning
 cmd /c if exist %~dp0\build\*.o del /F %~dp0\build\*.o
 :: Executing program
