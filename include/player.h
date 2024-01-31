@@ -13,6 +13,6 @@ typedef struct CPlayer {
 
 void init_player(CPlayer *player, int pos_x, int pos_y, int scale);
 void update_player(CPlayer *player, CBall *ball);
-void draw_player(CPlayer player);
+void draw_player(const CPlayer player);
 
 #endif // PLAYER_H
