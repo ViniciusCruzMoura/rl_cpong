@@ -16,6 +16,6 @@ typedef struct CMenu {
 
 void init_menu(CMenu *menu, int pos_x, int pos_y);
 void update_menu(CMenu *menu);
-void draw_menu(CMenu menu);
+void draw_menu(const CMenu menu);
 
 #endif // MENU_H
