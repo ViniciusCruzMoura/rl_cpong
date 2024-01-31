@@ -1,4 +1,4 @@
-#include "core\game.h"
+#include "game.h"
 
 void InitGame() 
 {
@@ -31,11 +31,11 @@ void InitGame()
     init_menu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
 
     // Textures loading
-    game.texLogo = LoadTexture("../resources/raylib_logo.png");
+    game.texLogo = LoadTexture("../assets/raylib_logo.png");
     
     // Sounds loading
     InitAudioDevice();      // Initialize audio device
-    game.soundArray[0] = LoadSound("../resources/pong.wav");
+    game.soundArray[0] = LoadSound("../assets/pong.wav");
 
     SetTargetFPS(60);
 }
