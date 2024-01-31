@@ -1,8 +1,8 @@
 #include "game.h"
 
-void init_gameplay_screen() {}
+void InitGameplayScreen() {}
 
-void update_gameplay_screen() {
+void UpdateGameplayScreen() {
     // Update GAMEPLAY screen data here!
     if (IsKeyPressed(KEY_SPACE)) game.gamePaused = !game.gamePaused;
 
@@ -50,7 +50,7 @@ void update_gameplay_screen() {
     }
 }
 
-void draw_gameplay_screen() {
+void DrawGameplayScreen() {
     // Draw GAMEPLAY screen here!
     // Draw pause message when required
     if (game.gamePaused) DrawText("GAME PAUSED", game.screenWidth/2 - MeasureText("GAME PAUSED", 40)/2, game.screenHeight/2 + 60, 40, GRAY);
@@ -100,4 +100,4 @@ void draw_gameplay_screen() {
     }
 }
 
-void unload_gameplay_screen() {}
+void UnloadGameplayScreen() {}
