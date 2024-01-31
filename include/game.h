@@ -16,7 +16,7 @@
 
 // typedef enum GameScreen { LOGO, TITLE, GAMEPLAY, ENDING } GameScreen;
 
-typedef struct CGame {
+typedef struct Game {
     // game state
     GameScreen currentScreen;
     bool gamePaused;
@@ -28,8 +28,8 @@ typedef struct CGame {
     bool fullscreen;
     
     // players and objects
-    struct CBall ball;
-    struct CPlayer player;
+    struct Ball ball;
+    struct Player player;
     
     // actions
     int isMouseClickingPaddle;
@@ -47,9 +47,9 @@ typedef struct CGame {
 
     // menus
     CMenu menu;
-} CGame;
+} Game;
 
-extern CGame game;
+extern Game game;
 
 void InitGame();         // Initialize game
 void UpdateGame();       // Update game (one frame)
