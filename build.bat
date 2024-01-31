@@ -10,8 +10,8 @@ set COMPILER_DIR=C:\raylib\w64devkit\bin
 set PATH=%PATH%;%COMPILER_DIR%
 set FILENAME=%1
 set FILENAME_FULL_PATH=%~f1
-:: cd %~dp0
-cd %~dp0\src
+cd %~dp0
+:: cd %~dp0\src
 :: .
 :: > Cleaning latest build
 :: ---------------------------
@@ -31,16 +31,18 @@ cmd /c if exist %~dp0\build\ rmdir /s /q %~dp0\build\
 :: Creating build folder
 cmd /c if not exist %~dp0\build mkdir %~dp0\build\
 :: Moving files to build folder
+cmd /c move %~dp0\src\*.o %~dp0\build
 cmd /c move %~dp0\src\core\*.o %~dp0\build
-cmd /c move %~dp0\src\screens\*.o %~dp0\build
-cmd /c move %~dp0\src\characters\ball\*.o %~dp0\build
-cmd /c move %~dp0\src\characters\player\*.o %~dp0\build
-cmd /c move %~dp0\src\*.exe %~dp0\build
+cmd /c move %~dp0\src\scenes\*.o %~dp0\build
+cmd /c move %~dp0\src\entities\*.o %~dp0\build
+:: cmd /c move %~dp0\src\*.exe %~dp0\build
+cmd /c move %~dp0\*.exe %~dp0\build
 :: Coping assets to build folder
-cmd /c robocopy %~dp0\resources\ %~dp0\build\resources\ /E
+cmd /c robocopy %~dp0\assets\ %~dp0\build\assets\ /E
 :: Cleaning
 cmd /c if exist %~dp0\build\*.o del /F %~dp0\build\*.o
 :: Executing program
+cd %~dp0\build
 cmd /c if exist %~dp0\build\game.exe %~dp0\build\game.exe
 
 :: Executing program
