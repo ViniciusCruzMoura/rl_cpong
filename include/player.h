@@ -11,8 +11,8 @@ typedef struct Player {
     Paddle paddleRight;
 } Player;
 
-void init_player(Player *player, int pos_x, int pos_y, int scale);
-void update_player(Player *player, Ball *ball);
-void draw_player(const Player player);
+void InitPlayer(Player *player, int pos_x, int pos_y, int scale);
+void UpdatePlayer(Player *player, Ball *ball);
+void DrawPlayer(const Player player);
 
 #endif // PLAYER_H
