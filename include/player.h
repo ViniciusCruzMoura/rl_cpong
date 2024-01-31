@@ -1,18 +1,18 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-typedef struct CPaddle {
+typedef struct Paddle {
     float speed;
     Rectangle rec;
-} CPaddle;
+} Paddle;
 
-typedef struct CPlayer {
-    CPaddle paddleLeft;
-    CPaddle paddleRight;
-} CPlayer;
+typedef struct Player {
+    Paddle paddleLeft;
+    Paddle paddleRight;
+} Player;
 
-void init_player(CPlayer *player, int pos_x, int pos_y, int scale);
-void update_player(CPlayer *player, CBall *ball);
-void draw_player(const CPlayer player);
+void init_player(Player *player, int pos_x, int pos_y, int scale);
+void update_player(Player *player, Ball *ball);
+void draw_player(const Player player);
 
 #endif // PLAYER_H
