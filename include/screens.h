@@ -4,27 +4,27 @@
 typedef enum GameScreen { LOGO, TITLE, GAMEPLAY, ENDING } GameScreen;
 
 // Logo Screen Functions Declaration
-void init_logo_screen(void);
-void update_logo_screen(void);
-void draw_logo_screen(void);
-void unload_logo_screen(void);
+void InitLogoScreen(void);
+void UpdateLogoScreen(void);
+void DrawLogoScreen(void);
+void UnloadLogoScreen(void);
 
 // Title Screen Functions Declaration
-void init_title_screen(void);
-void update_title_screen(void);
-void draw_title_screen(void);
-void unload_title_screen(void);
+void InitTitleScreen(void);
+void UpdateTitleScreen(void);
+void DrawTitleScreen(void);
+void UnloadTitleScreen(void);
 
 // Gameplay Screen Functions Declaration
-void init_gameplay_screen(void);
-void update_gameplay_screen(void);
-void draw_gameplay_screen(void);
-void unload_gameplay_screen(void);
+void InitGameplayScreen(void);
+void UpdateGameplayScreen(void);
+void DrawGameplayScreen(void);
+void UnloadGameplayScreen(void);
 
 // Ending Screen Functions Declaration
-void init_ending_screen(void);
-void update_ending_screen(void);
-void draw_ending_screen(void);
-void unload_ending_screen(void);
+void InitEndingScreen(void);
+void UpdateEndingScreen(void);
+void DrawEndingScreen(void);
+void UnloadEndingScreen(void);
 
 #endif // SCREENS_H
