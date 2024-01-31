@@ -10,7 +10,7 @@ void update_gameplay_screen() {
     {
         // TODO: Gameplay logic
 
-        update_ball(&game.ball, &game.player, &game.soundArray);
+        UpdateBall(&game.ball, &game.player, &game.soundArray);
 
         UpdatePlayer(&game.player, &game.ball);
 
@@ -46,7 +46,7 @@ void update_gameplay_screen() {
         game.framesCounter = 0;  // General pourpose frames counter
         
         InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
-        init_ball(&game.ball, game.screenScale);
+        InitBall(&game.ball, game.screenScale);
     }
 }
 
@@ -57,7 +57,7 @@ void draw_gameplay_screen() {
 
     if (game.isMouseOverPaddle) ClearBackground(GREEN);
     if (game.isMouseClickingPaddle) ClearBackground(RED);
-    draw_ball(game.ball);
+    DrawBall(game.ball);
     DrawPlayer(game.player);
 
     if (game.gameOver) {
