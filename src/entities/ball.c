@@ -1,6 +1,6 @@
 #include "game.h"
 
-void init_ball(Ball *ball, int scale) {
+void InitBall(Ball *ball, int scale) {
     // Init Ball
     ball->position.x = GetRenderWidth() / 2.0f;
     ball->position.y = GetScreenHeight() / 2.0f;
@@ -9,7 +9,7 @@ void init_ball(Ball *ball, int scale) {
     ball->radius = 3 * scale;
 }
 
-void update_ball(Ball *ball, Player *player, Sound *sfx) {
+void UpdateBall(Ball *ball, Player *player, Sound *sfx) {
     // BALL MOVEMENT
     ball->position.x += ball->speed.x * GetFrameTime();
     ball->position.y += ball->speed.y * GetFrameTime();
@@ -34,6 +34,6 @@ void update_ball(Ball *ball, Player *player, Sound *sfx) {
     }
 }
 
-void draw_ball(Ball ball) {
+void DrawBall(Ball ball) {
     DrawCircleV(ball.position, ball.radius, WHITE);
 }
