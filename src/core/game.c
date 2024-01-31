@@ -24,7 +24,7 @@ void InitGame()
     game.elementPositionY = -128;
     game.framesCounter = 0;  // General pourpose frames counter
     
-    init_player(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
+    InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
 
     init_ball(&game.ball, game.screenScale);
 
