@@ -1,16 +1,16 @@
 #ifndef BALL_H
 #define BALL_H
 
-typedef struct CPlayer CPlayer;
+typedef struct Player Player;
 
-typedef struct CBall {
+typedef struct Ball {
     float radius;
     Vector2 position;
     Vector2 speed;
-} CBall;
+} Ball;
 
-void init_ball(CBall *ball, int scale);
-void update_ball(CBall *ball, CPlayer *player, Sound *sfx);
-void draw_ball(const CBall ball);
+void init_ball(Ball *ball, int scale);
+void update_ball(Ball *ball, Player *player, Sound *sfx);
+void draw_ball(const Ball ball);
 
 #endif // BALL_H
