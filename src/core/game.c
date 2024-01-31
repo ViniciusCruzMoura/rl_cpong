@@ -31,11 +31,11 @@ void InitGame()
     InitMenu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
 
     // Textures loading
-    game.texLogo = LoadTexture("../assets/raylib_logo.png");
+    game.texLogo = LoadTexture("assets/textures/raylib_logo.png");
     
     // Sounds loading
     InitAudioDevice();      // Initialize audio device
-    game.soundArray[0] = LoadSound("../assets/pong.wav");
+    game.soundArray[0] = LoadSound("assets/sounds/pong.wav");
 
     SetTargetFPS(60);
 }
