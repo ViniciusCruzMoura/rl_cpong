@@ -1,6 +1,6 @@
 #include "game.h"
 
-void init_player(CPlayer *player, int pos_x, int pos_y, int scale) {
+void init_player(Player *player, int pos_x, int pos_y, int scale) {
     // Init Left Paddle
     player->paddleLeft.rec.x = 50;
     player->paddleLeft.rec.y = pos_y;
@@ -16,7 +16,7 @@ void init_player(CPlayer *player, int pos_x, int pos_y, int scale) {
     player->paddleRight.speed = 300 * scale;
 }
 
-void update_player(CPlayer *player, CBall *ball) {
+void update_player(Player *player, Ball *ball) {
     // PADDLE MOVEMENT
     if (IsKeyDown(KEY_W)) player->paddleLeft.rec.y -= player->paddleLeft.speed * GetFrameTime();
     if (IsKeyDown(KEY_S)) player->paddleLeft.rec.y += player->paddleLeft.speed * GetFrameTime();
@@ -47,7 +47,7 @@ void update_player(CPlayer *player, CBall *ball) {
     }
 }
 
-void draw_player(CPlayer player) {
+void draw_player(Player player) {
     DrawRectangleRec(player.paddleLeft.rec, WHITE);
     DrawRectangleRec(player.paddleRight.rec, WHITE);
 }
