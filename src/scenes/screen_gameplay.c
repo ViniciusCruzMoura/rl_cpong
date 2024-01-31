@@ -12,7 +12,7 @@ void update_gameplay_screen() {
 
         update_ball(&game.ball, &game.player, &game.soundArray);
 
-        update_player(&game.player, &game.ball);
+        UpdatePlayer(&game.player, &game.ball);
 
         // THE MOUSE IS COLLIDING WITH THE PADDLE
         game.isMouseOverPaddle = 0;
@@ -45,7 +45,7 @@ void update_gameplay_screen() {
         game.elementPositionY = -128;
         game.framesCounter = 0;  // General pourpose frames counter
         
-        init_player(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
+        InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
         init_ball(&game.ball, game.screenScale);
     }
 }
@@ -58,7 +58,7 @@ void draw_gameplay_screen() {
     if (game.isMouseOverPaddle) ClearBackground(GREEN);
     if (game.isMouseClickingPaddle) ClearBackground(RED);
     draw_ball(game.ball);
-    draw_player(game.player);
+    DrawPlayer(game.player);
 
     if (game.gameOver) {
         if (strcmp(game.winner, "RIGHT_PADDLE_WIN") == 0) {
