@@ -1,8 +1,8 @@
 #include "game.h"
 
-void init_logo_screen() {}
+void InitLogoScreen() {}
 
-void update_logo_screen() {
+void UpdateLogoScreen() {
     // Update LOGO screen data here!
     game.framesCounter++;            
     if (game.framesCounter > 180) 
@@ -12,7 +12,7 @@ void update_logo_screen() {
     }
 }
 
-void draw_logo_screen() {
+void DrawLogoScreen() {
     // Draw LOGO screen here!
     DrawText("LOGO SCREEN", 20, 20, 40, LIGHTGRAY);
     game.elementPositionY += 3;
@@ -27,4 +27,4 @@ void draw_logo_screen() {
     );
 }
 
-void unload_logo_screen() {}
+void UnloadLogoScreen() {}
