@@ -26,9 +26,9 @@ void InitGame()
     
     InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
 
-    init_ball(&game.ball, game.screenScale);
+    InitBall(&game.ball, game.screenScale);
 
-    init_menu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
+    InitMenu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
 
     // Textures loading
     game.texLogo = LoadTexture("../assets/raylib_logo.png");
