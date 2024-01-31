@@ -19,7 +19,7 @@ void InitMenu(CMenu *menu, int pos_x, int pos_y) {
     }
 }
 
-void update_menu(CMenu *menu) {
+void UpdateMenu(CMenu *menu) {
     // Mouse toggle group logic of menu options
     for (int i = 0; i < (sizeof(menu->option) / sizeof(menu->option[0])); i++) {
         if (CheckCollisionPointRec(GetMousePosition(), menu->option[i].recs))
@@ -36,7 +36,7 @@ void update_menu(CMenu *menu) {
     }
 }
 
-void draw_menu(CMenu menu) {
+void DrawMenu(CMenu menu) {
     // Draw menu options
     for (int i = 0; i < (sizeof(menu.option) / sizeof(menu.option[0])); i++) {
         DrawRectangleRec(menu.option[i].recs, ((i == menu.optionSelected) || (i == menu.mouseHoverRec)) ? SKYBLUE : LIGHTGRAY);
