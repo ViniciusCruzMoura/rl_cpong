@@ -46,19 +46,19 @@ void UpdateGame()
     {
         case LOGO: 
         {
-            update_logo_screen();
+            UpdateLogoScreen();
         } break;
         case TITLE: 
         {   
-            update_title_screen();
+            UpdateTitleScreen();
         } break;
         case GAMEPLAY:
         { 
-            update_gameplay_screen();
+            UpdateGameplayScreen();
         } break;
         case ENDING: 
         {
-            update_ending_screen();
+            UpdateEndingScreen();
         } break;
         default: break;
     }
@@ -75,19 +75,19 @@ void DrawGame()
         {
             case LOGO: 
             {
-                draw_logo_screen();
+                DrawLogoScreen();
             } break;
             case TITLE: 
             {
-                draw_title_screen();                
+                DrawTitleScreen();                
             } break;
             case GAMEPLAY:
             {
-                draw_gameplay_screen();   
+                DrawGameplayScreen();   
             } break;
             case ENDING: 
             {
-                draw_ending_screen();                
+                DrawEndingScreen();                
             } break;
             default: break;
         }
