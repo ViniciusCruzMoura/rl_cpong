@@ -9,8 +9,8 @@ typedef struct Ball {
     Vector2 speed;
 } Ball;
 
-void init_ball(Ball *ball, int scale);
-void update_ball(Ball *ball, Player *player, Sound *sfx);
-void draw_ball(const Ball ball);
+void InitBall(Ball *ball, int scale);
+void UpdateBall(Ball *ball, Player *player, Sound *sfx);
+void DrawBall(const Ball ball);
 
 #endif // BALL_H
