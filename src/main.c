@@ -2,7 +2,7 @@
 #include "game.h"
 
 // Game required variables
-CGame game;
+Game game;
 
 int main(void)
 {
