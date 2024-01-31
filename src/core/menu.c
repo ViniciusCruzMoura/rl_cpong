@@ -1,6 +1,6 @@
 #include "game.h"
 
-void init_menu(CMenu *menu, int pos_x, int pos_y) {
+void InitMenu(CMenu *menu, int pos_x, int pos_y) {
     // Init menu
     char *menu_opts[] = {
         "FULLSCREEN",
