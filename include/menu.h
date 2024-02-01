@@ -3,13 +3,13 @@
 
 #include "raylib.h"
 
-typedef struct CMenuOption {
+typedef struct MenuButton {
     char *label;
     Rectangle recs;
-} CMenuOption;
+} MenuButton;
 
 typedef struct CMenu {
-    CMenuOption option[5];
+    MenuButton option[5];
     int optionSelected;
     int mouseHoverRec;
 } CMenu;
