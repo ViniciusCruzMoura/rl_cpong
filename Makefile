@@ -182,6 +182,7 @@ endif
 PROJECT_SOURCE_FILES ?= \
     src\main.c \
     src\core\game.c \
+    src\core\settings.c \
     src\core\menu.c \
     src\entities\ball.c \
     src\entities\player.c \
