@@ -1,66 +1,32 @@
 #include "game.h"
 
-void InitGame() 
-{
-    game.currentScreen = LOGO;
-    game.screenScale = 3.0;
-    game.screenWidth = WIN_RES_W*game.screenScale;
-    game.screenHeight = WIN_RES_H*game.screenScale;
-    game.fullscreen = false; //IsWindowFullscreen()
-    
-    SetConfigFlags(FLAG_VSYNC_HINT);
-    InitWindow(game.screenWidth, game.screenHeight, "raylib - CPong");
-    if (game.fullscreen) {
-        game.screenWidth = GetMonitorWidth(GetCurrentMonitor());
-        game.screenHeight = GetMonitorHeight(GetCurrentMonitor());
-        game.screenScale = game.screenHeight/WIN_RES_H;
-        // game.screenScale = game.screenWidth/WIN_RES_W;
-        SetWindowSize(game.screenWidth, game.screenHeight);
-        ToggleFullscreen();
-    }
-
-    game.gamePaused = false;  // Game paused state toggle
-    game.gameOver = false;
-    game.elementPositionY = -128;
-    game.framesCounter = 0;  // General pourpose frames counter
-    
-    InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
-
-    InitBall(&game.ball, game.screenScale);
-
-    InitMenu(&game.menu, game.screenWidth/2, game.screenHeight/2.5f);
-
-    // Textures loading
-    game.texLogo = LoadTexture("assets/textures/raylib_logo.png");
-    
-    // Sounds loading
-    InitAudioDevice();      // Initialize audio device
-    game.soundArray[0] = LoadSound("assets/sounds/pong.wav");
-
-    SetTargetFPS(60);
+void InitGame() {
+    SetInitialScreenParams();
+    SetWindowConfig();
+    SetFullscreenMode();
+    InitializeGameElements();
+    LoadAssets();
+    LoadSounds();
+    ConfigureFrameRate();
 }
 
 void UpdateGame()
 {
-    switch(game.currentScreen)
-    {
+    switch (game.currentScreen) {
         case LOGO: 
-        {
             UpdateLogoScreen();
-        } break;
+            break;
         case TITLE: 
-        {   
             UpdateTitleScreen();
-        } break;
+            break;
         case GAMEPLAY:
-        { 
             UpdateGameplayScreen();
-        } break;
+            break;
         case ENDING: 
-        {
             UpdateEndingScreen();
-        } break;
-        default: break;
+            break;
+        default: 
+            break;
     }
 }
 
@@ -71,25 +37,21 @@ void DrawGame()
         // ClearBackground(RAYWHITE);
         ClearBackground(BLACK);
         
-        switch(game.currentScreen) 
-        {
-            case LOGO: 
-            {
+        switch(game.currentScreen) {
+            case LOGO:
                 DrawLogoScreen();
-            } break;
-            case TITLE: 
-            {
-                DrawTitleScreen();                
-            } break;
+                break;
+            case TITLE:
+                DrawTitleScreen();
+                break;
             case GAMEPLAY:
-            {
-                DrawGameplayScreen();   
-            } break;
-            case ENDING: 
-            {
-                DrawEndingScreen();                
-            } break;
-            default: break;
+                DrawGameplayScreen();
+                break;
+            case ENDING:
+                DrawEndingScreen();
+                break;
+            default: 
+                break;
         }
          
         char buf[1024];
