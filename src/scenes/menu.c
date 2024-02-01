@@ -1,6 +1,6 @@
 #include "game.h"
 
-void InitMenu(Menu *menu, int pos_x, int pos_y) {
+void InitMenu(Menu *menu, Vector2 position) {
     // Init menu
     char *menu_opts[] = {
         "FULLSCREEN",
@@ -11,8 +11,8 @@ void InitMenu(Menu *menu, int pos_x, int pos_y) {
     for (int i = 0; i < (sizeof(menu_opts) / sizeof(menu_opts[0])); i++) {
         menu->option[i].label = menu_opts[i];
         menu->option[i].recs = (Rectangle){ 
-            pos_x - 150.0f/2,
-            pos_y + 32*i,
+            position.x - 150.0f/2,
+            position.y + 32*i,
             150.0f,
             30.0f
         };

@@ -14,7 +14,7 @@ typedef struct Menu {
     int mouseHoverRec;
 } Menu;
 
-void InitMenu(Menu *menu, int pos_x, int pos_y);
+void InitMenu(Menu *menu, Vector2 position);
 void UpdateMenu(Menu *menu);
 void DrawMenu(const Menu menu);
 void UnloadMenu(Menu *menu);

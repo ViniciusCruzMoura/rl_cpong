@@ -32,7 +32,7 @@ void InitializeGameElements() {
 
     InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
     InitBall(&game.ball, game.screenScale);
-    InitMenu(&game.menu, game.screenWidth / 2, game.screenHeight / 2.5f);
+    InitMenu(&game.menu, (Vector2){game.screenWidth / 2, game.screenHeight / 2.5f});
 }
 
 void LoadAssets() {
