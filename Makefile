@@ -186,10 +186,10 @@ PROJECT_SOURCE_FILES ?= \
     src\entities\ball.c \
     src\entities\player.c \
     src\scenes\menu.c \
-    src\scenes\screen_logo.c \
-    src\scenes\screen_title.c \
-    src\scenes\screen_gameplay.c \
-    src\scenes\screen_ending.c \
+    src\scenes\logo.c \
+    src\scenes\title.c \
+    src\scenes\gameplay.c \
+    src\scenes\ending.c \
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
