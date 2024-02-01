@@ -6,6 +6,7 @@
 #include "ball.h"
 #include "player.h"
 #include "screens.h"
+#include "settings.h"
 #include <string.h>
 #include <stdio.h>
 // #include <unistd.h>
