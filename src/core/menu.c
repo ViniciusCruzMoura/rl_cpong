@@ -44,3 +44,5 @@ void DrawMenu(CMenu menu) {
         DrawText( menu.option[i].label, (int)( menu.option[i].recs.x + menu.option[i].recs.width/2 - MeasureText(menu.option[i].label, 10)/2), (int) menu.option[i].recs.y + 11, 10, ((i == menu.optionSelected) || (i == menu.mouseHoverRec)) ? DARKBLUE : DARKGRAY);
     }
 }
+
+void UnloadMenu(CMenu *menu) {}
