@@ -1,6 +1,6 @@
 #include "game.h"
 
-void InitMenu(CMenu *menu, int pos_x, int pos_y) {
+void InitMenu(Menu *menu, int pos_x, int pos_y) {
     // Init menu
     char *menu_opts[] = {
         "FULLSCREEN",
@@ -19,7 +19,7 @@ void InitMenu(CMenu *menu, int pos_x, int pos_y) {
     }
 }
 
-void UpdateMenu(CMenu *menu) {
+void UpdateMenu(Menu *menu) {
     // Mouse toggle group logic of menu options
     for (int i = 0; i < (sizeof(menu->option) / sizeof(menu->option[0])); i++) {
         if (CheckCollisionPointRec(GetMousePosition(), menu->option[i].recs))
@@ -36,7 +36,7 @@ void UpdateMenu(CMenu *menu) {
     }
 }
 
-void DrawMenu(CMenu menu) {
+void DrawMenu(Menu menu) {
     // Draw menu options
     for (int i = 0; i < (sizeof(menu.option) / sizeof(menu.option[0])); i++) {
         DrawRectangleRec(menu.option[i].recs, ((i == menu.optionSelected) || (i == menu.mouseHoverRec)) ? SKYBLUE : LIGHTGRAY);
@@ -45,4 +45,4 @@ void DrawMenu(CMenu menu) {
     }
 }
 
-void UnloadMenu(CMenu *menu) {}
+void UnloadMenu(Menu *menu) {}

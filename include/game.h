@@ -47,7 +47,7 @@ typedef struct Game {
     Sound soundArray[MAX_SOUNDS];
 
     // menus
-    CMenu menu;
+    Menu menu;
 } Game;
 
 extern Game game;
