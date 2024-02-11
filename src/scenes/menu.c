@@ -3,8 +3,10 @@
 void InitMenu(Menu *menu, Vector2 position) {
     // Init menu
     char *menu_opts[] = {
-        "FULLSCREEN",
-        "WINDOWED",
+        "NEW GAME",
+        "OPTIONS",
+        "CREDITS",
+        "EXIT",
     };
     menu->optionSelected = 0;
     menu->mouseHoverRec = -1;
