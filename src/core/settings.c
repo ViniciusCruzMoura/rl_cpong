@@ -32,7 +32,9 @@ void InitializeGameElements() {
 
     InitPlayer(&game.player, game.screenWidth - 50, game.screenHeight / 2, game.screenScale);
     InitBall(&game.ball, game.screenScale);
-    InitMenu(&game.menu, (Vector2){game.screenWidth / 2, game.screenHeight / 2.5f});
+    // InitMenu(&game.menu, (Vector2){game.screenWidth / 2, game.screenHeight / 2.5f});
+    char *main_menu_options[] = {"START", "SETTINGS", "EXIT"};
+    Menu_init(&game.menu, main_menu_options, sizeof(main_menu_options) / sizeof(main_menu_options[0]), game.screenWidth / 2, game.screenHeight / 2);
 }
 
 void LoadAssets() {
