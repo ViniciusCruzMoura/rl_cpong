@@ -104,4 +104,6 @@ bool Menu_is_option_selected(Menu *menu, char *text) {
 //     }
 // }
 
-void UnloadMenu(Menu *menu) {}
+void UnloadMenu(Menu *menu) {
+    Menu_destroy(&menu);
+}
