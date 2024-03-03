@@ -81,13 +81,11 @@ int main(void) {
 
     // config background size
     float aspect_ratio = texture_bg_main_menu.width / texture_bg_main_menu.height;
-    float target_width = screenWidth;
-    float target_height = target_width / aspect_ratio;
     Rectangle imageRect = (Rectangle){
-        (screenWidth - target_width) / 2,
-        (screenHeight - target_height) / 2,
-        target_width,
-        target_height,
+        (screenWidth - screenWidth) / 2,
+        (screenHeight - screenWidth / aspect_ratio) / 2,
+        screenWidth,
+        screenWidth / aspect_ratio,
     };
 
     // Main game loop
