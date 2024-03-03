@@ -65,8 +65,7 @@ class Menu {
     }
 };
 
-int main(void)
-{
+int main(void) {
     int screenWidth = 800;
     int screenHeight = 600;
     InitWindow(screenWidth, screenHeight, "raylib - test");
@@ -106,7 +105,12 @@ int main(void)
         //----------------------------------------------------------------------------------
         BeginDrawing();
         
-        DrawTexturePro(texture_bg_main_menu, (Rectangle){0,0, texture_bg_main_menu.width, texture_bg_main_menu.height}, imageRect, (Vector2){0, 0}, 0, WHITE);
+        DrawTexturePro(
+            texture_bg_main_menu, 
+            (Rectangle){0,0, texture_bg_main_menu.width, texture_bg_main_menu.height}, 
+            imageRect, 
+            (Vector2){0, 0}, 0, WHITE
+        );
         main_menu.draw();
 
         EndDrawing();
