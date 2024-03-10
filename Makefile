@@ -179,17 +179,9 @@ endif
 
 # Define source code object files required
 #------------------------------------------------------------------------------------------------
-PROJECT_SOURCE_FILES ?= \
-    src\main.c \
-    src\core\game.c \
-    src\core\settings.c \
-    src\entities\ball.c \
-    src\entities\player.c \
-    src\scenes\menu.c \
-    src\scenes\logo.c \
-    src\scenes\title.c \
-    src\scenes\gameplay.c \
-    src\scenes\ending.c \
+PROJECT_SOURCE_FILES := \
+    $(wildcard src/*.c) \
+    $(wildcard src/**/*.c) \
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))
