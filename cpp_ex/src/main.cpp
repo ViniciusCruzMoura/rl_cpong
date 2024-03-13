@@ -561,6 +561,15 @@
 Texture2D grass;
 Texture2D dirt;
 
+Rectangle player;
+Vector2 speed;
+bool is_colliding;
+Rectangle collision;
+bool up_block;
+bool down_block;
+bool left_block;
+bool right_block;
+
 int map1[TILEMAP_SIZE_H][TILEMAP_SIZE_W] = { 
     {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -587,8 +596,116 @@ int main(void)
     grass = LoadTexture("../assets/textures/grass.png");
     dirt = LoadTexture("../assets/textures/dirt.png");
 
+    player = { .x = 200, .y = 200, .width = TILE_SIZE, .height = TILE_SIZE };
+    speed = (Vector2){ .x = 3.0f, .y = 3.0f };
+
     while (!WindowShouldClose())
     {
+        if (IsKeyDown(KEY_S) && !down_block) {
+            player.y += speed.y;
+        } else if(IsKeyDown(KEY_W) && !up_block) { 
+            player.y -= speed.y;
+        }
+        if (IsKeyDown(KEY_D) && !right_block) {
+            player.x += speed.x;
+        } else if (IsKeyDown(KEY_A) && !left_block) {
+            player.x -= speed.x;
+        }
+
+        is_colliding = false;
+        speed.x = 3;
+        speed.y = 3;
+
+        up_block = false;
+        down_block = false;
+        left_block = false;
+        right_block = false;
+
+        for (int i = 0; i < TILEMAP_SIZE_H; i++)
+        {
+            for (int j = 0; j < TILEMAP_SIZE_W; j++)
+            {
+                collision = (Rectangle){
+                    .x = 0 + TILE_SIZE * j,
+                    .y = 0 + TILE_SIZE * i,
+                    .width = TILE_SIZE,
+                    .height = TILE_SIZE
+                };
+                switch (map1[i][j]) 
+                {
+                    case TILE_GRASS_ID:
+                        is_colliding = CheckCollisionRecs(player, collision);
+                        if (is_colliding)
+                        {
+                            /** 
+                            if (player.x < collision.x + collision.width && player.x + player.width > collision.x) {
+                                if (player.y < collision.y + collision.height && player.y + player.height > collision.y) {
+                                    if (speed > 0) {
+                                        //player.x = collision.x - player.width;
+                                        player.y += 3;
+                                    } else {
+                                        //player.x = collision.x + collision.width;
+                                        player.y += 3;
+                                    }
+                                }
+                            }
+                            if (player.y < collision.y + collision.height && player.y + player.height > collision.y) {
+                                if (player.x < collision.x + collision.width && player.x + player.width > collision.x) {
+                                    if (speed > 0) {
+                                        //player.y = collision.y - player.height;
+                                        player.x += 3;
+                                    } else {
+                                        //player.y = collision.y + collision.height;
+                                        player.x += 3;
+                                    }
+                                }
+                            }
+                            //speed = 0.0f;   
+                            */
+                            //if (player.x < collision.x + collision.width &&
+                            //    player.x + player.width > collision.x &&
+                            //    player.y < collision.y + collision.height &&
+                            //    player.y + player.height > collision.y) 
+                            //{
+                                //player.y += speed;
+                                //TraceLog(LOG_INFO, std::to_string(collision.x).c_str());
+                                //TraceLog(LOG_INFO, "COLLISION");
+                            //}
+                            if (player.y + speed.y > collision.y + collision.height && 
+                                player.y + player.height > collision.y) 
+                            {
+                                TraceLog(LOG_INFO, "UP_COLLISION");
+                                up_block = true;
+                            }
+                            else if (player.x + speed.x > collision.x + collision.width &&
+                                player.x + player.width > collision.x) 
+                            {
+                                TraceLog(LOG_INFO, "LEFT_COLLISION");
+                                left_block = true;
+                            }
+                            else if (player.y - player.height - speed.y < collision.y && 
+                                player.x + player.width - speed.x > collision.x) 
+                            {
+                                TraceLog(LOG_INFO, "DOWN_COLLISION");
+                                down_block = true;
+                            }
+                            else if (player.x + player.width + speed.x > collision.x &&
+                                player.y + player.height - speed.y > collision.y) 
+                            {
+                                TraceLog(LOG_INFO, "RIGHT_COLLISION");
+                                right_block = true;
+                            }
+
+                        }
+                        break;
+                    case TILE_DIRT_ID:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         BeginDrawing();
             // ClearBackground(RAYWHITE);
 
@@ -625,10 +742,17 @@ int main(void)
                             DrawTextureV(dirt, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
                             break;
                         default:
+                            DrawRectangleV(
+                                (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, 
+                                (Vector2){.x = 32, .y = 32}, 
+                                BLACK
+                            );
                             break;
                     }
                 }
             }
+
+            DrawRectangleRec(player, RED);
             
             // DrawTextureV(grass, (Vector2){.x = 0, .y = 0}, WHITE);
             
