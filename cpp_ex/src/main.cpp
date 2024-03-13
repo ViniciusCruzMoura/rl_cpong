@@ -544,6 +544,7 @@
 
 #include "raylib.h"
 #include <string>
+#include "raymath.h"
 
 #define TILE_SIZE 32
 #define TILEMAP_SIZE_W 16
@@ -562,13 +563,10 @@ Texture2D grass;
 Texture2D dirt;
 
 Rectangle player;
-Vector2 speed;
+int speed;
 bool is_colliding;
 Rectangle collision;
-bool up_block;
-bool down_block;
-bool left_block;
-bool right_block;
+Vector2 direction;
 
 int map1[TILEMAP_SIZE_H][TILEMAP_SIZE_W] = { 
     {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
@@ -579,7 +577,7 @@ int map1[TILEMAP_SIZE_H][TILEMAP_SIZE_W] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -587,6 +585,55 @@ int map1[TILEMAP_SIZE_H][TILEMAP_SIZE_W] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     {2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
 };
+
+void player_collision(Rectangle *player, Vector2 direction, int collision_map[TILEMAP_SIZE_H][TILEMAP_SIZE_W], int dir)
+{
+    Rectangle m_collision;
+    bool m_is_colliding;
+    for (int i = 0; i < TILEMAP_SIZE_H; i++)
+        {
+            for (int j = 0; j < TILEMAP_SIZE_W; j++)
+            {
+                m_collision = (Rectangle){
+                    .x = 0 + TILE_SIZE * j,
+                    .y = 0 + TILE_SIZE * i,
+                    .width = TILE_SIZE,
+                    .height = TILE_SIZE
+                };
+                switch (map1[i][j]) 
+                {
+                    case TILE_GRASS_ID:
+                        m_is_colliding = CheckCollisionRecs(*player, m_collision);
+                        if (m_is_colliding)
+                        {
+                            if (dir == 0) 
+                            {
+                                if (direction.x > 0) {
+                                    player->x = m_collision.x - m_collision.width;
+                                }
+                                if (direction.x < 0) {
+                                    player->x = m_collision.x + m_collision.width;
+                                }
+                            }
+                            if (dir == 1) 
+                            {
+                                if (direction.y > 0) {
+                                    player->y = m_collision.y - m_collision.height;
+                                }
+                                if (direction.y < 0) {
+                                    player->y = m_collision.y + m_collision.height;
+                                }
+                            }
+                        }
+                        break;
+                    case TILE_DIRT_ID:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+}
 
 int main(void)
 {
@@ -597,30 +644,46 @@ int main(void)
     dirt = LoadTexture("../assets/textures/dirt.png");
 
     player = { .x = 200, .y = 200, .width = TILE_SIZE, .height = TILE_SIZE };
-    speed = (Vector2){ .x = 3.0f, .y = 3.0f };
+    direction = (Vector2){ .x = 0, .y = 0 };
+    speed = 3;
+
 
     while (!WindowShouldClose())
     {
-        if (IsKeyDown(KEY_S) && !down_block) {
-            player.y += speed.y;
-        } else if(IsKeyDown(KEY_W) && !up_block) { 
-            player.y -= speed.y;
+        if (IsKeyDown(KEY_S)) {
+            direction.y = 1;
+        } else if(IsKeyDown(KEY_W)) { 
+            direction.y = -1;
+        } else {
+            direction.y = 0;
         }
-        if (IsKeyDown(KEY_D) && !right_block) {
-            player.x += speed.x;
-        } else if (IsKeyDown(KEY_A) && !left_block) {
-            player.x -= speed.x;
+        if (IsKeyDown(KEY_D)) {
+            direction.x = 1;
+        } else if (IsKeyDown(KEY_A)) {
+            direction.x = -1;
+        } else {
+            direction.x = 0;
         }
+
+        Vector2 pos = Vector2Add((Vector2){player.x, player.y}, Vector2Scale(direction, speed));
+        player.x = pos.x;
+        player_collision(&player, direction, map1, 0);
+        player.y = pos.y;
+        player_collision(&player, direction, map1, 1);
+        /**
+        if (IsKeyDown(KEY_S)) {
+            player.y -= speed * direction.y;
+        } else if(IsKeyDown(KEY_W)) { 
+            player.y -= speed * direction.y;
+        }
+        if (IsKeyDown(KEY_D)) {
+            player.x -= speed * direction.x;
+        } else if (IsKeyDown(KEY_A)) {
+            player.x -= speed * direction.x;
+        }*/
 
         is_colliding = false;
-        speed.x = 3;
-        speed.y = 3;
-
-        up_block = false;
-        down_block = false;
-        left_block = false;
-        right_block = false;
-
+        /** 
         for (int i = 0; i < TILEMAP_SIZE_H; i++)
         {
             for (int j = 0; j < TILEMAP_SIZE_W; j++)
@@ -637,65 +700,18 @@ int main(void)
                         is_colliding = CheckCollisionRecs(player, collision);
                         if (is_colliding)
                         {
-                            /** 
-                            if (player.x < collision.x + collision.width && player.x + player.width > collision.x) {
-                                if (player.y < collision.y + collision.height && player.y + player.height > collision.y) {
-                                    if (speed > 0) {
-                                        //player.x = collision.x - player.width;
-                                        player.y += 3;
-                                    } else {
-                                        //player.x = collision.x + collision.width;
-                                        player.y += 3;
-                                    }
-                                }
+                            if (direction.x > 0) {
+                                player.x = collision.x - collision.width;
                             }
-                            if (player.y < collision.y + collision.height && player.y + player.height > collision.y) {
-                                if (player.x < collision.x + collision.width && player.x + player.width > collision.x) {
-                                    if (speed > 0) {
-                                        //player.y = collision.y - player.height;
-                                        player.x += 3;
-                                    } else {
-                                        //player.y = collision.y + collision.height;
-                                        player.x += 3;
-                                    }
-                                }
+                            if (direction.x < 0) {
+                                player.x = collision.x + collision.width;
                             }
-                            //speed = 0.0f;   
-                            */
-                            //if (player.x < collision.x + collision.width &&
-                            //    player.x + player.width > collision.x &&
-                            //    player.y < collision.y + collision.height &&
-                            //    player.y + player.height > collision.y) 
-                            //{
-                                //player.y += speed;
-                                //TraceLog(LOG_INFO, std::to_string(collision.x).c_str());
-                                //TraceLog(LOG_INFO, "COLLISION");
-                            //}
-                            if (player.y + speed.y > collision.y + collision.height && 
-                                player.y + player.height > collision.y) 
-                            {
-                                TraceLog(LOG_INFO, "UP_COLLISION");
-                                up_block = true;
+                            if (direction.y > 0) {
+                                player.y = collision.y - collision.height;
                             }
-                            else if (player.x + speed.x > collision.x + collision.width &&
-                                player.x + player.width > collision.x) 
-                            {
-                                TraceLog(LOG_INFO, "LEFT_COLLISION");
-                                left_block = true;
+                            if (direction.y < 0) {
+                                player.y = collision.y + collision.height;
                             }
-                            else if (player.y - player.height - speed.y < collision.y && 
-                                player.x + player.width - speed.x > collision.x) 
-                            {
-                                TraceLog(LOG_INFO, "DOWN_COLLISION");
-                                down_block = true;
-                            }
-                            else if (player.x + player.width + speed.x > collision.x &&
-                                player.y + player.height - speed.y > collision.y) 
-                            {
-                                TraceLog(LOG_INFO, "RIGHT_COLLISION");
-                                right_block = true;
-                            }
-
                         }
                         break;
                     case TILE_DIRT_ID:
@@ -704,7 +720,7 @@ int main(void)
                         break;
                 }
             }
-        }
+        }*/
 
         BeginDrawing();
             // ClearBackground(RAYWHITE);
