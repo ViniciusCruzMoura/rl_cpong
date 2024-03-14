@@ -600,7 +600,7 @@ void player_collision(Rectangle *player, Vector2 direction, int collision_map[TI
                     .width = TILE_SIZE,
                     .height = TILE_SIZE
                 };
-                switch (map1[i][j]) 
+                switch (collision_map[i][j]) 
                 {
                     case TILE_GRASS_ID:
                         m_is_colliding = CheckCollisionRecs(*player, m_collision);
@@ -634,6 +634,33 @@ void player_collision(Rectangle *player, Vector2 direction, int collision_map[TI
             }
         }
 }
+
+/**
+typedef struct Player {
+    Vector2 position;
+    Vector2 direction;
+    Rectangle collision;
+    int speed;
+    Texture2D sprite;
+} Player;
+
+void player_input() {}
+void player_move() {}
+void player_update() {
+    player_input();
+    player_move();
+}
+*/
+/**
+class Player { 
+    public:
+        Vector2 position;
+        Vector2 direction;
+        Rectangle collision;
+        int speed;
+        Texture2D sprite;
+};
+*/
 
 int main(void)
 {
