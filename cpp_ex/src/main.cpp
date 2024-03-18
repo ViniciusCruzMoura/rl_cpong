@@ -569,13 +569,115 @@
 //     DIRT = 2
 // } Tile;
 
-typedef struct Player {
-    Vector2 position;
-    Vector2 direction;
-    Rectangle collision;
-    int speed;
-    Texture2D sprite;
-} Player;
+// typedef struct Player {
+//     Vector2 position;
+//     Vector2 direction;
+//     Rectangle collision;
+//     int speed;
+//     Texture2D sprite;
+// } Player;
+
+std::vector<std::vector<std::string>> map1;
+
+class Player { 
+    public:
+        Vector2 position;
+        Vector2 direction;
+        Rectangle collision;
+        int speed;
+        Texture2D sprite;
+
+        void update();
+    private:
+        void input();
+        void move();
+        void collision_obj(std::vector<std::vector<std::string>> collision_map, std::string dir);
+};
+
+void Player::input() {
+    if (IsKeyDown(KEY_S)) {
+        direction.y = 1;
+    } else if(IsKeyDown(KEY_W)) { 
+        direction.y = -1;
+    } else {
+        direction.y = 0;
+    }
+    if (IsKeyDown(KEY_D)) {
+        direction.x = 1;
+    } else if (IsKeyDown(KEY_A)) {
+        direction.x = -1;
+    } else {
+        direction.x = 0;
+    }
+}
+
+void Player::move() {
+    Vector2 pos = Vector2Add(position, Vector2Scale(direction, speed));
+    position.x = pos.x;
+    collision.x = pos.x;
+    collision_obj(map1, "horizontal");
+    position.y = pos.y;
+    collision.y = pos.y;
+    collision_obj(map1, "vertical");
+}
+
+void Player::collision_obj(std::vector<std::vector<std::string>> collision_map, std::string dir) {
+    Rectangle m_collision;
+    bool m_is_colliding;
+    for (int i = 0; i < collision_map.size(); i++)
+        {
+            for (int j = 0; j < collision_map[i].size(); j++)
+            {
+                m_collision = (Rectangle){
+                    .x = TILE_SIZE * j,
+                    .y = TILE_SIZE * i,
+                    .width = TILE_SIZE,
+                    .height = TILE_SIZE
+                };
+                switch (std::stoi(collision_map[i][j])) 
+                {
+                    case TILE_GRASS_ID:
+                    case TILE_NULL:
+                        m_is_colliding = CheckCollisionRecs(collision, m_collision);
+                        if (m_is_colliding)
+                        {
+                            if (dir == "horizontal") 
+                            {
+                                if (direction.x > 0) {
+                                    position.x = m_collision.x - m_collision.width;
+                                    collision.x = m_collision.x - m_collision.width;
+                                }
+                                if (direction.x < 0) {
+                                    position.x = m_collision.x + m_collision.width;
+                                    collision.x = m_collision.x + m_collision.width;
+                                }
+                            }
+                            if (dir == "vertical") 
+                            {
+                                if (direction.y > 0) {
+                                    position.y = m_collision.y - m_collision.height;
+                                    collision.y = m_collision.y - m_collision.height;
+                                }
+                                if (direction.y < 0) {
+                                    position.y = m_collision.y + m_collision.height;
+                                    collision.y = m_collision.y + m_collision.height;
+                                }
+                            }
+                        }
+                        break;
+                    case TILE_DIRT_ID:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+}
+
+void Player::update() {
+    input();
+    move();
+}
 
 Texture2D grass;
 Texture2D dirt;
@@ -600,61 +702,61 @@ Player player;
 //     {2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
 // };
 
-int map1[TILEMAP_SIZE_H][TILEMAP_SIZE_W];
 
-void player_collision(Player *player, int collision_map[TILEMAP_SIZE_H][TILEMAP_SIZE_W], int dir)
-{
-    Rectangle m_collision;
-    bool m_is_colliding;
-    for (int i = 0; i < TILEMAP_SIZE_H; i++)
-        {
-            for (int j = 0; j < TILEMAP_SIZE_W; j++)
-            {
-                m_collision = (Rectangle){
-                    .x = TILE_SIZE * j,
-                    .y = TILE_SIZE * i,
-                    .width = TILE_SIZE,
-                    .height = TILE_SIZE
-                };
-                switch (collision_map[i][j]) 
-                {
-                    case TILE_GRASS_ID:
-                    case TILE_NULL:
-                        m_is_colliding = CheckCollisionRecs(player->collision, m_collision);
-                        if (m_is_colliding)
-                        {
-                            if (dir == 0) 
-                            {
-                                if (player->direction.x > 0) {
-                                    player->position.x = m_collision.x - m_collision.width;
-                                    player->collision.x = m_collision.x - m_collision.width;
-                                }
-                                if (player->direction.x < 0) {
-                                    player->position.x = m_collision.x + m_collision.width;
-                                    player->collision.x = m_collision.x + m_collision.width;
-                                }
-                            }
-                            if (dir == 1) 
-                            {
-                                if (player->direction.y > 0) {
-                                    player->position.y = m_collision.y - m_collision.height;
-                                    player->collision.y = m_collision.y - m_collision.height;
-                                }
-                                if (player->direction.y < 0) {
-                                    player->position.y = m_collision.y + m_collision.height;
-                                    player->collision.y = m_collision.y + m_collision.height;
-                                }
-                            }
-                        }
-                        break;
-                    case TILE_DIRT_ID:
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-}
+
+// void player_collision(Player *player, std::vector<std::vector<std::string>> collision_map, int dir)
+// {
+//     Rectangle m_collision;
+//     bool m_is_colliding;
+//     for (int i = 0; i < collision_map.size(); i++)
+//         {
+//             for (int j = 0; j < collision_map[i].size(); j++)
+//             {
+//                 m_collision = (Rectangle){
+//                     .x = TILE_SIZE * j,
+//                     .y = TILE_SIZE * i,
+//                     .width = TILE_SIZE,
+//                     .height = TILE_SIZE
+//                 };
+//                 switch (std::stoi(collision_map[i][j])) 
+//                 {
+//                     case TILE_GRASS_ID:
+//                     case TILE_NULL:
+//                         m_is_colliding = CheckCollisionRecs(player->collision, m_collision);
+//                         if (m_is_colliding)
+//                         {
+//                             if (dir == 0) 
+//                             {
+//                                 if (player->direction.x > 0) {
+//                                     player->position.x = m_collision.x - m_collision.width;
+//                                     player->collision.x = m_collision.x - m_collision.width;
+//                                 }
+//                                 if (player->direction.x < 0) {
+//                                     player->position.x = m_collision.x + m_collision.width;
+//                                     player->collision.x = m_collision.x + m_collision.width;
+//                                 }
+//                             }
+//                             if (dir == 1) 
+//                             {
+//                                 if (player->direction.y > 0) {
+//                                     player->position.y = m_collision.y - m_collision.height;
+//                                     player->collision.y = m_collision.y - m_collision.height;
+//                                 }
+//                                 if (player->direction.y < 0) {
+//                                     player->position.y = m_collision.y + m_collision.height;
+//                                     player->collision.y = m_collision.y + m_collision.height;
+//                                 }
+//                             }
+//                         }
+//                         break;
+//                     case TILE_DIRT_ID:
+//                         break;
+//                     default:
+//                         break;
+//                 }
+//             }
+//         }
+// }
 
 
 
@@ -667,16 +769,6 @@ void player_update() {
     player_move();
 }
 */
-/**
-class Player { 
-    public:
-        Vector2 position;
-        Vector2 direction;
-        Rectangle collision;
-        int speed;
-        Texture2D sprite;
-};
-*/
 
 std::vector<std::string> split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
@@ -688,13 +780,14 @@ std::vector<std::string> split(const std::string& s, char delimiter) {
     return tokens;
 }
 
-void load_csv(const std::string path, int map[TILEMAP_SIZE_H][TILEMAP_SIZE_W])
+std::vector<std::vector<std::string>> load_csv(const std::string path)
 {
     // Open the .csv file
     std::ifstream file(path);
     if (!file.is_open()) {
         std::cerr << "Error opening file." << std::endl;
-        return;
+        std::vector<std::vector<std::string>> err;
+        return err;
     }
 
     // Read the .csv file line by line
@@ -718,18 +811,20 @@ void load_csv(const std::string path, int map[TILEMAP_SIZE_H][TILEMAP_SIZE_W])
     // Close the file
     file.close();
 
-    // Check if the dimensions of data match the dimensions of map
-    if (data.size() != TILEMAP_SIZE_H || (data.size() > 0 && data[0].size() != TILEMAP_SIZE_W)) {
-        std::cerr << "Vector dimensions do not match array dimensions\n";
-        return;
-    }
+    return data;
 
-    // Convert to 2D array
-    for (int i = 0; i < TILEMAP_SIZE_H; ++i) {
-        for (int j = 0; j < TILEMAP_SIZE_W; ++j) {
-            map[i][j] = std::stoi(data[i][j]);
-        }
-    }
+    // // Check if the dimensions of data match the dimensions of map
+    // if (data.size() != TILEMAP_SIZE_H || (data.size() > 0 && data[0].size() != TILEMAP_SIZE_W)) {
+    //     std::cerr << "Vector dimensions do not match array dimensions\n";
+    //     return;
+    // }
+
+    // // Convert to 2D array
+    // for (int i = 0; i < TILEMAP_SIZE_H; ++i) {
+    //     for (int j = 0; j < TILEMAP_SIZE_W; ++j) {
+    //         map[i][j] = std::stoi(data[i][j]);
+    //     }
+    // }
 }
 
 int main(void)
@@ -751,32 +846,33 @@ int main(void)
     player.speed = 5;
     player.sprite = LoadTexture(SPRITE_PLAYER_PATH);
 
-    load_csv(TILEMAP_PATH, map1);
+    map1 = load_csv(TILEMAP_PATH);
 
     while (!WindowShouldClose())
     {
-        if (IsKeyDown(KEY_S)) {
-            player.direction.y = 1;
-        } else if(IsKeyDown(KEY_W)) { 
-            player.direction.y = -1;
-        } else {
-            player.direction.y = 0;
-        }
-        if (IsKeyDown(KEY_D)) {
-            player.direction.x = 1;
-        } else if (IsKeyDown(KEY_A)) {
-            player.direction.x = -1;
-        } else {
-            player.direction.x = 0;
-        }
+        // if (IsKeyDown(KEY_S)) {
+        //     player.direction.y = 1;
+        // } else if(IsKeyDown(KEY_W)) { 
+        //     player.direction.y = -1;
+        // } else {
+        //     player.direction.y = 0;
+        // }
+        // if (IsKeyDown(KEY_D)) {
+        //     player.direction.x = 1;
+        // } else if (IsKeyDown(KEY_A)) {
+        //     player.direction.x = -1;
+        // } else {
+        //     player.direction.x = 0;
+        // }
 
-        Vector2 pos = Vector2Add(player.position, Vector2Scale(player.direction, player.speed));
-        player.position.x = pos.x;
-        player.collision.x = pos.x;
-        player_collision(&player, map1, 0);
-        player.position.y = pos.y;
-        player.collision.y = pos.y;
-        player_collision(&player, map1, 1);
+        // Vector2 pos = Vector2Add(player.position, Vector2Scale(player.direction, player.speed));
+        // player.position.x = pos.x;
+        // player.collision.x = pos.x;
+        // player_collision(&player, map1, 0);
+        // player.position.y = pos.y;
+        // player.collision.y = pos.y;
+        // player_collision(&player, map1, 1);
+        
         /**
         if (IsKeyDown(KEY_S)) {
             player.y -= speed * direction.y;
@@ -827,14 +923,16 @@ int main(void)
             }
         }*/
 
+        player.update();
+
         BeginDrawing();
             // ClearBackground(RAYWHITE);
 
-            for (int i = 0; i < TILEMAP_SIZE_H; i++)
+            for (int i = 0; i < map1.size(); i++)
             {
-                for (int j = 0; j < TILEMAP_SIZE_W; j++)
+                for (int j = 0; j < map1[i].size(); j++)
                 {
-                    switch (map1[i][j]) 
+                    switch (std::stoi(map1[i][j])) 
                     {
                         case TILE_GRASS_ID: 
                             DrawTextureV(grass, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
