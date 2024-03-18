@@ -583,7 +583,7 @@ class Player {
     public:
         Vector2 position;
         Vector2 direction;
-        Rectangle collision;
+        Rectangle hitbox;
         int speed;
         Texture2D sprite;
 
@@ -591,7 +591,7 @@ class Player {
     private:
         void input();
         void move();
-        void collision_obj(std::vector<std::vector<std::string>> collision_map, std::string dir);
+        void collision(std::vector<std::vector<std::string>> collision_map, std::string dir);
 };
 
 void Player::input() {
@@ -613,22 +613,23 @@ void Player::input() {
 
 void Player::move() {
     Vector2 pos = Vector2Add(position, Vector2Scale(direction, speed));
-    position.x = pos.x;
-    collision.x = pos.x;
-    collision_obj(map1, "horizontal");
-    position.y = pos.y;
-    collision.y = pos.y;
-    collision_obj(map1, "vertical");
+    
+    hitbox.x = pos.x;
+    collision(map1, "horizontal");
+    position.x = hitbox.x;
+
+    hitbox.y = pos.y;
+    collision(map1, "vertical");
+    position.y = hitbox.y;
 }
 
-void Player::collision_obj(std::vector<std::vector<std::string>> collision_map, std::string dir) {
-    Rectangle m_collision;
-    bool m_is_colliding;
+void Player::collision(std::vector<std::vector<std::string>> collision_map, std::string dir) {
+    Rectangle tile;
     for (int i = 0; i < collision_map.size(); i++)
         {
             for (int j = 0; j < collision_map[i].size(); j++)
             {
-                m_collision = (Rectangle){
+                tile = (Rectangle){
                     .x = TILE_SIZE * j,
                     .y = TILE_SIZE * i,
                     .width = TILE_SIZE,
@@ -638,29 +639,28 @@ void Player::collision_obj(std::vector<std::vector<std::string>> collision_map, 
                 {
                     case TILE_GRASS_ID:
                     case TILE_NULL:
-                        m_is_colliding = CheckCollisionRecs(collision, m_collision);
-                        if (m_is_colliding)
+                        if (CheckCollisionRecs(hitbox, tile))
                         {
                             if (dir == "horizontal") 
                             {
                                 if (direction.x > 0) {
-                                    position.x = m_collision.x - m_collision.width;
-                                    collision.x = m_collision.x - m_collision.width;
+                                    // position.x = m_collision.x - m_collision.width;
+                                    hitbox.x = tile.x - tile.width;
                                 }
                                 if (direction.x < 0) {
-                                    position.x = m_collision.x + m_collision.width;
-                                    collision.x = m_collision.x + m_collision.width;
+                                    // position.x = m_collision.x + m_collision.width;
+                                    hitbox.x = tile.x + tile.width;
                                 }
                             }
                             if (dir == "vertical") 
                             {
                                 if (direction.y > 0) {
-                                    position.y = m_collision.y - m_collision.height;
-                                    collision.y = m_collision.y - m_collision.height;
+                                    // position.y = m_collision.y - m_collision.height;
+                                    hitbox.y = tile.y - tile.height;
                                 }
                                 if (direction.y < 0) {
-                                    position.y = m_collision.y + m_collision.height;
-                                    collision.y = m_collision.y + m_collision.height;
+                                    // position.y = m_collision.y + m_collision.height;
+                                    hitbox.y = tile.y + tile.height;
                                 }
                             }
                         }
@@ -758,18 +758,6 @@ Player player;
 //         }
 // }
 
-
-
-
-/**
-void player_input() {}
-void player_move() {}
-void player_update() {
-    player_input();
-    player_move();
-}
-*/
-
 std::vector<std::string> split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
     std::string token;
@@ -836,7 +824,7 @@ int main(void)
     dirt = LoadTexture(TILE_DIRT_PATH);
 
     player.position = (Vector2){ .x = 200, .y = 200 };
-    player.collision = (Rectangle){ 
+    player.hitbox = (Rectangle){ 
         .x = 200, 
         .y = 200, 
         .width = TILE_SIZE, 
@@ -952,7 +940,7 @@ int main(void)
             }
 
             DrawTextureV(player.sprite, player.position, WHITE);
-            DrawRectangleLinesEx(player.collision, 3.0f, PURPLE);
+            DrawRectangleLinesEx(player.hitbox, 3.0f, PURPLE);
 
             DrawText("demo_test", 0, 0, 20, WHITE);
             DrawText(std::to_string(player.direction.x).c_str(), 0, 32, 20, WHITE);
