@@ -581,12 +581,13 @@ std::vector<std::vector<std::string>> map1;
 
 class Player { 
     public:
-        Vector2 position;
-        Vector2 direction;
-        Rectangle hitbox;
-        int speed;
-        Texture2D sprite;
+        Vector2 m_position;
+        Vector2 m_direction;
+        Rectangle m_hitbox;
+        int m_speed;
+        Texture2D m_sprite;
 
+        void init(int px, int py);
         void update();
     private:
         void input();
@@ -594,33 +595,46 @@ class Player {
         void collision(std::vector<std::vector<std::string>> collision_map, std::string dir);
 };
 
+void Player::init(int px, int py) {
+    m_position = (Vector2){ .x = px, .y = py };
+    m_hitbox = (Rectangle){ 
+        .x = px, 
+        .y = py, 
+        .width = TILE_SIZE, 
+        .height = TILE_SIZE 
+    };
+    m_direction = (Vector2){ .x = 0, .y = 0 };
+    m_speed = 5;
+    m_sprite = LoadTexture(SPRITE_PLAYER_PATH);
+}
+
 void Player::input() {
     if (IsKeyDown(KEY_S)) {
-        direction.y = 1;
+        m_direction.y = 1;
     } else if(IsKeyDown(KEY_W)) { 
-        direction.y = -1;
+        m_direction.y = -1;
     } else {
-        direction.y = 0;
+        m_direction.y = 0;
     }
     if (IsKeyDown(KEY_D)) {
-        direction.x = 1;
+        m_direction.x = 1;
     } else if (IsKeyDown(KEY_A)) {
-        direction.x = -1;
+        m_direction.x = -1;
     } else {
-        direction.x = 0;
+        m_direction.x = 0;
     }
 }
 
 void Player::move() {
-    Vector2 pos = Vector2Add(position, Vector2Scale(direction, speed));
+    Vector2 pos = Vector2Add(m_position, Vector2Scale(m_direction, m_speed));
     
-    hitbox.x = pos.x;
+    m_hitbox.x = pos.x;
     collision(map1, "horizontal");
-    position.x = hitbox.x;
+    m_position.x = m_hitbox.x;
 
-    hitbox.y = pos.y;
+    m_hitbox.y = pos.y;
     collision(map1, "vertical");
-    position.y = hitbox.y;
+    m_position.y = m_hitbox.y;
 }
 
 void Player::collision(std::vector<std::vector<std::string>> collision_map, std::string dir) {
@@ -639,28 +653,28 @@ void Player::collision(std::vector<std::vector<std::string>> collision_map, std:
                 {
                     case TILE_GRASS_ID:
                     case TILE_NULL:
-                        if (CheckCollisionRecs(hitbox, tile))
+                        if (CheckCollisionRecs(m_hitbox, tile))
                         {
                             if (dir == "horizontal") 
                             {
-                                if (direction.x > 0) {
-                                    // position.x = m_collision.x - m_collision.width;
-                                    hitbox.x = tile.x - tile.width;
+                                if (m_direction.x > 0) {
+                                    // m_position.x = m_collision.x - m_collision.width;
+                                    m_hitbox.x = tile.x - tile.width;
                                 }
-                                if (direction.x < 0) {
-                                    // position.x = m_collision.x + m_collision.width;
-                                    hitbox.x = tile.x + tile.width;
+                                if (m_direction.x < 0) {
+                                    // m_position.x = m_collision.x + m_collision.width;
+                                    m_hitbox.x = tile.x + tile.width;
                                 }
                             }
                             if (dir == "vertical") 
                             {
-                                if (direction.y > 0) {
-                                    // position.y = m_collision.y - m_collision.height;
-                                    hitbox.y = tile.y - tile.height;
+                                if (m_direction.y > 0) {
+                                    // m_position.y = m_collision.y - m_collision.height;
+                                    m_hitbox.y = tile.y - tile.height;
                                 }
-                                if (direction.y < 0) {
-                                    // position.y = m_collision.y + m_collision.height;
-                                    hitbox.y = tile.y + tile.height;
+                                if (m_direction.y < 0) {
+                                    // m_position.y = m_collision.y + m_collision.height;
+                                    m_hitbox.y = tile.y + tile.height;
                                 }
                             }
                         }
@@ -702,61 +716,6 @@ Player player;
 //     {2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
 // };
 
-
-
-// void player_collision(Player *player, std::vector<std::vector<std::string>> collision_map, int dir)
-// {
-//     Rectangle m_collision;
-//     bool m_is_colliding;
-//     for (int i = 0; i < collision_map.size(); i++)
-//         {
-//             for (int j = 0; j < collision_map[i].size(); j++)
-//             {
-//                 m_collision = (Rectangle){
-//                     .x = TILE_SIZE * j,
-//                     .y = TILE_SIZE * i,
-//                     .width = TILE_SIZE,
-//                     .height = TILE_SIZE
-//                 };
-//                 switch (std::stoi(collision_map[i][j])) 
-//                 {
-//                     case TILE_GRASS_ID:
-//                     case TILE_NULL:
-//                         m_is_colliding = CheckCollisionRecs(player->collision, m_collision);
-//                         if (m_is_colliding)
-//                         {
-//                             if (dir == 0) 
-//                             {
-//                                 if (player->direction.x > 0) {
-//                                     player->position.x = m_collision.x - m_collision.width;
-//                                     player->collision.x = m_collision.x - m_collision.width;
-//                                 }
-//                                 if (player->direction.x < 0) {
-//                                     player->position.x = m_collision.x + m_collision.width;
-//                                     player->collision.x = m_collision.x + m_collision.width;
-//                                 }
-//                             }
-//                             if (dir == 1) 
-//                             {
-//                                 if (player->direction.y > 0) {
-//                                     player->position.y = m_collision.y - m_collision.height;
-//                                     player->collision.y = m_collision.y - m_collision.height;
-//                                 }
-//                                 if (player->direction.y < 0) {
-//                                     player->position.y = m_collision.y + m_collision.height;
-//                                     player->collision.y = m_collision.y + m_collision.height;
-//                                 }
-//                             }
-//                         }
-//                         break;
-//                     case TILE_DIRT_ID:
-//                         break;
-//                     default:
-//                         break;
-//                 }
-//             }
-//         }
-// }
 
 std::vector<std::string> split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
@@ -823,16 +782,7 @@ int main(void)
     grass = LoadTexture(TILE_GRASS_PATH);
     dirt = LoadTexture(TILE_DIRT_PATH);
 
-    player.position = (Vector2){ .x = 200, .y = 200 };
-    player.hitbox = (Rectangle){ 
-        .x = 200, 
-        .y = 200, 
-        .width = TILE_SIZE, 
-        .height = TILE_SIZE 
-    };
-    player.direction = (Vector2){ .x = 0, .y = 0 };
-    player.speed = 5;
-    player.sprite = LoadTexture(SPRITE_PLAYER_PATH);
+    player.init(200, 200);
 
     map1 = load_csv(TILEMAP_PATH);
 
@@ -866,12 +816,12 @@ int main(void)
                 }
             }
 
-            DrawTextureV(player.sprite, player.position, WHITE);
-            DrawRectangleLinesEx(player.hitbox, 3.0f, PURPLE);
+            DrawTextureV(player.m_sprite, player.m_position, WHITE);
+            DrawRectangleLinesEx(player.m_hitbox, 3.0f, PURPLE);
 
             DrawText("demo_test", 0, 0, 20, WHITE);
-            DrawText(std::to_string(player.direction.x).c_str(), 0, 32, 20, WHITE);
-            DrawText(std::to_string(player.direction.y).c_str(), 0, 64, 20, WHITE);
+            DrawText(std::to_string(player.m_direction.x).c_str(), 0, 32, 20, WHITE);
+            DrawText(std::to_string(player.m_direction.y).c_str(), 0, 64, 20, WHITE);
             
             // DrawTextureV(grass, (Vector2){.x = 0, .y = 0}, WHITE);
             // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
