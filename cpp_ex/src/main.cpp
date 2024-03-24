@@ -592,7 +592,7 @@ class Player {
     private:
         void input();
         void move();
-        void collision(std::vector<std::vector<std::string>> collision_map, std::string dir);
+        void check_collision_with_map(std::vector<std::vector<std::string>> collision_map, std::string dir);
 };
 
 void Player::init(int px, int py) {
@@ -601,7 +601,7 @@ void Player::init(int px, int py) {
         .x = px, 
         .y = py, 
         .width = TILE_SIZE, 
-        .height = TILE_SIZE 
+        .height = TILE_SIZE
     };
     m_direction = (Vector2){ .x = 0, .y = 0 };
     m_speed = 5;
@@ -623,69 +623,97 @@ void Player::input() {
     } else {
         m_direction.x = 0;
     }
+    if (m_direction.x != 0 && m_direction.y != 0) {
+        m_direction = Vector2Normalize(m_direction);
+    }
 }
 
 void Player::move() {
+    // if (!check_collision_with_map(map1)) {
+    //     m_position = Vector2Add(m_position, Vector2Scale(m_direction, m_speed));
+    //     m_hitbox.x = m_position.x;
+    //     m_hitbox.y = m_position.y;
+    // }
     Vector2 pos = Vector2Add(m_position, Vector2Scale(m_direction, m_speed));
     
     m_hitbox.x = pos.x;
-    collision(map1, "horizontal");
+    check_collision_with_map(map1, "horizontal");
     m_position.x = m_hitbox.x;
 
     m_hitbox.y = pos.y;
-    collision(map1, "vertical");
+    check_collision_with_map(map1, "vertical");
     m_position.y = m_hitbox.y;
 }
 
-void Player::collision(std::vector<std::vector<std::string>> collision_map, std::string dir) {
+void Player::check_collision_with_map(std::vector<std::vector<std::string>> collision_map, std::string dir) {
+    if (m_direction.x == 0 && m_direction.y == 0) {
+        return;
+    }
+    // Vector2 hitbox = {m_hitbox.x, m_hitbox.y};
+    // int player_map_pos_x = hitbox.x / TILE_SIZE;
     Rectangle tile;
-    for (int i = 0; i < collision_map.size(); i++)
-        {
-            for (int j = 0; j < collision_map[i].size(); j++)
-            {
-                tile = (Rectangle){
-                    .x = TILE_SIZE * j,
-                    .y = TILE_SIZE * i,
-                    .width = TILE_SIZE,
-                    .height = TILE_SIZE
-                };
-                switch (std::stoi(collision_map[i][j])) 
-                {
-                    case TILE_GRASS_ID:
-                    case TILE_NULL:
-                        if (CheckCollisionRecs(m_hitbox, tile))
-                        {
-                            if (dir == "horizontal") 
-                            {
-                                if (m_direction.x > 0) {
-                                    // m_position.x = m_collision.x - m_collision.width;
-                                    m_hitbox.x = tile.x - tile.width;
-                                }
-                                if (m_direction.x < 0) {
-                                    // m_position.x = m_collision.x + m_collision.width;
-                                    m_hitbox.x = tile.x + tile.width;
-                                }
+    // std::cout << "player_map_pos_x_min: " << player_map_pos_x_min << " player_map_pos_x_max: " << player_map_pos_x_max << " player_map_pos_y_min: " << player_map_pos_y_min << " player_map_pos_y_max: " << player_map_pos_y_max << std::endl;
+    for (size_t i = 0; i < collision_map.size(); i++) {
+        for (size_t j = 0; j < collision_map[i].size(); j++) {
+            // std::cout << "i: " << i << " j: " << j << std::endl;
+            tile = {TILE_SIZE * j, TILE_SIZE * i, TILE_SIZE, TILE_SIZE};
+            switch (std::stoi(collision_map[i][j])) {
+                case TILE_GRASS_ID:
+                case TILE_NULL:
+                // std::cout << "x: " << m_hitbox.x << " y: " << m_hitbox.y << " tile_id: " << collision_map[i][j] << std::endl;
+                    if (CheckCollisionRecs(m_hitbox, tile)) {
+                        if (dir == "horizontal") {
+                            if (m_direction.x > 0) {
+                                m_hitbox.x = tile.x - tile.width;
+                                m_position.x = tile.x - tile.width;
                             }
-                            if (dir == "vertical") 
-                            {
-                                if (m_direction.y > 0) {
-                                    // m_position.y = m_collision.y - m_collision.height;
-                                    m_hitbox.y = tile.y - tile.height;
-                                }
-                                if (m_direction.y < 0) {
-                                    // m_position.y = m_collision.y + m_collision.height;
-                                    m_hitbox.y = tile.y + tile.height;
-                                }
+                            if (m_direction.x < 0) {
+                                m_hitbox.x = tile.x + tile.width;
+                                m_position.x = tile.x + tile.width;
                             }
                         }
-                        break;
-                    case TILE_DIRT_ID:
-                        break;
-                    default:
-                        break;
-                }
+                        if (dir == "vertical") {
+                            if (m_direction.y > 0) {
+                                m_hitbox.y = tile.y - tile.height;
+                                m_position.y = tile.y - tile.height;
+                            }
+                            if (m_direction.y < 0) {
+                                m_hitbox.y = tile.y + tile.height;
+                                m_position.y = tile.y + tile.height;
+                            }
+                        }
+                    }
+                    break;
             }
         }
+    }
+
+    // if (m_direction.x > 0) {
+    //     // player_map_pos_x = round(player_map_pos_x + 0.5f);
+    //     player_map_pos_x += 1;   
+    // }
+    // if (m_direction.y > 0) {
+    //     // player_map_pos_y = round(player_map_pos_y + 0.5f);
+    //     player_map_pos_y += 1;
+    // } else if (m_direction.y < 0) {
+    //     player_map_pos_x = round(hitbox.x / TILE_SIZE);
+    // }
+    // switch (std::stoi(collision_map[player_map_pos_y][player_map_pos_x])) {
+    //     case TILE_GRASS_ID:
+    //     case TILE_NULL:
+    //         std::cout << "x: " << m_hitbox.x << " y: " << m_hitbox.y << " tile_id: " << collision_map[player_map_pos_y][player_map_pos_x] << std::endl;
+    //         return true;
+    // }
+    // std::cout << collision_map[player_map_pos_y][player_map_pos_x] << std::endl;
+    // if (target_tile_x >= 0 && target_tile_x < TILEMAP_SIZE_W && target_tile_y >= 0 && target_tile_y < TILEMAP_SIZE_H) {
+    //     switch (std::stoi(collision_map[target_tile_y][target_tile_x])) {
+    //         case TILE_GRASS_ID:
+    //         case TILE_NULL:
+    //             std::cout << tile.x << std::endl;
+    //             std::cout << hbox.x << std::endl;
+    //             return true;
+    //     }       
+    // }
 }
 
 void Player::update() {
@@ -697,25 +725,6 @@ Texture2D grass;
 Texture2D dirt;
 
 Player player;
-
-// int map1[TILEMAP_SIZE_H][TILEMAP_SIZE_W] = { 
-//     {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-//     {2, 0, 0, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0},
-// };
-
 
 std::vector<std::string> split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
@@ -774,8 +783,7 @@ std::vector<std::vector<std::string>> load_csv(const std::string path)
     // }
 }
 
-int main(void)
-{
+int main(void) {
     InitWindow(WIN_RES_W, WIN_RES_H, "raylib example - tilemap");
     SetTargetFPS(30);
 
@@ -786,19 +794,15 @@ int main(void)
 
     map1 = load_csv(TILEMAP_PATH);
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose()) {
         player.update();
 
         BeginDrawing();
             // ClearBackground(RAYWHITE);
 
-            for (int i = 0; i < map1.size(); i++)
-            {
-                for (int j = 0; j < map1[i].size(); j++)
-                {
-                    switch (std::stoi(map1[i][j])) 
-                    {
+            for (size_t i = 0; i < map1.size(); i++) {
+                for (size_t j = 0; j < map1[i].size(); j++) {
+                    switch (std::stoi(map1[i][j])) {
                         case TILE_GRASS_ID: 
                             DrawTextureV(grass, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
                             break;
