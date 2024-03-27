@@ -544,6 +544,8 @@
 
 #include "raylib.h"
 #include <string>
+#include <map>
+#include <memory>
 #include "raymath.h"
 
 #include <iostream>
@@ -756,13 +758,13 @@ std::vector<std::vector<std::string>> load_csv(const std::string path)
     }
 
     // Display the data (optional)
-    std::cout << "CSV Data." << std::endl;
-    for (const auto& row : data) {
-        for (const auto& value : row) {
-            std::cout << value << " ";
-        }
-        std::cout << std::endl;
-    }
+    // std::cout << "CSV Data." << std::endl;
+    // for (const auto& row : data) {
+    //     for (const auto& value : row) {
+    //         std::cout << value << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     // Close the file
     file.close();
@@ -783,55 +785,428 @@ std::vector<std::vector<std::string>> load_csv(const std::string path)
     // }
 }
 
-int main(void) {
-    InitWindow(WIN_RES_W, WIN_RES_H, "raylib example - tilemap");
-    SetTargetFPS(30);
+// int main(void) {
+//     InitWindow(WIN_RES_W, WIN_RES_H, "raylib example - tilemap");
+//     SetTargetFPS(30);
 
-    grass = LoadTexture(TILE_GRASS_PATH);
-    dirt = LoadTexture(TILE_DIRT_PATH);
+//     grass = LoadTexture(TILE_GRASS_PATH);
+//     dirt = LoadTexture(TILE_DIRT_PATH);
 
-    player.init(200, 200);
+//     player.init(200, 200);
 
-    map1 = load_csv(TILEMAP_PATH);
+//     map1 = load_csv(TILEMAP_PATH);
 
-    while (!WindowShouldClose()) {
-        player.update();
+//     while (!WindowShouldClose()) {
+//         player.update();
 
-        BeginDrawing();
-            // ClearBackground(RAYWHITE);
+//         BeginDrawing();
+//             // ClearBackground(RAYWHITE);
 
-            for (size_t i = 0; i < map1.size(); i++) {
-                for (size_t j = 0; j < map1[i].size(); j++) {
-                    switch (std::stoi(map1[i][j])) {
-                        case TILE_GRASS_ID: 
-                            DrawTextureV(grass, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
-                            break;
-                        case TILE_DIRT_ID: 
-                            DrawTextureV(dirt, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
-                            break;
-                        default:
-                            DrawRectangleV(
-                                (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, 
-                                (Vector2){.x = 32, .y = 32}, 
-                                BLACK
-                            );
-                            break;
-                    }
-                }
-            }
+//             for (size_t i = 0; i < map1.size(); i++) {
+//                 for (size_t j = 0; j < map1[i].size(); j++) {
+//                     switch (std::stoi(map1[i][j])) {
+//                         case TILE_GRASS_ID: 
+//                             DrawTextureV(grass, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
+//                             break;
+//                         case TILE_DIRT_ID: 
+//                             DrawTextureV(dirt, (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, WHITE);
+//                             break;
+//                         default:
+//                             DrawRectangleV(
+//                                 (Vector2){.x = 0 + 32 * j, .y = 0 + 32 * i}, 
+//                                 (Vector2){.x = 32, .y = 32}, 
+//                                 BLACK
+//                             );
+//                             break;
+//                     }
+//                 }
+//             }
 
-            DrawTextureV(player.m_sprite, player.m_position, WHITE);
-            DrawRectangleLinesEx(player.m_hitbox, 3.0f, PURPLE);
+//             DrawTextureV(player.m_sprite, player.m_position, WHITE);
+//             DrawRectangleLinesEx(player.m_hitbox, 3.0f, PURPLE);
 
-            DrawText("demo_test", 0, 0, 20, WHITE);
-            DrawText(std::to_string(player.m_direction.x).c_str(), 0, 32, 20, WHITE);
-            DrawText(std::to_string(player.m_direction.y).c_str(), 0, 64, 20, WHITE);
+//             DrawText("demo_test", 0, 0, 20, WHITE);
+//             DrawText(std::to_string(player.m_direction.x).c_str(), 0, 32, 20, WHITE);
+//             DrawText(std::to_string(player.m_direction.y).c_str(), 0, 64, 20, WHITE);
             
-            // DrawTextureV(grass, (Vector2){.x = 0, .y = 0}, WHITE);
-            // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+//             // DrawTextureV(grass, (Vector2){.x = 0, .y = 0}, WHITE);
+//             // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+//         EndDrawing();
+//     }
+//     CloseWindow();
+
+//     return 0;
+// }
+
+class RenderWindow {
+    std::string m_title = "Window - Sample Title";
+    size_t m_width = 800;
+    size_t m_height = 450;
+    size_t m_framerate_limit = 30;
+    public:
+        RenderWindow() {};
+        // RenderWindow(std::string title, size_t height, size_t width) {
+        //     m_title = title;
+        //     m_height = height;
+        //     m_width = width;
+        // };
+        // void init() {
+        //     InitWindow(m_width, m_height, m_title.c_str());
+        //     SetTargetFPS(m_framerate_limit);
+        // };
+        bool is_open() {
+            return !WindowShouldClose();
+        };
+        void close() {
+            CloseWindow();
+        };
+        void create(size_t w, size_t h, std::string t) {
+            m_width = w;
+            m_height = h;
+            m_title = t;
+            InitWindow(m_width, m_height, m_title.c_str());
+        };
+        void set_framerate_limit(size_t fps) {
+            m_framerate_limit = fps;
+            SetTargetFPS(m_framerate_limit);
+        };
+        std::string get_title() {
+            return m_title;
+        };
+        void set_title(std::string title) {
+            m_title = title;
+        };
+        int get_width() {
+            return m_width;
+        };
+        void set_width(int width) {
+            m_width = width;
+        };
+        int get_height() {
+            return m_height;
+        };
+        void set_height(int height) {
+            m_height = height;
+        };
+};
+
+class Text {
+    std::string m_text;
+    Font m_font;
+    size_t m_size;
+    public:
+        Text() {}
+        Text(std::string t, Font f, size_t s)
+            : m_text(t), m_font(f), m_size(s) {}
+};
+
+class CircleShape {
+    float m_x; 
+    float m_y; 
+    float m_radius;
+    Color m_color;
+    size_t m_points;
+    public:
+        CircleShape(float xin, float yin, float rad)
+            : m_x(xin), m_y(yin), m_radius(rad) {}
+        CircleShape (float r, size_t p)
+            : m_radius(r), m_points(p) {}
+
+        void setFillColor(const Color & color);
+        void setOutlineColor(const Color & color);
+        void setOutlineThickness(const float thickness);
+        void setOrigin(const float x, const float y);
+};
+
+class Vec2: public Vector2 {
+    public:
+        Vec2();
+        Vec2(float xin, float yin);
+
+        void normalize();
+        float length() const;
+        float dist(const Vec2 & rhs) const;
+
+        bool operator == (const Vec2 & rhs) const;
+        bool operator != (const Vec2 & rhs) const;
+
+        Vec2 operator + (const Vec2 & rhs) const;
+        Vec2 operator - (const Vec2 & rhs) const;
+        Vec2 operator / (const float val) const;
+        Vec2 operator * (const float val) const;
+
+        void operator += (const Vec2 & rhs);
+        void operator -= (const Vec2 & rhs);
+        void operator *= (const float val);
+        void operator /= (const float val);
+};
+
+Vec2::Vec2() {}
+
+Vec2::Vec2(float xin, float yin) {
+    x = xin;
+    y = yin;
+}
+
+bool Vec2::operator == (const Vec2 & rhs) const {
+    return (x == rhs.x && y == rhs.y);
+}
+bool Vec2::operator != (const Vec2 & rhs) const {
+    return (x != rhs.x || y != rhs.y);
+}
+Vec2 Vec2::operator + (const Vec2 & rhs) const {
+    return Vec2(x+rhs.x, y+rhs.y);
+}
+Vec2 Vec2::operator - (const Vec2 & rhs) const {
+    return Vec2(x-rhs.x, y-rhs.y);
+}
+Vec2 Vec2::operator / (const float val) const {
+    return Vec2(x/val, y/val);
+}
+Vec2 Vec2::operator * (const float val) const {
+    return Vec2(x*val, y*val);
+}
+void Vec2::operator += (const Vec2 & rhs) {}
+void Vec2::operator -= (const Vec2 & rhs) {}
+void Vec2::operator /= (const float val) {}
+void Vec2::operator *= (const float val) {}
+
+void Vec2::normalize() {
+    Vector2 vec = Vector2Normalize({x,y});
+    x = vec.x;
+    y = vec.y;
+};
+
+class CTransform {
+    public:
+        Vec2 pos = {0.0, 0.0};
+        Vec2 velocity = {0.0, 0.0};;
+        float angle = 0;
+
+        CTransform(const Vec2 & p, const Vec2 & v, float a)
+            : pos(p), velocity(v), angle(a) {}
+};
+
+class CShape {
+    public:
+        CircleShape circle;
+        CShape(float radius, int points, const Color & fill, const Color & outline, float thickness)
+            : circle(radius, points) {
+            
+            circle.setFillColor(fill);
+            circle.setOutlineColor(outline);
+            circle.setOutlineThickness(thickness);
+            circle.setOrigin(radius, radius);
+        }
+};
+
+class CCollision {
+    public:
+        float radius = 0;
+        CCollision(float r)
+            : radius(r) {}
+};
+
+class CScore {
+    public:
+        int score = 0;
+        CScore(int s)
+            : score(s) {}
+};
+
+class CLifespan {
+    public:
+        int remaining = 0;
+        int total = 0;
+        CLifespan(int t)
+            : remaining(t), total(t) {}
+};
+
+class CInput {
+    public:
+        bool up = false;
+        bool left = false;
+        bool right = false;
+        bool down = false;
+        bool shoot = false;
+        
+        CInput() {}
+};
+
+class Entity {
+    friend class EntityManager;
+
+    bool m_active = true;
+    size_t m_id = 0;
+    std::string m_tag = "default";    
+
+    Entity(const size_t id, const std::string & tag);
+
+    //component pointers
+    std::shared_ptr<CTransform> c_transform;
+    std::shared_ptr<CShape> c_shape;
+    std::shared_ptr<CCollision> c_collision;
+    std::shared_ptr<CScore> c_score;
+    std::shared_ptr<CLifespan> c_lifespan;
+    std::shared_ptr<CInput> c_input;
+
+    public:        
+        bool is_active() const;
+        const std::string & tag() const;
+        const size_t id() const;
+        void destroy();
+};
+
+Entity::Entity(const size_t id, const std::string & tag) {
+    m_id = id;
+    m_tag = tag;
+};
+
+bool Entity::is_active() const {
+    return m_active;
+};
+const std::string & Entity::tag() const {
+    return m_tag;
+};
+const size_t Entity::id() const {
+    return m_id;
+}
+
+typedef std::vector<std::shared_ptr<Entity>> EntityVec;
+typedef std::map<std::string, EntityVec> EntityMap;
+
+class EntityManager {
+    EntityVec m_entities;    
+    EntityVec m_to_add;
+    EntityMap m_entities_map;
+    size_t m_total_entities = 0;
+    
+    // void init();
+    void remove_dead_entities(EntityVec & vec);
+    
+    public:
+        EntityManager();
+        
+        void update();
+        
+        std::shared_ptr<Entity> add_entity(const std::string & tag);
+        
+        const EntityVec & get_entities();
+        const EntityVec & get_entities(const std::string tag);
+};
+
+EntityManager::EntityManager() {}
+
+void EntityManager::update() {}
+
+std::shared_ptr<Entity> EntityManager::add_entity(const std::string & tag) {
+    auto entity = std::shared_ptr<Entity>(new Entity(m_total_entities++, tag));
+    m_to_add.push_back(entity);
+    return entity;
+}
+
+const EntityVec & EntityManager::get_entities() {
+    return m_entities;
+}
+
+const EntityVec & EntityManager::get_entities(const std::string tag) {
+    //TODO: this is wrong, return the vector from the map by tag
+    return m_entities;
+}
+
+class Game {
+    RenderWindow m_windows;
+    EntityManager m_entities;
+    Font m_font;
+    Text m_text;
+
+    // PlayerConfig m_player_config;
+    // EnemyConfig m_enemy_config;
+    // BulletConfig m_bullet_config;
+
+    int m_score = 0;
+    int m_current_frame = 0;
+    int m_last_enemy_spawn_time = 0;
+    
+    bool m_paused = false;
+    bool m_running = true;
+
+    std::shared_ptr<Entity> m_player;
+
+    void init(const std::string & config);
+    void set_pause(bool paused);
+
+    //systems
+    void s_movement();
+    void s_user_input();
+    void s_lifespan();
+    void s_render();
+    void s_enemy_spawner();
+    void s_collision();
+
+    void spawn_player();
+    void spawn_enemy();
+    void spawn_small_enemies(std::shared_ptr<Entity> entity);
+    void spawn_bullet(std::shared_ptr<Entity> entity, const Vec2 & mouse_pos);
+    void spawn_special_weapon(std::shared_ptr<Entity> entity);
+
+    public:        
+        Game(const std::string & config);
+        void run();
+};
+
+Game::Game(const std::string & config) {
+    init(config);
+};
+
+void Game::init(const std::string & path) {
+    // std:ifstream fin(path);
+
+    m_windows.create(800, 450, "Engine GEPT-1");
+    m_windows.set_framerate_limit(30);
+    
+    spawn_player();
+}
+
+void Game::run() {
+    while(m_running && m_windows.is_open()) {
+        m_entities.update();
+
+        if (!m_paused) {}
+
+        m_current_frame++;
+        
+        BeginDrawing();
+            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
         EndDrawing();
+        std::cout << m_current_frame << std::endl;
     }
-    CloseWindow();
+    m_windows.close();
+}
+
+void Game::set_pause(bool paused) {}
+void Game::spawn_player() {}
+
+
+int main(void) {
+    // InitWindow(800, 450, "raylib example - tilemap");
+    // SetTargetFPS(30);
+
+    // Vec2 v1(100, 200);
+    // Vec2 v2(300, 100);
+    // Vec2 v3;
+    // v3 = v1 - v2;
+    // std::cout << v3.x << " - " << v3.y << std::endl;
+
+    Game g("config.txt");
+    g.run();
+
+    // while (!WindowShouldClose()) {
+    //     BeginDrawing();
+    //         DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+    //     EndDrawing();
+    // }
+    // CloseWindow();
 
     return 0;
 }
