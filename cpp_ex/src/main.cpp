@@ -900,24 +900,6 @@ class Text {
             : m_text(t), m_font(f), m_size(s) {}
 };
 
-class CircleShape {
-    float m_x; 
-    float m_y; 
-    float m_radius;
-    Color m_color;
-    size_t m_points;
-    public:
-        CircleShape(float xin, float yin, float rad)
-            : m_x(xin), m_y(yin), m_radius(rad) {}
-        CircleShape (float r, size_t p)
-            : m_radius(r), m_points(p) {}
-
-        void setFillColor(const Color & color);
-        void setOutlineColor(const Color & color);
-        void setOutlineThickness(const float thickness);
-        void setOrigin(const float x, const float y);
-};
-
 class Vec2: public Vector2 {
     public:
         Vec2();
@@ -966,16 +948,62 @@ Vec2 Vec2::operator / (const float val) const {
 Vec2 Vec2::operator * (const float val) const {
     return Vec2(x*val, y*val);
 }
-void Vec2::operator += (const Vec2 & rhs) {}
+void Vec2::operator += (const Vec2 & rhs) {
+    x = x+rhs.x;
+    y = y+rhs.y;
+}
 void Vec2::operator -= (const Vec2 & rhs) {}
 void Vec2::operator /= (const float val) {}
-void Vec2::operator *= (const float val) {}
+void Vec2::operator *= (const float val) {
+    x = x*val;
+    y = y*val;
+}
 
 void Vec2::normalize() {
     Vector2 vec = Vector2Normalize({x,y});
     x = vec.x;
     y = vec.y;
 };
+
+class CircleShape {
+    float m_x; 
+    float m_y; 
+    float m_radius;
+    Color m_fill_color;
+    size_t m_points;
+    public:
+        CircleShape(float xin, float yin, float rad)
+            : m_x(xin), m_y(yin), m_radius(rad) {}
+        CircleShape (float r, size_t p)
+            : m_radius(r), m_points(p) {}
+        
+        void set_fill_color(const Color & color);
+        void set_outline_color(const Color & color);
+        void set_outline_thickness(const float thickness);
+        void set_origin(const float x, const float y);
+        const Vec2 get_origin() const;
+        const float get_radius() const;
+        const Color get_fill_color() const;
+};
+
+void CircleShape::set_fill_color(const Color & color) {
+    m_fill_color = color;
+}
+void CircleShape::set_outline_color(const Color & color) {}
+void CircleShape::set_outline_thickness(const float thickness) {}
+void CircleShape::set_origin(const float x, const float y) {
+    m_x = x;
+    m_y = y;
+}
+const Vec2 CircleShape::get_origin() const {
+    return Vec2(m_x, m_y);
+}
+const float CircleShape::get_radius() const {
+    return m_radius;
+}
+const Color CircleShape::get_fill_color() const {
+    return m_fill_color;
+}
 
 class CTransform {
     public:
@@ -993,10 +1021,10 @@ class CShape {
         CShape(float radius, int points, const Color & fill, const Color & outline, float thickness)
             : circle(radius, points) {
             
-            circle.setFillColor(fill);
-            circle.setOutlineColor(outline);
-            circle.setOutlineThickness(thickness);
-            circle.setOrigin(radius, radius);
+            circle.set_fill_color(fill);
+            circle.set_outline_color(outline);
+            circle.set_outline_thickness(thickness);
+            circle.set_origin(radius, radius);
         }
 };
 
@@ -1035,6 +1063,7 @@ class CInput {
 
 class Entity {
     friend class EntityManager;
+    friend class Game;
 
     bool m_active = true;
     size_t m_id = 0;
@@ -1111,7 +1140,8 @@ const EntityVec & EntityManager::get_entities() {
 
 const EntityVec & EntityManager::get_entities(const std::string tag) {
     //TODO: this is wrong, return the vector from the map by tag
-    return m_entities;
+    return m_entities_map.at(tag);
+    // return m_entities;
 }
 
 class Game {
@@ -1172,20 +1202,84 @@ void Game::run() {
     while(m_running && m_windows.is_open()) {
         m_entities.update();
 
-        if (!m_paused) {}
+        if (!m_paused) {
+            // s_enemy_spawner();
+            s_movement();
+            // s_collision();
+        }
+        s_user_input();
+        s_render();
 
         m_current_frame++;
         
-        BeginDrawing();
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        EndDrawing();
-        std::cout << m_current_frame << std::endl;
+        // std::cout << m_current_frame << std::endl;
+        // std::cout << m_player->tag() << std::endl;
+        // std::cout << m_player->c_input->up << std::endl;
+        // std::cout << m_player->c_transform->pos.y << std::endl;
     }
     m_windows.close();
 }
 
-void Game::set_pause(bool paused) {}
-void Game::spawn_player() {}
+void Game::set_pause(bool paused) {
+    m_paused = paused;
+}
+
+void Game::spawn_player() {
+    //create a entity and get the return type
+    auto entity = m_entities.add_entity("player");
+    //give the entity a transform
+    entity->c_transform = std::make_shared<CTransform>(Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 0.0f);
+    //add a shape
+    entity->c_shape = std::make_shared<CShape>(32.0f, 8, RED, BLUE, 4.0f);
+    //add input component
+    entity->c_input = std::make_shared<CInput>();
+    //against entitymanager paradigm, but we use player so much, so its worth it
+    m_player = entity;
+}
+
+void Game::s_render() {
+    BeginDrawing();
+        ClearBackground(BLACK);
+        DrawCircle(m_player->c_transform->pos.x, m_player->c_transform->pos.y, m_player->c_shape->circle.get_radius(), m_player->c_shape->circle.get_fill_color());
+        // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+    EndDrawing();
+}
+
+void Game::s_user_input() {
+    if (IsKeyDown(KEY_S)) {
+        m_player->c_input->down = true;
+    } else if(IsKeyDown(KEY_W)) { 
+        m_player->c_input->up = true;
+    } else {
+        m_player->c_input->down = false;
+        m_player->c_input->up = false;
+    }
+    if (IsKeyDown(KEY_D)) {
+        m_player->c_input->left = true;
+    } else if (IsKeyDown(KEY_A)) {
+        m_player->c_input->right = true;
+    } else {
+        m_player->c_input->left = false;
+        m_player->c_input->right = false;
+    }
+    if (IsKeyDown(KEY_SPACE)) {
+        set_pause(!m_paused);
+    }
+    // if (m_direction.x != 0 && m_direction.y != 0) {
+    //     m_direction = Vector2Normalize(m_direction);
+    // }
+}
+
+void Game::s_movement() {
+    if (m_player->c_transform->pos.x > GetScreenWidth() || m_player->c_transform->pos.x < 0) {
+        m_player->c_transform->velocity *= -1;    
+    }
+    if (m_player->c_transform->pos.y > GetScreenHeight() || m_player->c_transform->pos.y <= 0) {
+        m_player->c_transform->velocity *= -1;    
+    }
+    m_player->c_transform->pos += m_player->c_transform->velocity * 10;
+    // m_player->c_transform->velocity.normalize();
+}
 
 
 int main(void) {
