@@ -552,6 +552,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 #define TILE_SIZE 32
 #define TILEMAP_SIZE_W 16
@@ -945,6 +946,10 @@ class RenderWindow {
             m_framerate_limit = fps;
             SetTargetFPS(m_framerate_limit);
         };
+        const size_t get_framerate_limit() const {
+            return m_framerate_limit;
+            // return GetFPS();
+        }
         const std::string get_title() const {
             return m_title;
         };
@@ -988,6 +993,7 @@ class CircleShape {
         void set_outline_thickness(const float & thickness);
         void set_origin(const float x, const float y);
         void set_rotation(const float r);
+        // void set_position(const float x, const float y);
         const Vec2 get_origin() const;
         const float get_radius() const;
         const Color get_fill_color() const;
@@ -1136,7 +1142,7 @@ typedef std::map<std::string, EntityVec> EntityMap;
 
 class EntityManager {
     EntityVec m_entities;    
-    EntityVec m_to_add;
+    EntityVec m_entities_to_add;
     EntityMap m_entities_map;
     size_t m_total_entities = 0;
     
@@ -1156,11 +1162,55 @@ class EntityManager {
 
 EntityManager::EntityManager() {}
 
-void EntityManager::update() {}
+void EntityManager::update() {
+    // std::cout << m_entities_map.size() << "\n";
+    for (auto e : m_entities_to_add) {
+        m_entities.push_back(e);
+        
+        // m_entities_map[e->tag()].swap(m_entities_to_add);
+        // m_entities_map.insert(std::pair<std::string,EntityVec>(e->tag(), m_entities_to_add));
+        // m_entities_map.find(e->tag())->second.push_back(e);
+        // if (e->tag() == "bullet") {
+        //     m_entities_map["bullet"].push_back(e);
+        // }
+
+        m_entities_map[e->tag()].push_back(e);
+
+    }
+    // std::cout << "bullet_size: " << m_entities_map["bullet"].size() << "\n";
+    // std::cout << "enemy_size: " << m_entities_map["enemy"].size() << "\n";
+
+    // std::cout << "bullet_size: " << m_entities_map.find("bullet")->second.size() << "\n";
+    // std::cout << "enemy_size: " << m_entities_map.find("enemy")->second.size() << "\n";
+    // for (auto e : m_entities_map.at("bullet")) {        
+    //     std::cout << e->id() << " " << e->tag() << "\n";
+    // }
+    // m_entities_map.insert(make_pair("aaa", m_entities_to_add));
+    m_entities_to_add.clear();
+    remove_dead_entities(m_entities);
+    for (auto & [tag, entityVec] : m_entities_map) {
+        remove_dead_entities(entityVec);
+    }
+}
+
+void EntityManager::remove_dead_entities(EntityVec & vec) {
+    // for (auto e : vec) {
+    //     if (e->is_active()) {
+    //         continue;
+    //     }
+    //     //remove from vec;
+    // }
+    vec.erase(
+        std::remove_if(vec.begin(), 
+        vec.end(), 
+        [](const std::shared_ptr<Entity> & o) { return !o->is_active(); }), 
+        vec.end()
+    );
+}
 
 std::shared_ptr<Entity> EntityManager::add_entity(const std::string & tag) {
     auto entity = std::shared_ptr<Entity>(new Entity(m_total_entities++, tag));
-    m_to_add.push_back(entity);
+    m_entities_to_add.push_back(entity);
     return entity;
 }
 
@@ -1169,8 +1219,9 @@ const EntityVec & EntityManager::get_entities() {
 }
 
 const EntityVec & EntityManager::get_entities(const std::string tag) {
-    //TODO: this is wrong, return the vector from the map by tag
-    return m_entities_map.at(tag);
+    return m_entities_map[tag];
+    // return m_entities_map.at(tag);
+    //TODO: this is wrong, return the vector from the map by tag    
     // return m_entities;
 }
 
@@ -1229,13 +1280,13 @@ void Game::init(const std::string & path) {
 }
 
 void Game::run() {
-    while(m_running && m_windows.is_open()) {
+    while(m_running) {
         m_entities.update();
 
         if (!m_paused) {
-            // s_enemy_spawner();
+            s_enemy_spawner();
             s_movement();
-            // s_collision();
+            s_collision();
         }
         s_user_input();
         s_render();
@@ -1258,7 +1309,10 @@ void Game::spawn_player() {
     //create a entity and get the return type
     auto entity = m_entities.add_entity("player");
     //give the entity a transform
-    entity->c_transform = std::make_shared<CTransform>(Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 0.0f);
+    // entity->c_transform = std::make_shared<CTransform>(Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 0.0f);
+    entity->c_transform = std::make_shared<CTransform>(
+        Vec2(m_windows.get_size().x/2.0f, m_windows.get_size().y/2.0f), Vec2(1.0f, 1.0f), 0.0f
+    );
     //add a shape
     entity->c_shape = std::make_shared<CShape>(32.0f, 8, RED, BLUE, 4.0f);
     //add input component
@@ -1267,50 +1321,196 @@ void Game::spawn_player() {
     m_player = entity;
 }
 
+void Game::spawn_enemy() {
+    auto enemy = m_entities.add_entity("enemy");
+    //give the entity a transform
+    // entity->c_transform = std::make_shared<CTransform>(Vec2(200.0f, 200.0f), Vec2(1.0f, 1.0f), 0.0f);
+    enemy->c_transform = std::make_shared<CTransform>(
+        Vec2(
+            rand() % static_cast<int>(m_windows.get_size().x), 
+            rand() % static_cast<int>(m_windows.get_size().y)
+        ),
+        Vec2(1.0f, 1.0f), 0.0f
+    );
+    //add a shape
+    enemy->c_shape = std::make_shared<CShape>(32.0f, 3, BLUE, RED, 4.0f);
+    //add input component
+    enemy->c_input = std::make_shared<CInput>();
+
+    m_last_enemy_spawn_time = m_current_frame;
+}
+
+void Game::spawn_bullet(std::shared_ptr<Entity> entity, const Vec2 & mouse_pos) {
+    auto bullet = m_entities.add_entity("bullet");
+    bullet->c_transform = std::make_shared<CTransform>(mouse_pos, Vec2(0,0), 0.0f);
+    bullet->c_shape = std::make_shared<CShape>(10, 8, ORANGE, GREEN, 2);
+}
+
+void Game::s_enemy_spawner() {
+    size_t seconds = 5;
+    size_t wait_time = m_windows.get_framerate_limit() * seconds;
+    bool is_time_to_spawn = m_current_frame % wait_time == 0;
+    
+    if (is_time_to_spawn) {
+        spawn_enemy();
+    }
+
+    m_current_frame -= m_last_enemy_spawn_time;
+}
+
+void Game::s_collision() {}
+
 void Game::s_render() {
     BeginDrawing();
     ClearBackground(BLACK);
     // DrawCircle(m_player->c_transform->pos.x, m_player->c_transform->pos.y, m_player->c_shape->circle.get_radius(), m_player->c_shape->circle.get_fill_color());
     // DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-    DrawPoly(m_player->c_transform->pos, m_player->c_shape->circle.get_point_count(), m_player->c_shape->circle.get_radius(), m_player->c_shape->circle.get_rotation(), m_player->c_shape->circle.get_fill_color());
-    DrawPolyLinesEx(m_player->c_transform->pos, m_player->c_shape->circle.get_point_count(), m_player->c_shape->circle.get_radius(), m_player->c_shape->circle.get_rotation(), m_player->c_shape->circle.get_outline_thickness(), m_player->c_shape->circle.get_outline_color());
+    
+    // DrawPoly(m_player->c_transform->pos, m_player->c_shape->circle.get_point_count(), m_player->c_shape->circle.get_radius(), m_player->c_shape->circle.get_rotation(), m_player->c_shape->circle.get_fill_color());
+    // DrawPolyLinesEx(m_player->c_transform->pos, m_player->c_shape->circle.get_point_count(), m_player->c_shape->circle.get_radius(), m_player->c_shape->circle.get_rotation(), m_player->c_shape->circle.get_outline_thickness(), m_player->c_shape->circle.get_outline_color());
+
+    for (auto e : m_entities.get_entities()) {
+        DrawPoly(e->c_transform->pos, e->c_shape->circle.get_point_count(), e->c_shape->circle.get_radius(), e->c_shape->circle.get_rotation(), e->c_shape->circle.get_fill_color());
+        DrawPolyLinesEx(e->c_transform->pos, e->c_shape->circle.get_point_count(), e->c_shape->circle.get_radius(), e->c_shape->circle.get_rotation(), e->c_shape->circle.get_outline_thickness(), e->c_shape->circle.get_outline_color());    
+    }
     EndDrawing();
 }
 
 void Game::s_user_input() {
-    if (IsKeyDown(KEY_S)) {
+    if(!m_windows.is_open()) {
+        m_running = false;
+    }
+
+    // if (IsKeyDown(KEY_S)) {
+    //     std::cout << "S Key Pressed" << std::endl;
+    //     m_player->c_input->down = true;
+    // } else if(IsKeyDown(KEY_W)) { 
+    //     std::cout << "W Key Pressed" << std::endl;
+    //     m_player->c_input->up = true;
+    // } else {
+    //     m_player->c_input->down = false;
+    //     m_player->c_input->up = false;
+    // }
+    // if (IsKeyDown(KEY_D)) {
+    //     std::cout << "D Key Pressed" << std::endl;
+    //     m_player->c_input->left = true;
+    // } else if (IsKeyDown(KEY_A)) {
+    //     std::cout << "A Key Pressed" << std::endl;
+    //     m_player->c_input->right = true;
+    // } else {
+    //     m_player->c_input->left = false;
+    //     m_player->c_input->right = false;
+    // }
+
+    // if (IsKeyPressed(KEY_SPACE)) {
+    //     std::cout << "SPACE Key Pressed" << std::endl;
+    //     set_pause(!m_paused);
+    // }
+    
+    //Pressed
+    if (IsKeyPressed(KEY_S)) {
+        std::cout << "S Key Pressed" << std::endl;
         m_player->c_input->down = true;
-    } else if(IsKeyDown(KEY_W)) { 
+    } 
+    if(IsKeyPressed(KEY_W)) { 
+        std::cout << "W Key Pressed" << std::endl;
         m_player->c_input->up = true;
-    } else {
+    }
+    if (IsKeyPressed(KEY_D)) {
+        std::cout << "D Key Pressed" << std::endl;
+        m_player->c_input->left = true;
+    } 
+    if (IsKeyPressed(KEY_A)) {
+        std::cout << "A Key Pressed" << std::endl;
+        m_player->c_input->right = true;
+    }
+    //Releassed
+    if (IsKeyReleased(KEY_S)) {
+        std::cout << "S Key Released" << std::endl;
         m_player->c_input->down = false;
+    } 
+    if(IsKeyReleased(KEY_W)) { 
+        std::cout << "W Key Released" << std::endl;
         m_player->c_input->up = false;
     }
-    if (IsKeyDown(KEY_D)) {
-        m_player->c_input->left = true;
-    } else if (IsKeyDown(KEY_A)) {
-        m_player->c_input->right = true;
-    } else {
+    if (IsKeyReleased(KEY_D)) {
+        std::cout << "D Key Released" << std::endl;
         m_player->c_input->left = false;
+    } 
+    if (IsKeyReleased(KEY_A)) {
+        std::cout << "A Key Released" << std::endl;
         m_player->c_input->right = false;
     }
-    if (IsKeyDown(KEY_SPACE)) {
+    
+    if (IsKeyPressed(KEY_SPACE)) {
+        std::cout << "SPACE Key Released" << std::endl;
         set_pause(!m_paused);
     }
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+        std::cout << "MOUSE_BUTTON_LEFT Key Pressed";
+        std::cout << " at (" << GetMouseX() << "," << GetMouseY() << ")" << std::endl;
+        spawn_bullet(m_player, Vec2(GetMouseX(), GetMouseY()));
+    }
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+        std::cout << "MOUSE_BUTTON_RIGHT Key Pressed";
+        std::cout << " at (" << GetMouseX() << "," << GetMouseY() << ")" << std::endl;   
+    }
+    // if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+    //     std::cout << "MOUSE_BUTTON_LEFT Key Released" << std::endl;
+    // }
+    // if (IsMouseButtonReleased(MOUSE_BUTTON_RIGHT)) {
+    //     std::cout << "MOUSE_BUTTON_RIGHT Key Released" << std::endl;
+    // }
+    
     // if (m_direction.x != 0 && m_direction.y != 0) {
     //     m_direction = Vector2Normalize(m_direction);
     // }
 }
 
 void Game::s_movement() {
-    m_player->c_shape->circle.set_rotation( m_player->c_shape->circle.get_rotation() + 1.0f );
-    if (m_player->c_transform->pos.x > GetScreenWidth() || m_player->c_transform->pos.x < 0) {
-        m_player->c_transform->velocity *= -1;    
+    // m_player->c_shape->circle.set_position(m_player->c_transform->pos.x, m_player->c_transform->pos.y);
+    m_player->c_transform->angle += 1.0f;
+    m_player->c_shape->circle.set_rotation(m_player->c_transform->angle);
+    // if (m_player->c_transform->pos.x > GetScreenWidth() || m_player->c_transform->pos.x < 0) {
+    //     m_player->c_transform->velocity *= -1;    
+    // }
+    // if (m_player->c_transform->pos.y > GetScreenHeight() || m_player->c_transform->pos.y <= 0) {
+    //     m_player->c_transform->velocity *= -1;    
+    // }
+    // m_player->c_transform->pos += m_player->c_transform->velocity;
+
+    // if (m_player->c_input->up) {
+    //     m_player->c_transform->pos.y -= m_player->c_transform->velocity.y;
+    // }
+    // if (m_player->c_input->down) {
+    //     m_player->c_transform->pos.y += m_player->c_transform->velocity.y;
+    // }
+    // if (m_player->c_input->right) {
+    //     m_player->c_transform->pos.x -= m_player->c_transform->velocity.x;
+    // }
+    // if (m_player->c_input->left) {
+    //     m_player->c_transform->pos.x += m_player->c_transform->velocity.x;
+    // }
+
+    m_player->c_transform->velocity = { 0, 0 };
+
+    if (m_player->c_input->up) {
+        m_player->c_transform->velocity.y = -5;
     }
-    if (m_player->c_transform->pos.y > GetScreenHeight() || m_player->c_transform->pos.y <= 0) {
-        m_player->c_transform->velocity *= -1;    
+    if (m_player->c_input->down) {
+        m_player->c_transform->velocity.y = 5;
     }
-    m_player->c_transform->pos += m_player->c_transform->velocity;
+    if (m_player->c_input->right) {
+        m_player->c_transform->velocity.x = -5;
+    }
+    if (m_player->c_input->left) {
+        m_player->c_transform->velocity.x = 5;
+    }
+
+    m_player->c_transform->pos.x += m_player->c_transform->velocity.x;
+    m_player->c_transform->pos.y += m_player->c_transform->velocity.y;
+
     // m_player->c_transform->velocity.normalize();
 }
 
