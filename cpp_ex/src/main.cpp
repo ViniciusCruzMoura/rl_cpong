@@ -1333,7 +1333,8 @@ void Game::spawn_enemy() {
         Vec2(1.0f, 1.0f), 0.0f
     );
     //add a shape
-    enemy->c_shape = std::make_shared<CShape>(32.0f, 3, BLUE, RED, 4.0f);
+    enemy->c_shape = std::make_shared<CShape>(rand() % (32 - 24) + 24, rand() % (10 - 3) + 3, BLUE, RED, 4.0f);
+    // enemy->c_shape = std::make_shared<CShape>(32.0f, 3, BLUE, RED, 4.0f);
     //add input component
     enemy->c_input = std::make_shared<CInput>();
 
