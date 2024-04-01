@@ -1358,7 +1358,11 @@ void Game::s_enemy_spawner() {
     m_current_frame -= m_last_enemy_spawn_time;
 }
 
-void Game::s_collision() {}
+void Game::s_collision() {
+    for (auto b : m_entities.get_entities("bullet")) {
+        for (auto e : m_entities.get_entities("enemy")) {}
+    }
+}
 
 void Game::s_render() {
     BeginDrawing();
@@ -1493,25 +1497,56 @@ void Game::s_movement() {
     //     m_player->c_transform->pos.x += m_player->c_transform->velocity.x;
     // }
 
-    m_player->c_transform->velocity = { 0, 0 };
+    // m_player->c_transform->velocity = { 0, 0 };
 
-    if (m_player->c_input->up) {
-        m_player->c_transform->velocity.y = -5;
-    }
-    if (m_player->c_input->down) {
-        m_player->c_transform->velocity.y = 5;
-    }
-    if (m_player->c_input->right) {
-        m_player->c_transform->velocity.x = -5;
-    }
-    if (m_player->c_input->left) {
-        m_player->c_transform->velocity.x = 5;
-    }
+    // if (m_player->c_input->up) {
+    //     m_player->c_transform->velocity.y = -5;
+    // }
+    // if (m_player->c_input->down) {
+    //     m_player->c_transform->velocity.y = 5;
+    // }
+    // if (m_player->c_input->right) {
+    //     m_player->c_transform->velocity.x = -5;
+    // }
+    // if (m_player->c_input->left) {
+    //     m_player->c_transform->velocity.x = 5;
+    // }
 
-    m_player->c_transform->pos.x += m_player->c_transform->velocity.x;
-    m_player->c_transform->pos.y += m_player->c_transform->velocity.y;
+    // m_player->c_transform->pos.x += m_player->c_transform->velocity.x;
+    // m_player->c_transform->pos.y += m_player->c_transform->velocity.y;
 
     // m_player->c_transform->velocity.normalize();
+
+    for (auto p : m_entities.get_entities("player")) {
+        p->c_transform->velocity = { 0, 0 };
+
+        if (p->c_input->up) {
+            p->c_transform->velocity.y = -5;
+        }
+        if (p->c_input->down) {
+            p->c_transform->velocity.y = 5;
+        }
+        if (p->c_input->right) {
+            p->c_transform->velocity.x = -5;
+        }
+        if (p->c_input->left) {
+            p->c_transform->velocity.x = 5;
+        }
+
+        p->c_transform->pos.x += p->c_transform->velocity.x;
+        p->c_transform->pos.y += p->c_transform->velocity.y;
+    }
+    for (auto e : m_entities.get_entities("enemy")) {
+        if (e->c_transform->pos.x > GetScreenWidth() || e->c_transform->pos.x < 0) {
+            e->c_transform->velocity.x *= -1;
+        }
+        if (e->c_transform->pos.y > GetScreenHeight() || e->c_transform->pos.y <= 0) {
+            e->c_transform->velocity.y *= -1;
+        }
+        // e->c_transform->pos += e->c_transform->velocity;
+        e->c_transform->pos.x += e->c_transform->velocity.x;
+        e->c_transform->pos.y += e->c_transform->velocity.y;
+    }
 }
 
 
