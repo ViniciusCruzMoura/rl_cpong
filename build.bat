@@ -1,8 +1,4 @@
 ::@echo off
-:: .
-:: .
-:: > Setup required Environment
-:: -------------------------------------
 set RAYLIB_INCLUDE_DIR=C:\raylib\raylib\src
 set RAYLIB_LIB_DIR=C:\raylib\raylib\src
 set RAYLIB_RES_FILE=C:\raylib\raylib\src\raylib.rc.data
