@@ -8,13 +8,13 @@
 ### Docker
 To install build dependencies:
 ```
-docker run -it --rm -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 bash
+docker run -it --rm --network=host -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 bash
 ./configure.sh
 ./build.sh
 ```
 Other examples:
 ```
-docker run -it --rm -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 sh -c "./configure.sh && ./build.sh"
+docker run -it --rm --network=host -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 sh -c "./configure.sh && ./build.sh"
 ```
 
 ### Linux
