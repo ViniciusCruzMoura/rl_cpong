@@ -63,3 +63,7 @@ Next, clone the repo from within the Linux shell:
 `git clone https://github.com/ViniciusCruzMoura/rl_cpong.git`
 
 Then continue following the directions in the [Linux](#linux) installation section below.
+
+## Contribute
+
+Issues and pull requests are welcome.
