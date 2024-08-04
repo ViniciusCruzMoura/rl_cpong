@@ -44,7 +44,7 @@ sudo pacman -S ...
 Run `./build.sh` to build the project
 Other examples:
 ```
-make -B PLATFORM=PLATFORM_DESKTOP
+make
 ```
 
 Resulting artifacts can be found in the `build` directory.
