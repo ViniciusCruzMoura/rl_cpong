@@ -1,30 +1,20 @@
 .PHONY: all run
 
-# Define required environment variables
-#------------------------------------------------------------------------------------------------
 PLATFORM              ?= PLATFORM_DESKTOP
-
-# Define project variables
 PROJECT_NAME          ?= game
 PROJECT_VERSION       ?= 1.0
-
-RAYLIB_PATH           ?= RAYLIB_PATH#C:\raylib\raylib#$(RAYLIB_PATH)
-
+RAYLIB_PATH           ?= RAYLIB_PATH
 # Locations of raylib.h and libraylib.a/libraylib.so
 # NOTE: Those variables are only used for PLATFORM_OS: LINUX
 RAYLIB_INCLUDE_PATH   ?= /usr/local/include
 RAYLIB_LIB_PATH       ?= /usr/local/lib
-
 # Library type compilation: STATIC (.a) or SHARED (.so/.dll)
 RAYLIB_LIBTYPE        ?= STATIC
-
 # Build mode for project: DEBUG or RELEASE
 BUILD_MODE            ?= DEBUG
-
 # Use Wayland display server protocol on Linux desktop (by default it uses X11 windowing system)
 # NOTE: This variable is only used for PLATFORM_OS: LINUX
 USE_WAYLAND_DISPLAY   ?= FALSE
-
 
 # Determine PLATFORM_OS in case PLATFORM_DESKTOP selected
 ifeq ($(PLATFORM),PLATFORM_DESKTOP)
