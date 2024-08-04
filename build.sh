@@ -13,4 +13,4 @@ set -xe
 
 #gcc -Wall -Wextra -ggdb -o ./outmain main.c
 
-make -B PLATFORM=PLATFORM_DESKTOP
+make #-B PLATFORM=PLATFORM_DESKTOP
