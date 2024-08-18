@@ -1,4 +1,4 @@
-.PHONY: all run
+.PHONY: all run clean
 
 PLATFORM              ?= PLATFORM_DESKTOP
 PROJECT_NAME          ?= game
@@ -195,3 +195,6 @@ $(PROJECT_NAME): $(OBJS)
 
 run:
 	$(MAKE) $(MAKEFILE_PARAMS)
+
+clean:
+	rm -f $(wildcard src/*.o) $(wildcard src/**/*.o)
