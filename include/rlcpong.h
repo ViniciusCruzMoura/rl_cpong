@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "utils.h"
 #include "render_window.h"
+#include "components.h"
 #include "entity.h"
 #include "entity_manager.h"
 

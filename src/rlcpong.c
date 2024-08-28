@@ -49,8 +49,19 @@ void sys_render(Game *g)
         die("fatal: game not initialized\n");
     }
     BeginDrawing();
+
     ClearBackground(BLACK);
     DrawText("Render: OpenGL screen", 190, 200, 30, WHITE);
+
+    char buf[1024];
+    snprintf(buf, 1024,
+            "Debug:\n" \
+            "- GetMonitorWidth: (%d)\n" \
+            "- GetMonitorHeight: (%d)\n"
+            , GetMonitorWidth(GetCurrentMonitor())
+            , GetMonitorHeight(GetCurrentMonitor()));
+    DrawText(TextFormat(buf), 0, 0, 10, WHITE);
+
     EndDrawing();
 }
 
@@ -64,7 +75,14 @@ void sys_user_input(Game *g)
     {
         g->m_running = false;
     }
-    
+
+    for (int i=0; i <= MAX_ENTITY_MAP_COLUMNS; ++i)
+    {
+        Entity *e = g->m_entities.m_map[ENTITY_TYPE_PLAYER][i];
+        if (!e) continue;
+        //printf("%s : %li\n", e->m_tag, e->m_id);
+    }
+
     if (IsKeyPressed(KEY_S)) {
         printf("S Key Pressed\n");
     } 
