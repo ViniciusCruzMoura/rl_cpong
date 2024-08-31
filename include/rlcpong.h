@@ -3,6 +3,7 @@
 
 #include <stdio.h> 
 #include <stdlib.h> 
+#include <string.h>
 #include "raylib.h"
 #include "utils.h"
 #include "render_window.h"
