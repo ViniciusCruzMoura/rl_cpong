@@ -2,10 +2,10 @@
 #define COMPONENTS_H
 
 typedef struct CFlags {
-    bool isVisible;
-    bool hasCollided;
-    bool isCircleCollision;
-    bool isRectangleCollision;
+    bool is_visible;
+    bool has_collided;
+    bool is_circle_collision;
+    bool is_rectangle_collision;
 } CFlags;
 
 typedef struct CInput {
