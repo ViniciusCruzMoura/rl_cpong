@@ -16,6 +16,9 @@ Other examples:
 ```
 docker run -it --rm --network=host -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 sh -c "./configure.sh && ./build.sh"
 ```
+```
+docker exec $CONTAINER_ID sh -c "make -B"; ./game
+```
 
 ### Linux
 
