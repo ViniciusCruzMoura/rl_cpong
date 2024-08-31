@@ -20,6 +20,7 @@ void run(Game *g)
     }
     create_window(&g->m_windows);
     spawn_player(&g->m_entities);
+//    Entity **x =  get_entities(&g->m_entities, ENTITY_TYPE_PLAYER);
     while (g->m_running)
     {
         update_entities(&g->m_entities);
@@ -38,8 +39,13 @@ void run(Game *g)
 
 void spawn_player(EntityManager *em)
 {
-    Entity *e = add_entity(em, "player", ENTITY_TYPE_PLAYER);
-    //printf("%li : %s \n", e->m_id, e->m_tag);
+    Entity *e = add_entity(em, ENTITY_TYPE_PLAYER);
+    // create rec shape
+    // set position on scene
+    // set inputs
+//    e->flags.is_rectangle_collision = true;
+//    printf("is rectangle collision : %d\n", e->flags.is_rectangle_collision);
+//    printf("%li : %d \n", e->m_id, e->m_tag);
 }
 
 void sys_render(Game *g)
@@ -74,13 +80,6 @@ void sys_user_input(Game *g)
     if (!is_open_window(&g->m_windows))
     {
         g->m_running = false;
-    }
-
-    for (int i=0; i <= MAX_ENTITY_MAP_COLUMNS; ++i)
-    {
-        Entity *e = g->m_entities.m_map[ENTITY_TYPE_PLAYER][i];
-        if (!e) continue;
-        //printf("%s : %li\n", e->m_tag, e->m_id);
     }
 
     if (IsKeyPressed(KEY_S)) {
