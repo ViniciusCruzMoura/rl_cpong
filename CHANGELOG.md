@@ -6,24 +6,24 @@
 
 ## 2024-08-31
 
-- RlCpong - Entity - Change char tag to enum type
-- RlCpong - EntityManger - Stop using map and use vector with a filter by type
-- RlCpong - EntityManger - Create a entity list to add on next delta time
+- RlCpong - Entity - Changed character tag to use enum type
+- RlCpong - EntityManger - Replaced map with vector and added a type-based filter
+- RlCpong - EntityManger - Implemented an entity list for addition in the next delta time
 
 ## 2024-08-28
 
-- RlCpong - Components - create components in entity struct
+- RlCpong - Components - Added components directly within the entity struct
 
 ## 2024-08-05 a 2024-08-16
 
-- RlCpong - Directory - Move src to src_bkp
-- RlCpong - Screen - Make a New Window 800x600
-- RlCpong - Entity - Make a entity map
-- RlCpong - Configs - Create a Struct thats contain all the sys vars
-- RlCpong - Structs - Define whats structs gonna be use
-- RlCpong - EntityManger - Solve problem of pointers values
-- RlCpong - Makefile - Clean all object file
-- RlCpong - Files - Separate implementation from headers
+- RlCpong - Directory - Moved src to src_bkp
+- RlCpong - Screen - Created a new 800x600 window
+- RlCpong - Entity - Implemented an entity map
+- RlCpong - Configs - Developed a struct to hold all system variables
+- RlCpong - Structs - Defined the structs to be used
+- RlCpong - EntityManger - Resolved pointer value issues
+- RlCpong - Makefile - Cleaned all object files
+- RlCpong - Files - Separated implementation files from headers
 
 ## 2023-12-26
 
