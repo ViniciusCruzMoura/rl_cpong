@@ -34,7 +34,20 @@ Dependency installation instructions for common Linux distros are provided below
 ##### Debian / Ubuntu
 To install build dependencies:
 ```
-sudo apt install -y ...
+sudo apt install -y build-essential \
+    gcc \
+    git \
+    cmake \
+    libasound2-dev \
+    libx11-dev \
+    libxrandr-dev \
+    libxi-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    libxcursor-dev \
+    libxinerama-dev \
+    libwayland-dev \
+    libxkbcommon-dev
 ```
 
 ##### Arch Linux
