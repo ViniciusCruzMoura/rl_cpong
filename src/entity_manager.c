@@ -17,6 +17,20 @@ void update_entities(EntityManager *em)
     }
     memset(em->m_to_add, 0, sizeof em->m_to_add);
     // free not active entities
+    for (int i=0; i < MAX_ENTITIES; ++i)
+    {
+        if (!em->m_vec[i])
+        {
+            continue;
+        }
+        if (em->m_vec[i]->m_active)
+        {
+            continue;
+        }
+        printf("EntityID to REMOVE %li\n", em->m_vec[i]->m_id);
+        //em->m_vec[i] = NULL;
+        free(em->m_vec[i]);
+    }
 }
 
 Entity *add_entity(EntityManager *em, EntityTypes tag)
