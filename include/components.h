@@ -16,7 +16,7 @@ typedef struct CInput {
 } CInput;
 
 typedef struct CShape {
-    float circle_radius;
+    float radius;
     Rectangle rec;
     Color color;
 } CShape;
@@ -34,11 +34,18 @@ typedef struct CTransform {
     Vector2 pos;
     Vector2 velocity;
     float angle;
+    float rotation;
+    Vector2 scale;
 } CTransform;
 
 typedef struct CLifespan {
     int remaining_life;
     int total_life;
 } CLifespan;
+
+typedef struct CAnimation {
+    bool loop;
+    //sprite
+} CAnimation;
 
 #endif //COMPONENTS_H

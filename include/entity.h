@@ -18,13 +18,23 @@ typedef struct Entity {
     //flags
     CFlags flags;
 
-    //componets
-    CInput input;
-    CTransform transform;
-    CCollision collision;
-    CShape shape;
-    CScore score;
+    CInput input; //CMouseInput, CKeyboardInput
     CLifespan lifespan;
+    CScore score;
+
+    //AI components
+    //CAIHealth, CAIVision, CAIPathfinding
+    //CAIState, CAIBehavior, CAIAttack
+
+    //Animation components
+    CAnimation animation;
+
+    //Physics components
+    CCollision collision;
+    CTransform transform;
+
+    //Graphics components
+    CShape shape;
 
 } Entity;
 
