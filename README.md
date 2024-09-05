@@ -8,16 +8,17 @@
 ### Docker
 To install build dependencies:
 ```
-docker run -it --rm --network=host --name rlcpong -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 bash
+docker run -it --rm --network=host -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" ubuntu:22.04 bash
 ./configure.sh
-./build.sh
+make
+make clean
 ```
 Other examples:
 ```
-docker run -it --rm --network=host --name rlcpong -v "$PWD":/usr/src/app -w /usr/src/app ubuntu:22.04 sh -c "./configure.sh && ./build.sh"
+docker run -it --rm --network=host -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" ubuntu:22.04 sh -c "./configure.sh; make; make clean"
 ```
 ```
-docker exec rlcpong sh -c "make -B"; ./game
+./build.sh
 ```
 
 ### Linux

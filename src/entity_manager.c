@@ -19,11 +19,7 @@ void update_entities(EntityManager *em)
     // free not active entities
     for (int i=0; i < MAX_ENTITIES; ++i)
     {
-        if (!em->m_vec[i])
-        {
-            continue;
-        }
-        if (em->m_vec[i]->m_active)
+        if (!em->m_vec[i] || em->m_vec[i]->m_active)
         {
             continue;
         }
@@ -61,11 +57,7 @@ Entity **get_entities(EntityManager *em, EntityTypes etype)
     static Entity *new_list[MAX_ENTITIES];
     for (int i=0; i < MAX_ENTITIES; ++i)
     {
-        if (!em->m_vec[i])
-        {
-            continue;
-        }
-        if (em->m_vec[i]->m_tag != etype)
+        if (!em->m_vec[i] || em->m_vec[i]->m_tag != etype)
         {
             continue;
         }
