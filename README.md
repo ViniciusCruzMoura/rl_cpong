@@ -8,17 +8,11 @@
 ### Docker
 To install build dependencies:
 ```
-docker run -it --rm --network=host -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" ubuntu:22.04 bash
-./configure.sh
-make
-make clean
+./build.sh -b && ./build.sh -r
 ```
 Other examples:
 ```
-docker run -it --rm --network=host -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" ubuntu:22.04 sh -c "./configure.sh; make; make clean"
-```
-```
-./build.sh
+./build.sh -h
 ```
 
 ### Linux

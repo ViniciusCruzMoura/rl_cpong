@@ -7,7 +7,7 @@ case $1 in
         exit 0
         ;;
     -r|-run|--run|run)
-        docker run -it --rm --network=host -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" $(basename $PWD) sh -c "make -B; make clean"
+        docker run -it --rm --network=host --name $(basename $PWD) -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" $(basename $PWD) sh -c "make -B; make clean"
         exit 0
         ;;
     -rmi|--rmi|rmi)
