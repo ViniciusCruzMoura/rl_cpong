@@ -1,6 +1,4 @@
 #!/bin/sh
-#make #-B PLATFORM=PLATFORM_DESKTOP
-
 case $1 in
     -b|-build|--build|build)
         docker build --network=host -t $(basename $PWD) .
