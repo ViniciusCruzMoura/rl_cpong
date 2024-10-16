@@ -19,6 +19,7 @@
 typedef struct Game {
     RenderWindow m_windows;
     EntityManager m_entities;
+    //Scene m_scenes;
     bool m_paused;
     bool m_running;
     int m_current_frame;

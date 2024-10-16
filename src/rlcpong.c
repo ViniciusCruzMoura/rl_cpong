@@ -14,18 +14,15 @@ void init_game(Game *g)
 
 void run(Game *g)
 {
-    if (!g)
-    {
+    if (!g) {
         die("fatal: game not initialized\n");
     }
     create_window(&g->m_windows);
     spawn_player(&g->m_entities);
-//    Entity **x =  get_entities(&g->m_entities, ENTITY_TYPE_PLAYER);
-    while (g->m_running)
-    {
+//    Entity *x =  get_entities(&g->m_entities, ENTITY_TYPE_PLAYER);
+    while (g->m_running) {
         update_entities(&g->m_entities);
-        if (!g->m_paused)
-        {
+        if (!g->m_paused) {
             //spawn_enemy();
             //movement();
             //collision();
@@ -50,14 +47,13 @@ void spawn_player(EntityManager *em)
 
 void sys_render(Game *g)
 {
-    if (!g)
-    {
+    if (!g) {
         die("fatal: game not initialized\n");
     }
     BeginDrawing();
 
     ClearBackground(BLACK);
-    DrawText("Render: OpenGL screen", 190, 200, 30, WHITE);
+    DrawText("Render: OpenGL Screen", 0, 100, 50, WHITE);
 
     char buf[1024];
     snprintf(buf, 1024,
@@ -73,12 +69,10 @@ void sys_render(Game *g)
 
 void sys_user_input(Game *g)
 {
-    if (!g)
-    {
+    if (!g) {
         die("fatal: game not initialized\n");
     }
-    if (!is_open_window(&g->m_windows))
-    {
+    if (!is_open_window(&g->m_windows)) {
         g->m_running = false;
     }
 
