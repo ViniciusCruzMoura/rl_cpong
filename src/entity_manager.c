@@ -11,7 +11,7 @@ void update_entities(EntityManager *em)
         *temp = *em->m_list;
         while(temp) {
             if (!temp->m_active) {
-                printf("EntityID to REMOVE %li\n", temp->m_id);
+                DEBUG_PRINT("EntityID to REMOVE %li\n", temp->m_id);
                 entity_remove_by_id(&em->m_list, temp->m_id);
             }
             temp = temp->next;
@@ -23,7 +23,7 @@ void update_entities(EntityManager *em)
 Entity *add_entity(EntityManager *em, EntityTypes tag)
 {
     Entity *e = entity_create(&em->m_toadd, tag, ++em->m_total_entities);
-    printf("Entity ID: %zu : Stored in map at: %p\n",
+    DEBUG_PRINT("Entity ID: %zu : Stored in map at: %p\n",
             e->m_id, (void*)e);
     return e;
 }

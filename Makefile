@@ -172,6 +172,8 @@ endif
 PROJECT_SOURCE_FILES := \
     $(wildcard src/*.c) \
     $(wildcard src/**/*.c) \
+    $(wildcard tests/*.c) \
+    $(wildcard tests/**/*.c) \
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))

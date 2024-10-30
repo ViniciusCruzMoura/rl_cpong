@@ -60,9 +60,12 @@ void sys_render(Game *g)
             "Debug:\n" \
             "- GetMonitorWidth: (%d)\n" \
             "- GetMonitorHeight: (%d)\n"
+            "- Frame: (%d)\n"
             , GetMonitorWidth(GetCurrentMonitor())
-            , GetMonitorHeight(GetCurrentMonitor()));
+            , GetMonitorHeight(GetCurrentMonitor())
+            , g->m_current_frame);
     DrawText(TextFormat(buf), 0, 0, 10, WHITE);
+    DrawText(TextFormat(buf), 0, 150, 40, RED);
 
     EndDrawing();
 }
@@ -77,43 +80,43 @@ void sys_user_input(Game *g)
     }
 
     if (IsKeyPressed(KEY_S)) {
-        printf("S Key Pressed\n");
+        DEBUG_PRINT("S Key Pressed\n");
     } 
     if(IsKeyPressed(KEY_W)) { 
-        printf("W Key Pressed\n");
+        DEBUG_PRINT("W Key Pressed\n");
     }
     if (IsKeyPressed(KEY_D)) {
-        printf("D Key Pressed\n");
+        DEBUG_PRINT("D Key Pressed\n");
     } 
     if (IsKeyPressed(KEY_A)) {
-        printf("A Key Pressed\n");
+        DEBUG_PRINT("A Key Pressed\n");
     }
 
     if (IsKeyReleased(KEY_S)) {
-        printf("S Key Released\n");
+        DEBUG_PRINT("S Key Released\n");
     } 
     if(IsKeyReleased(KEY_W)) { 
-        printf("W Key Released\n");
+        DEBUG_PRINT("W Key Released\n");
     }
     if (IsKeyReleased(KEY_D)) {
-        printf("D Key Released\n");
+        DEBUG_PRINT("D Key Released\n");
     } 
     if (IsKeyReleased(KEY_A)) {
-        printf("A Key Released\n");
+        DEBUG_PRINT("A Key Released\n");
     }
 
     if (IsKeyPressed(KEY_SPACE)) {
-        printf("SPACE Key Released\n");
+        DEBUG_PRINT("SPACE Key Released\n");
         g->m_paused = !g->m_paused;
     }
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        printf("MOUSE_BUTTON_LEFT Key Pressed");
-        printf(" at ( %i , %i )\n", GetMouseX(), GetMouseY());
+        DEBUG_PRINT("MOUSE_BUTTON_LEFT Key Pressed");
+        DEBUG_PRINT(" at ( %i , %i )\n", GetMouseX(), GetMouseY());
     }
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
-        printf("MOUSE_BUTTON_RIGHT Key Pressed");
-        printf(" at ( %i , %i )\n", GetMouseX(), GetMouseY());
+        DEBUG_PRINT("MOUSE_BUTTON_RIGHT Key Pressed");
+        DEBUG_PRINT(" at ( %i , %i )\n", GetMouseX(), GetMouseY());
     }
 }
 
