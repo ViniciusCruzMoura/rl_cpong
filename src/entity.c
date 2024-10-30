@@ -67,7 +67,7 @@ Entity *entity_search_by_id(Entity *head, size_t id)
 
 void entity_remove_by_id(Entity **head, size_t id)
 {
-    if (!head || !*head) return NULL;
+    if (!head || !*head) return;
     Entity *prev = NULL;
     Entity *curr = *head;
     while(curr != NULL) {
@@ -114,7 +114,7 @@ Entity *entity_append(Entity **head1, Entity *head2)
         return *head1;
     }
     if (!head2) return NULL;
-    Entity *curr = head1;
+    Entity *curr = *head1;
     while (curr->next) {
         curr = curr->next;
     }
@@ -128,7 +128,7 @@ void entity_display(Entity *head)
     Entity *ee = malloc(sizeof(Entity));
     *ee = *head;
     while(ee) {
-        printf("ID: %ld TAG: %ld\n", ee->m_id, ee->m_tag);
+        printf("ID: %ld TAG: %d\n", ee->m_id, ee->m_tag);
         ee = ee->next;
     }
     entity_free(ee);
