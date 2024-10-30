@@ -15,28 +15,14 @@ typedef struct Entity {
     bool m_active;
     size_t m_id;
     EntityTypes m_tag;
-
-    //flags
     CFlags flags;
-
-    CInput input; //CMouseInput, CKeyboardInput
+    CInput input;
     CLifespan lifespan;
     CScore score;
-
-    //AI components
-    //CAIHealth, CAIVision, CAIPathfinding
-    //CAIState, CAIBehavior, CAIAttack
-
-    //Animation components
     CAnimation animation;
-
-    //Physics components
     CCollision collision;
     CTransform transform;
-
-    //Graphics components
     CShape shape;
-
 } Entity;
 
 int entity_size(Entity *head);
