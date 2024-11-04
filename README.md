@@ -48,7 +48,20 @@ sudo apt install -y build-essential \
 ##### Arch Linux
 To install build dependencies:
 ```
-sudo pacman -S ...
+sudo pacman -S --needed base-devel \
+    gcc \
+    git \
+    cmake \
+    alsa-lib \
+    libx11 \
+    libxrandr \
+    libxi \
+    mesa \
+    glu \
+    libxcursor \
+    libxinerama \
+    wayland \
+    xkbcommon
 ```
 
 #### Step 2: Build
