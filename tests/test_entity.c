@@ -119,8 +119,16 @@ void test_entity_append()
             __func__, "should append 2 entities list"); 
 }
 
+void test_ini_file_parser()
+{
+    printf("%s %s(): %s\n",
+            (false) ? "PASS| " : "^^^^^FAIL| ",
+            __func__, "should parser an ini file");
+}
+
 void tests_run()
 {
+    test_ini_file_parser();
     test_entity_create();
     test_entity_search_by_tag();
     test_entity_search_by_id();
