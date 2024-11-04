@@ -5,7 +5,7 @@
 #include <stdlib.h> 
 #include <string.h>
 #include <stdint.h>
-#include "raylib.h"
+#include <ctype.h>
 #include "raylib.h"
 #include "types.h"
 #include "utils.h"
@@ -13,6 +13,7 @@
 #include "components.h"
 #include "entity.h"
 #include "entity_manager.h"
+#include "inifile_parser.h"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
