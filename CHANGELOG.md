@@ -4,6 +4,10 @@
 
 - Not Started / Stopped / Incomplete
 
+## 2024-11-04
+
+- RlCpong - IniFile - Implemented a parser, for it'll use .ini to config
+
 ## 2024-10-16
 
 - RlCpong - EntityManger - Replace the entity array with a single linked list
