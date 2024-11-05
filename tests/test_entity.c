@@ -121,8 +121,13 @@ void test_entity_append()
 
 void test_ini_file_parser()
 {
+    IniFileConfig *conf = create_config();
+    parse_ini_file("test_conf.ini", conf);
+    const char* x = get_value_ini_file(conf, "Section", "key");
+    //display_all_ini_file(conf);
+    free_config(conf);
     printf("%s %s(): %s\n",
-            (false) ? "PASS| " : "^^^^^FAIL| ",
+            (strcmp(x, "value") == 0) ? "PASS| " : "^^^^^FAIL| ",
             __func__, "should parser an ini file");
 }
 

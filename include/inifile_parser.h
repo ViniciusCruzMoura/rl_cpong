@@ -19,6 +19,7 @@ typedef struct IniFileConfig {
     Section *sections;
 } IniFileConfig;
 
+IniFileConfig *create_config();
 void free_config(IniFileConfig *config);
 void trim_whitespace(char *str);
 void parse_ini_file(const char *filename, IniFileConfig *config);
