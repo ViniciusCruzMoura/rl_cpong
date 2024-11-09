@@ -15,21 +15,22 @@
 #include "entity_manager.h"
 #include "inifile_parser.h"
 
+// Compile-time control (this can be set by the compiler/build system)
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #define SCREEN_FRAMERATE 30
 #define SCREEN_TITLE "RlCPong"
+#define CONF_INIFILE_PATH "conf.ini"
+#define DEBUG_ENABLED 1
 
-#define RUNTESTS_ACTIVATED 0 //*experimental feature to run the 'tests/'
-#define DEBUG_ACTIVATED 1 //*experimental feature to show prints in the console
+#define SAFE_FREE(p) { if (p) { free(p); (p) = NULL; } }
 
-#if defined(DEBUG_ACTIVATED) && DEBUG_ACTIVATED > 0
+#if defined(DEBUG_ENABLED) && DEBUG_ENABLED > 0
 #define DEBUG_PRINT(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \
         __FILE__, __LINE__, __func__, ##args)
 #else
-#define DEBUG_PRINT(fmt, args...) /* Don't do anything in release builds */
+#define DEBUG_PRINT(fmt, args...) /* No debug printing in release builds */
 #endif
-#define SAFE_FREE(p) { if (p) { free(p); (p) = NULL; } }
 
 typedef struct Game {
     RenderWindow m_windows;
