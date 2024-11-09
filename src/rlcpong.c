@@ -10,6 +10,7 @@ void init_game(Game *g)
         .m_framerate_limit=SCREEN_FRAMERATE,
         .m_title=SCREEN_TITLE };
     g->m_entities = (EntityManager){ .m_total_entities=0};
+    g->m_windows.m_fullscreen_enabled = false;
 }
 
 void run(Game *g)
