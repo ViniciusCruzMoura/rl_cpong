@@ -2,7 +2,7 @@
 
 size_t total_entities = 0;
 
-int test_entity_create()
+void test_entity_create()
 {
     Entity *e = malloc(sizeof(Entity));
     entity_create(&e, ENTITY_TYPE_PLAYER, ++total_entities);
@@ -20,7 +20,6 @@ int test_entity_create()
     printf("%s %s(): %s\n", 
             (count >= 256000) ? "PASS| " : "^^^^^FAIL| ",
             __func__, "should have than 256000 entities"); 
-    return 0;
 }
 
 void test_entity_search_by_tag()
@@ -37,7 +36,7 @@ void test_entity_search_by_tag()
             __func__, "entity tag should be same", 
             "ENTITY_TAG:", e->m_tag, "TAG:", ENTITY_TYPE_PLAYER);
 
-    int count = entity_size(e);
+    size_t count = entity_size(e);
     printf("%s %s(): %s\n", 
             (count == 2) ? "PASS| " : "^^^^^FAIL| ",
             __func__, "should have 2 entities with player tag"); 
@@ -88,7 +87,7 @@ void test_entity_remove_by_tag()
 
     entity_remove_by_tag(&e, ENTITY_TYPE_PLAYER);
     e = entity_search_by_tag(e, ENTITY_TYPE_PLAYER);
-    int count = entity_size(e);
+    size_t count = entity_size(e);
     printf("%s %s(): %s\n", 
             (count == 0) ? "PASS| " : "^^^^^FAIL| ",
             __func__, "should have 0 entities with player tag"); 

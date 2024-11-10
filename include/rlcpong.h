@@ -37,7 +37,7 @@ typedef struct Game {
     EntityManager m_entities;
     bool m_paused;
     bool m_running;
-    int m_current_frame;
+    uint32_t m_current_frame;
 } Game;
 
 void init_game(Game *g);

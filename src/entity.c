@@ -1,9 +1,9 @@
 #include "rlcpong.h"
 
-int entity_size(Entity *head)
+uint32_t entity_size(Entity *head)
 {
     if (!head) return 0;
-    int count = 0;
+    uint32_t count = 0;
     while(head) {
         ++count;
         head = head->next;

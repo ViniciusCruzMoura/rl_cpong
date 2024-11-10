@@ -4,7 +4,6 @@
 #define TRUE 1
 #define FALSE 0
 
-// Use standard fixed-width types
 typedef int8_t s8;     // Signed 8-bit integer
 typedef uint8_t u8;    // Unsigned 8-bit integer
 typedef int16_t s16;   // Signed 16-bit integer

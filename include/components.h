@@ -27,7 +27,7 @@ typedef struct CCollision {
 } CCollision;
 
 typedef struct CScore {
-    int score;
+    uint32_t score;
 } CScore;
 
 typedef struct CTransform {
@@ -39,8 +39,8 @@ typedef struct CTransform {
 } CTransform;
 
 typedef struct CLifespan {
-    int remaining_life;
-    int total_life;
+    uint32_t remaining_life;
+    uint32_t total_life;
 } CLifespan;
 
 typedef struct CAnimation {

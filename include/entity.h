@@ -25,7 +25,7 @@ typedef struct Entity {
     CShape shape;
 } Entity;
 
-int entity_size(Entity *head);
+uint32_t entity_size(Entity *head);
 Entity *entity_create(Entity **head, EntityTypes tag, size_t id);
 Entity *entity_search_by_tag(Entity *head, EntityTypes tag);
 Entity *entity_search_by_id(Entity *head, size_t id);
