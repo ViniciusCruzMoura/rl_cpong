@@ -199,4 +199,4 @@ run:
 	$(MAKE) $(MAKEFILE_PARAMS)
 
 clean:
-	rm -f $(wildcard src/*.o) $(wildcard src/**/*.o)
+	rm -f $(wildcard src/*.o) $(wildcard src/**/*.o) $(wildcard tests/*.o) $(wildcard tests/**/*.o)
