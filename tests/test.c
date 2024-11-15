@@ -110,7 +110,9 @@ void test_ini_file_parser()
     IniFileConfig *conf = create_config();
     parse_ini_file("tests/test_conf.ini", conf);
     const char* x = get_value_ini_file(conf, "Section", "key");
+    const char* y = get_value_ini_file(conf, "Section", "text");
     //display_all_ini_file(conf);
+    TEST_ASSERT(strcmp(y, "text with spaces") == 0, "should parser a 'text with spaces'");
     TEST_ASSERT(strcmp(x, "value") == 0, "should parser an ini file");
     free_config(conf);
 }
