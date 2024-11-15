@@ -21,7 +21,6 @@ typedef struct IniFileConfig {
 
 IniFileConfig *create_config();
 void free_config(IniFileConfig *config);
-void trim_whitespace(char *str);
 void parse_ini_file(const char *filename, IniFileConfig *config);
 const char* get_value_ini_file(IniFileConfig *config, const char *section, const char *key);
 void display_all_ini_file(IniFileConfig *config);

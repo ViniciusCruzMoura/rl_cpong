@@ -25,16 +25,6 @@ void free_config(IniFileConfig *config) {
     free(config);
 }
 
-void trim_whitespace(char *str) {
-    char *end;
-    while (isspace((unsigned char)*str)) str++;
-    if (*str == 0) return;
-
-    end = str + strlen(str) - 1;
-    while (end > str && isspace((unsigned char)*end)) end--;
-    *(end + 1) = '\0';
-}
-
 void parse_ini_file(const char *filename, IniFileConfig *config) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -45,7 +35,16 @@ void parse_ini_file(const char *filename, IniFileConfig *config) {
     Section *currentSection = NULL;
     char line[MAX_LINE_LENGTH];
     while (fgets(line, sizeof(line), file)) {
-        trim_whitespace(line);
+        //trim_whitespace
+        char *trim_str = line;
+        char *trim_end;
+        while (isspace((unsigned char)*trim_str)) trim_str++;
+        if (*trim_str != 0) {
+            trim_end = trim_str + strlen(trim_str) - 1;
+            while (trim_end > trim_str && isspace((unsigned char)*trim_end)) trim_end--;
+            *(trim_end + 1) = '\0';
+        }
+
         if (line[0] == '\0' || line[0] == ';') continue; // Skip empty lines and comments
         if (line[0] == '[') { // Section header
             char *end = strchr(line, ']');
