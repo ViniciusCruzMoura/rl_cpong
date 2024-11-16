@@ -16,8 +16,8 @@
 #include "inifile_parser.h"
 
 // Compile-time control (this can be set by the compiler/build system)
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 4*200
+#define SCREEN_HEIGHT 3*200
 #define SCREEN_FRAMERATE 30
 #define SCREEN_TITLE "RlCPong"
 #define CONF_INIFILE_PATH "conf.ini"
