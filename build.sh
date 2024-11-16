@@ -5,6 +5,11 @@ case $1 in
         exit 0
         ;;
     -r|-run|--run|run)
+        if docker images --format '{{.Repository}}:{{.Tag}}' | grep -q "^$(basename $PWD):latest$"; then
+            echo
+        else
+            docker build --network=host -t $(basename $PWD) .
+        fi
         docker run -it --rm --network=host --name $(basename $PWD) -v "$PWD":/"$(basename $PWD)" -w /"$(basename $PWD)" $(basename $PWD) sh -c "make -B; make clean"
         exit 0
         ;;
