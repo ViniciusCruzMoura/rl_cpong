@@ -8,7 +8,6 @@
 #include <ctype.h>
 #include "raylib.h"
 #include "raymath.h"
-#include "types.h"
 #include "entity.h"
 #include "entity_manager.h"
 #include "inifile_parser.h"
