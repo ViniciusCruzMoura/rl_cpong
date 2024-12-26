@@ -17,6 +17,27 @@ case $1 in
         docker rmi $(basename $PWD) --force
         exit 0
         ;;
+    -l|--l|local)
+        if [ ! -d "external" ]; then
+            mkdir -p external/
+            cd external/
+            wget https://github.com/raysan5/raylib/releases/download/5.0/raylib-5.0_linux_amd64.tar.gz
+            tar -xf raylib-5.0_linux_amd64.tar.gz
+            rm raylib-5.0_linux_amd64.tar.gz
+            mv raylib-5.0_linux_amd64/ raylib/
+            cd ../
+        fi
+        if [ "$2" = "compile" ]; then 
+            rm -f game
+            make -B; make clean
+            exit 0
+        fi
+        if [ "$2" = "run" ]; then 
+            LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./external/raylib/lib ./game 
+            exit 0
+        fi
+        exit 0
+        ;;
     -h|-help|--help|help|*)
         echo "These are common commands used in various situations:"
         echo
@@ -24,10 +45,11 @@ case $1 in
         echo "  ./build.sh COMMAND"
         echo
         echo "Commands:"
-        echo "  help            Shows this information"
-        echo "  build           Make docker image"
-        echo "  run             Run docker image"
-        echo "  rmi             Remove docker image"
+        echo "  help            Display this help information."
+        echo "  build           Build a new Docker image."
+        echo "  run             Run the Docker image if it exists; otherwise, build the image and then run it."
+        echo "  rmi             Remove the Docker image by untagging it."
+        echo "  local           Download and configure the dependencies out of the box."
         echo
         echo "./build.sh COMMAND --help to get help on each command"
         echo
