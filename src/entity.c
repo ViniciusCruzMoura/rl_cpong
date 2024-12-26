@@ -1,6 +1,6 @@
 #include "rlcpong.h"
 
-uint32_t entity_size(Entity *head)
+uint32_t entity_size(struct entity *head)
 {
     if (!head) return 0;
     uint32_t count = 0;
@@ -11,10 +11,10 @@ uint32_t entity_size(Entity *head)
     return count;
 }
 
-Entity *entity_create(Entity **head, EntityTypes tag, size_t id)
+struct entity *entity_create(struct entity **head, enum entity_types tag, size_t id)
 {
     if (!head) {
-        Entity *e = malloc(sizeof(Entity));
+        struct entity *e = malloc(sizeof(struct entity));
         e->m_id = id;
         e->m_active = true;
         e->m_tag = ENTITY_TYPE_NOTHING;
@@ -23,7 +23,7 @@ Entity *entity_create(Entity **head, EntityTypes tag, size_t id)
         return *head;
     }
     if (!head) return NULL;
-    Entity *e2 = malloc(sizeof(Entity));
+    struct entity *e2 = malloc(sizeof(struct entity));
     e2->m_id = id;
     e2->m_active = true;
     e2->m_tag = tag;
@@ -32,10 +32,10 @@ Entity *entity_create(Entity **head, EntityTypes tag, size_t id)
     return *head;
 }
 
-Entity *entity_search_by_tag(Entity *head, EntityTypes tag)
+struct entity *entity_search_by_tag(struct entity *head, enum entity_types tag)
 {
-    Entity *new_list = NULL;
-    Entity *last = NULL;
+    struct entity *new_list = NULL;
+    struct entity *last = NULL;
     while(head) {
         if (head->m_tag == tag) {
             if (!new_list) {
@@ -53,7 +53,7 @@ Entity *entity_search_by_tag(Entity *head, EntityTypes tag)
     return new_list;
 }
 
-Entity *entity_search_by_id(Entity *head, size_t id)
+struct entity *entity_search_by_id(struct entity *head, size_t id)
 {
     if (!head) return NULL;
     while(head) {
@@ -65,11 +65,11 @@ Entity *entity_search_by_id(Entity *head, size_t id)
     return NULL;
 }
 
-void entity_remove_by_id(Entity **head, size_t id)
+void entity_remove_by_id(struct entity **head, size_t id)
 {
     if (!head || !*head) return;
-    Entity *prev = NULL;
-    Entity *curr = *head;
+    struct entity *prev = NULL;
+    struct entity *curr = *head;
     while(curr != NULL) {
         if(curr->m_id == id) {
              if(prev == NULL) {
@@ -85,10 +85,10 @@ void entity_remove_by_id(Entity **head, size_t id)
     }
 }
 
-void entity_remove_by_tag(Entity **head, EntityTypes tag)
+void entity_remove_by_tag(struct entity **head, enum entity_types tag)
 {
-    Entity *prev = NULL;
-    Entity *curr = *head;
+    struct entity *prev = NULL;
+    struct entity *curr = *head;
     while(curr != NULL) {
         if(curr->m_tag == tag) {
             if(prev == NULL) {
@@ -96,7 +96,7 @@ void entity_remove_by_tag(Entity **head, EntityTypes tag)
             } else {
                 prev->next = curr->next;
             }
-            Entity *temp = curr;
+            struct entity *temp = curr;
             curr = curr->next;
             free(temp);
         } else {
@@ -106,7 +106,7 @@ void entity_remove_by_tag(Entity **head, EntityTypes tag)
     }
 }
 
-Entity *entity_append(Entity **head1, Entity *head2)
+struct entity *entity_append(struct entity **head1, struct entity *head2)
 {
     if (!head1) return NULL;
     if (!*head1) {
@@ -114,7 +114,7 @@ Entity *entity_append(Entity **head1, Entity *head2)
         return *head1;
     }
     if (!head2) return NULL;
-    Entity *curr = *head1;
+    struct entity *curr = *head1;
     while (curr->next) {
         curr = curr->next;
     }
@@ -122,10 +122,10 @@ Entity *entity_append(Entity **head1, Entity *head2)
     return *head1;
 }
 
-void entity_display(Entity *head)
+void entity_display(struct entity *head)
 {
     if (!head) return;
-    Entity *ee = malloc(sizeof(Entity));
+    struct entity *ee = malloc(sizeof(struct entity));
     *ee = *head;
     while(ee) {
         printf("ID: %ld TAG: %d\n", ee->m_id, ee->m_tag);
@@ -135,9 +135,9 @@ void entity_display(Entity *head)
     free(ee);
 }
 
-void entity_free(Entity *head) {
+void entity_free(struct entity *head) {
     while (head) {
-        Entity *temp = head;
+        struct entity *temp = head;
         head = head->next;
         free(temp);
     }

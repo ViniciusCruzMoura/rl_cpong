@@ -3,26 +3,26 @@
 
 #define MAX_LINE_LENGTH 256
 
-typedef struct KeyValue {
+struct key_value {
     char *key;
     char *value;
-    struct KeyValue *next;
-} KeyValue;
+    struct key_value *next;
+};
 
-typedef struct Section {
+struct section {
     char *name;
-    KeyValue *keyValues;
-    struct Section *next;
-} Section;
+    struct key_value *keyValues;
+    struct section *next;
+};
 
-typedef struct IniFileConfig {
-    Section *sections;
-} IniFileConfig;
+struct ini_file_config {
+    struct section *sections;
+};
 
-IniFileConfig *create_config();
-void free_config(IniFileConfig *config);
-void parse_ini_file(const char *filename, IniFileConfig *config);
-const char* get_value_ini_file(IniFileConfig *config, const char *section, const char *key);
-void display_all_ini_file(IniFileConfig *config);
+struct ini_file_config *create_config();
+void free_config(struct ini_file_config *config);
+void parse_ini_file(const char *filename, struct ini_file_config *config);
+const char* get_value_ini_file(struct ini_file_config *config, const char *section, const char *key);
+void display_all_ini_file(struct ini_file_config *config);
 
 #endif //INIFILE_PARSER_H

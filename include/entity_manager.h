@@ -1,14 +1,14 @@
 #ifndef ENTITY_MANAGER_H
 #define ENTITY_MANAGER_H
 
-typedef struct EntityManager {
+struct entity_manager {
     size_t m_total_entities;
-    Entity *m_list;
-    Entity *m_toadd;
-} EntityManager;
+    struct entity *m_list;
+    struct entity *m_toadd;
+};
 
-void update_entities(EntityManager *em);
-Entity *add_entity(EntityManager *em, EntityTypes tag);
-Entity *get_entities(EntityManager *em, EntityTypes etype);
+void update_entities(struct entity_manager *em);
+struct entity *add_entity(struct entity_manager *em, enum entity_types tag);
+struct entity *get_entities(struct entity_manager *em, enum entity_types etype);
 
 #endif //ENTITY_MANAGER_H
