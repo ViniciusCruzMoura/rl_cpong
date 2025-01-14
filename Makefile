@@ -2,7 +2,6 @@
 
 PLATFORM ?= PLATFORM_DESKTOP
 PROJECT_NAME ?= game
-RAYLIB_PATH ?= RAYLIB_PATH
 # Locations of raylib.h and libraylib.a/libraylib.so
 # NOTE: Those variables are only used for PLATFORM_OS: LINUX
 RAYLIB_INCLUDE_PATH ?= /usr/local/include
@@ -14,11 +13,7 @@ BUILD_MODE ?= DEBUG #RELEASE
 ifeq ($(shell uname),Linux)
 	PLATFORM_OS = LINUX
 endif
-ifeq ($(shell uname),Darwin)
-	PLATFORM_OS = OSX
-endif
 
-RAYLIB_RELEASE_PATH	?= $(RAYLIB_PATH)/src
 CC = gcc
 MAKE ?= make
 
@@ -35,24 +30,21 @@ ifeq ($(PLATFORM_OS),LINUX)
 		CFLAGS += -D_DEFAULT_SOURCE
 	endif
 	ifeq ($(RAYLIB_LIBTYPE),SHARED)
-		CFLAGS += -Wl,-rpath,$(RAYLIB_RELEASE_PATH)
+		CFLAGS += -Wl,-rpath
 	endif
 endif
 
 # Define include paths for required headers: INCLUDE_PATHS
 # NOTE: Some external/extras libraries could be required (stb, physac, easings...)
-INCLUDE_PATHS = -I. -I$(RAYLIB_PATH)/src -I$(RAYLIB_PATH)/src/external -I$(RAYLIB_PATH)/src/extras -Iinclude -I$(RAYLIB_PATH)/include
-INCLUDE_PATHS += -Iexternal/raylib/include
+INCLUDE_PATHS = -I. -Iinclude -Iexternal/raylib/include
 ifeq ($(PLATFORM_OS),LINUX)
 	INCLUDE_PATHS += -I$(RAYLIB_INCLUDE_PATH)
 endif
 
-LDFLAGS = -L. -L$(RAYLIB_RELEASE_PATH) -L$(RAYLIB_PATH)/src
-LDFLAGS += -Lexternal/raylib/lib
+LDFLAGS = -L. -Lexternal/raylib/lib
 ifeq ($(PLATFORM_OS),LINUX)
 	LDFLAGS += -L$(RAYLIB_LIB_PATH)
-	LDLIBS = -lraylib -lGL -lm -lpthread -ldl -lrt
-	LDLIBS += -lX11
+	LDLIBS = -l:libraylib.a -lGL -lm -lpthread -ldl -lrt -lX11
 	ifeq ($(RAYLIB_LIBTYPE),SHARED)
 		LDLIBS += -lc
 	endif
