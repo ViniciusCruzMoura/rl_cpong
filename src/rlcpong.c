@@ -8,7 +8,7 @@ void initialize_game(struct game_instance *g)
     g->m_windows = (struct render_window){ .m_width=SCREEN_WIDTH, 
         .m_height=SCREEN_HEIGHT, 
         .m_framerate_limit=30,
-        .m_title="RlCPong" };
+        .m_title=(char*)"RlCPong" };
     g->m_entities = (struct entity_manager){ .m_total_entities=0};
     g->m_windows.m_fullscreen_enabled = false;
 }
