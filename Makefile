@@ -64,3 +64,7 @@ clean:
 
 clean_vendor:
 	$(MAKE) -C vendor/raylib/src clean
+
+vendor:
+	if [ ! -d "vendor/raylib" ]; then git clone -b 5.5 --depth=1 https://github.com/raysan5/raylib.git vendor/raylib; fi
+	
