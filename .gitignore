@@ -1,3 +1,7 @@
+*.git
+**/.git
+**/*.git
+
 # Backup files # 
 *.bak 
 *.swp
